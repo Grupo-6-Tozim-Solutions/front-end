@@ -1,0 +1,23 @@
+.table-header {
+  display: grid;
+  grid-template-columns: 80px 1.5fr 1fr 1.5fr 80px;
+  border-radius: 18px 18px 0 0;
+  background: #127ADC;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: #127ADC 2px solid;
+  width: calc(100vw - 50px);
+  max-width: 1200px;
+  margin: -0.1rem auto;
+  box-sizing: border-box;
+}
+
+
+.col-id, .col-name, .col-quantity, .col-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

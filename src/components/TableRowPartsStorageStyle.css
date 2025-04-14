@@ -1,0 +1,74 @@
+.table-row {
+    display: grid;
+    grid-template-columns: 80px 1.5fr 1fr 1.5fr 80px;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border-left: 2px solid #127ADC;
+    border-right: 2px solid #127ADC;
+    color: #000;
+    column-gap: 0.5rem;
+  }
+  
+  .even {
+    background-color: #ffffff;
+  }
+  
+  .odd {
+    background-color: #f0f0f0;
+  }
+  
+  .col-id.critical, .col-name.critical {
+    color: rgba(255, 13, 13, 1);
+  }
+  .col-id.warning, .col-name.warning {
+    color: rgba(255, 142, 13, 1);
+  }
+  
+  .col-quantity.critical,
+  .col-status.critical {
+    background-color: #ffd6d6;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    color: #c40000;
+    display: inline-block;
+    justify-self: center;   
+  }
+  
+  .col-quantity.warning,
+  .col-status.warning {
+    background-color: #fff6c0;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    color: #c58a00;
+    display: inline-block;
+    justify-self: center;
+  }
+  
+  
+  .actions {
+    display: inline-flex;
+    gap: 0.5rem;
+    vertical-align: middle;
+  }
+  
+  .action-icon {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border-radius: 5px;
+    padding: 0.3rem;
+  }
+  
+  .trashcan:hover {
+    background-color: rgba(255, 201, 201, 1);
+  }
+
+  .pencil:hover {
+    background-color: rgba(165, 215, 255, 1);
+  }
+  

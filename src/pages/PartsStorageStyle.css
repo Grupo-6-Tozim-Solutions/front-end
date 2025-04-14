@@ -1,0 +1,34 @@
+#root {
+    margin: 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+body {
+    background-color: rgba(245, 245, 245, 1);
+}
+
+.table-container {
+    border: 2px solid #127ADC;
+    border-radius: 18px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #797979 transparent;
+    width: calc(100vw - 50px);
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    max-height: 550px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 95vw;
+    height: 95vh;
+    padding: 1rem 0;
+    margin: 0 4rem;
+}
