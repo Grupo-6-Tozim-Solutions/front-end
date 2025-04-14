@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.login-page {
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f4;
+    font-family: "Crimson Text", serif;
+    width: 100%;
+    position: absolute;
+}
+
+.imagem-logo-esquerda{
+    height: 55%;
+}
+.left-panel {
+    width: 40%;
+    background-color: rgba(7, 64, 218, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.div-link-cadastro{
+    margin-top: 2%;
+}
+.div-link-cadastro span{
+font-size: 110%;
+}
+.pattern {
+    width: 80%;
+    height: 80%;
+    /* background-image: url('../assets/box-logo-login.svg'); */
+    opacity: 95%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* background-color: black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-panel {
+    width: 60%;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 3% 0 0 0;
+}
+
+.right-panel h1 {
+    font-size: 4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.login-form {
+    background: #ffffff;
+    padding: 3% 3% 2% 5%;
+    margin-top: 3%;
+    border-radius: 20px;
+    border: solid rgba(217, 217, 217, 1) 2px;
+    width: 67%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-form label {
+    font-weight: bold;
+    display: block;
+    margin-top: 2%;
+    font-size: 1.1vw;
+    
+}
+
+.login-form #input-credencial,
+.login-form #input-senha {
+    width: 93%;
+    height: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(235, 235, 235, 1);
+    color: rgba(121, 121, 121, 1);
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    width: 25px;
+    height: 25px;
+    background-image: url("../public/assets/closedEye.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 13px;
+    right: 52px;
+    cursor: pointer;
+}
+
+.toggle-password.visible {
+    background-image: url("../public/assets/openedEye.png");
+}
+
+.div-checkbox-text {
+    margin-bottom: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.15vw;
+}
+
+.button-submit {
+    display: flex;
+    justify-content: center;
+    font-size: 3vw;
+}
+
+.button-submit span {
+    font-size: 1.2vw;
+}
+
+.button-submit button {
+    width: 40%;
+    padding: 10px;
+    margin-top: 10%;
+    background-color: rgba(201, 231, 255, 1);
+    border: none;
+    color: rgba(13, 138, 255, 1);
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: "Inter", sans-serif;
+}
+
+.button-submit button:hover {
+    background-color: rgba(152, 209, 255, 1); 
+    color: rgba(13, 138, 255, 1);
+}
+
+.login-help {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.login-help a {
+    color: black;
+    font-weight: bold;
+}
+
+.login-help a:hover {
+    text-decoration: underline;
+}
+
+.login-status {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.login-status.sucesso {
+    background-color: rgba(210, 255, 201, 1);
+    color: rgba(25, 215, 0, 1);
+    border: none;
+}
+
+.login-status.erro {
+    background-color: rgba(255, 201, 201, 1);
+    color: rgba(255, 13, 13, 1);
+    border: none;
+}
+
+.input-error {
+    border: solid rgba(255, 13, 13, 1) 2px !important;
+}
+
+.login-status.aviso {
+    background-color: rgba(255, 250, 201, 1);
+    color: rgba(255, 142, 13, 1);
+    border: none;
+}
