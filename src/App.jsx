@@ -1,17 +1,13 @@
-import React from 'react';
-import LoginPage from './pages/LoginPage';
-import CadastroPage from './pages/CadastroPage';
-
-
-// import './App.css';
-
+import './App.css'
+import Navbar from './components/SideBar'
 function App() {
+
   return (
-    <div >
-   <CadastroPage/>
-   {/* <LoginPage/> */}
+    <div>
+      <Navbar/>
+
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
