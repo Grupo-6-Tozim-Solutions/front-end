@@ -17,7 +17,7 @@ const LoginForm = ({ onLogin, loginStatus }) => {
 
   return (
     <form onSubmit={handleSubmit} className="login-form" noValidate>
-      <label htmlFor="input-credencial">Email:</label>
+      <label htmlFor="input-credencial">Nome ou Email:</label>
       <input
         type="text"
         id="input-credencial"

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;700&display=swap');
 
 * {
     margin: 0;
@@ -12,11 +11,10 @@
     background-color: #f4f4f4;
     font-family: "Crimson Text", serif;
     width: 100%;
-    position: absolute;
 }
-
 .imagem-logo-esquerda{
-    height: 55%;
+    height: 78%;
+    opacity: 74%;
 }
 .left-panel {
     width: 40%;
@@ -69,20 +67,20 @@ font-size: 110%;
     width: 67%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    text-align: start;
+    gap: 5px;
 }
 
-.login-form label {
+.login-form label{
     font-weight: bold;
     display: block;
-    margin-top: 2%;
+    /* margin-top: 2%; */
     font-size: 1.1vw;
-    
 }
 
 .login-form #input-credencial,
 .login-form #input-senha {
-    width: 93%;
+    width: 96%;
     height: 100%;
     padding: 10px;
     margin-top: 5px;
@@ -202,3 +200,9 @@ font-size: 110%;
     color: rgba(255, 142, 13, 1);
     border: none;
 }
+
+
+    /* .junta-form{
+    background-color: black;
+
+    } */

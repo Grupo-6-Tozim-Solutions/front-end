@@ -24,12 +24,13 @@ const CadastroPage = () => {
     <div className="login-page">
       <LoginLeft />
       <div className="right-panel">
-    <TituloLogin titulo="Cadastro."/>
+    <TituloLogin titulo="Cadastro"/>
         <CadastroForm 
           onLogin={handleLogin} 
           loginStatus={loginStatus} 
         /> <div className="div-link-cadastro">
          <LinkCadastro textoBase="Já possui conta?" textoLink="Clique aqui."/>
+
          </div>
       </div> 
       

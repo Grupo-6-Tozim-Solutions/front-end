@@ -22,7 +22,7 @@ const LoginPage = () => {
     <div className="login-page">
       <LoginLeft />
       <div className="right-panel">
-    <TituloLogin titulo="Bom dia, Antônio."/>
+    <TituloLogin titulo="Bem-vindo"/>
         <LoginForm 
           onLogin={handleLogin} 
           loginStatus={loginStatus} 
