@@ -13,6 +13,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
         <div style={overlayStyle} onClick={onClose}>
             <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
                 <div style={nameContainer}>
+                    <div style={boxNameContainer}>
                     <div style={idPartStyle}>
                         <span style={idTextStyle}>ID</span>
                         <span style={idStyle}>001</span>
@@ -22,9 +23,10 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                         <img
                             src="public/assets/btnClose.png"
                             alt="btnClose"
-                            style={{ width: '12px', height: '12px', padding: '0px' }}
+                            style={{ width: '16px', height: '16px' }}
                         />
                     </button>
+                    </div>
                 </div>
                 <div style={editPartContainer}>
                     <div style={actions}>
@@ -47,7 +49,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                                     onClick={() => console.log('Adicionar clicado')}
                                 />
                                 <div style={{display:'flex', position:'absolute'}}>
-                                    <img src="./assets/Line.png" alt="" style={{ width: '87%', height: '1.5px',  marginTop: '55px',}} />
+                                    <img src="./assets/Line.png" alt="" style={{ width: '94%', height: '1.5px',  marginTop: '55px',}} />
                                 </div>
                             </div>
                         </label>
@@ -68,7 +70,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                                     onClick={() => console.log('Remover clicado')}
                                 />
                                 <div style={{display:'flex', position:'absolute'}}>
-                                    <img src="./assets/Line.png" alt="" style={{ width: '87%', height: '1.5px',  marginTop: '55px',  }} />
+                                    <img src="./assets/Line.png" alt="" style={{ width: '94%', height: '1.5px',  marginTop: '55px',  }} />
                                 </div>
                             </div>
                         </label>
@@ -93,9 +95,9 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                             Resumo
                         </span>
                         <img src="./assets/Line.png" alt="" style={{ width: '96%', height: '0.8px', marginTop: '4px' }} />
-                        <div style={{ display: 'flex', gap: '5px', marginTop: '18px' }}>
-                            <span style={{fontWeight:'600', fontSize: '16px'}} >Peça:</span>
-                            <span style={{fontSize: '12px', marginTop:'5px'}} >Peça Sinistra</span> 
+                        <div style={{ display: 'flex', gap: '5px', marginTop: '22px' }}>
+                            <span style={{fontWeight:'600', fontSize: '17px'}} >Peça:</span>
+                            <span style={{fontSize: '13px', marginTop:'5px', fontWeight:'500'}} >Peça Sinistra</span> 
                         </div>
                         <div style={boxContainer}>
                             <div style={boxResult}>
@@ -114,14 +116,14 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                                 <span style={resultOperationStyle}>00</span>  
                             </div> 
                         </div>
-                        <div style={{marginTop: '60px', display: 'flex', flexDirection: 'column', gap: '5px'}}>
-                            <span style={{fontSize: '11px', fontFamily: 'Inter', lineHeight: '14px' }} >
+                        <div style={{marginTop: '35%', display: 'flex', flexDirection: 'column', gap: '5px'}}>
+                            <span style={{fontSize: '12px', fontFamily: 'Inter', lineHeight: '14px' }} >
                             Esse registro poderá ser encontrado no seu <span style={{color:'#0740DA', fontWeight:'bold', fontStyle:'italic', margin:'0' }}>Histórico</span>
                             </span>
                             <div style={{width:'100%'}}>
-                            <img src="./assets/Line.png" alt="" style={{ width: '96%', height: '0.8px', margin:'0', display: 'block' }} />
+                            <img src="./assets/Line.png" alt="" style={{ width: '100%', height: '0.8px', margin:'0', display: 'block' }} />
                             </div>
-                            <span style={{fontSize: '20px', fontFamily:'Inter', fontWeight:'600', marginRight:'65%', marginTop:'0px'}} >
+                            <span style={{fontSize: '20px', fontFamily:'Inter', fontWeight:'600', marginRight:'75%', marginTop:'0px'}} >
                                 Total:80
                             </span>
                         </div>
@@ -161,17 +163,19 @@ const PointsStyle = {
 
 const resultOperationStyle = {
     whiteSpace: 'nowrap', // Garante que o texto não quebre para a próxima linha
-    fontSize: '12px', // Tamanho da fonte
+    fontSize: '14px', // Tamanho da fonte
     textAlign: 'right', // Alinha o texto à direita
-    marginTop: '4px', // Margem superior
+    marginTop: '4px',
+    fontWeight:'500' // Margem superior
     
 }
 
 const boxContainer = {
+    fontSize: '16px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
-    marginTop: '14px',
+    gap: '17px',
+    marginTop: '16px',
 }
 
 const boxResult = {
@@ -181,25 +185,35 @@ const boxResult = {
 
 const informationOperationStyle = {
     fontWeight:'600',
-     fontSize: '16px',
+     fontSize: '17px',
      whiteSpace: 'nowrap',
 }
-    
-
 
 const tittleSumaryStyle = {
-    fontSize: '14px',
-    fontWeight: 'medium',
-    marginRight: '100%',
+    fontSize: '17px',
+    fontWeight: '500',
 }
 
 const modalStyle = {
     background: 'white',
     borderRadius: '10px 10px 10px 10px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    height: '75vh',
-    width: '65vw',
+    height: '62vh',
+    width: '55vw',
+    display:'flex',
+    alignItems:'center',
+    flexDirection:'column'
 };
+
+const boxNameContainer = {
+    display:'flex',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-between',
+    padding:'5px 17px 5px 17px'
+
+}
 
 const idPartStyle = {
     display: 'flex',
@@ -220,37 +234,38 @@ const idStyle = {
 };
 
 const textOperationStyle = {
-    fontSize: '12px',
-    fontWeight: 'regular',
-    marginRight: '65px',
+    fontWeight: '400',
 };
 
 const editPartContainer = {
     display: 'flex',
     gap: '16px',
-    padding: '2px 18px 2px 18px',
+    height:'85%',
+    width:'95%',
 };
+
 
 
 const boxInputButton = {
     display: 'flex',
-    gap: '120px',
+    gap: '50%',
     alignItems: 'center',
     marginTop: '15px',
     width: '100%',
+  
 };
 
 const imageButtonPlus = {
     display: 'flex',
-    width: '13px',
-    height: '13px',
+    width: '16px',
+    height: '16px',
     marginRight: '7px',
 };
 
 const imageButtonSub = {
     display: 'flex',
-    width: '16px',
-    height: '3px',
+    width: '18px',
+    height: '4px',
     marginRight: '7px',
 };
 
@@ -259,7 +274,7 @@ const btnRemoveStyle = {
     color: '#FF0D0D',
     border: 'none',
     borderRadius: '4px',
-    padding: '4px 10px',
+    padding: '6px 12px',
     cursor: 'pointer',
     fontSize: '12px',
     display: 'flex',
@@ -270,8 +285,7 @@ const btnRemoveStyle = {
 const containerButtons = {
     display: 'flex',
     gap: '10px',
-    marginLeft: '30px',
-    marginTop: '30px',
+    marginTop: '15px',
 
 }
 
@@ -280,7 +294,7 @@ const btnAddStyle = {
     color: '#0740DA',
     border: 'none',
     borderRadius: '4px',
-    padding: '4px 10px',
+    padding: '6px 12px',
     cursor: 'pointer',
     fontSize: '12px',
     display: 'flex',
@@ -289,7 +303,7 @@ const btnAddStyle = {
 };
 
 const tittleActions = {
-    fontSize: '14px',
+    fontSize: '15px',
     fontWeight: 'bold',
     color: 'white',
     backgroundColor: '#127ADC',
@@ -297,24 +311,32 @@ const tittleActions = {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
+    width:'100%',
     borderRadius: '8px 8px 0px 0px',
 };
 
 const actions = { 
     width: '60%',
     border: '2px solid #127ADC',
-    height: '63vh',
+    height: '100%',
     borderRadius: '10px',
     position: 'relative',
+    display:'flex',
+    justifyContent:'center',
+    flexDirection:'column',
+    alignItems:'center'
+
 };
 
 
 const containerActionStyle = {
-    width: '100%',
-    height: '100%',
+    width: '90%',
+    height: '90%',
     display: 'flex',
     flexDirection: 'column',
-    padding: '0px 20px 0px 20px',
+    gap:'2%',
+    marginTop:'7px'
+   
   
 }
 
@@ -327,13 +349,12 @@ const summary = {
     borderRadius: '10px',
     position: 'relative',
     color: 'black',
-    height: '61vh',
-    padding: '5px 10px 5px 10px',
+    height: '97.5%',
+    padding: '7px 12px 5px 12px',
     
 };
 
 const labelStyle = {
-    padding: '0px 25px 14px 4px',
     display: 'flex',
     flexDirection: 'column',
     gap: '5px',
@@ -342,12 +363,13 @@ const labelStyle = {
 };
 
 const inputStyle = {
-    padding: '10px',
+ 
     borderRadius: '5px',
-    border: '1.5px solid #000',
-    width: '2.5vw',
-    height: '3vh',
+    border: '2px solid back',
+    width: '4vw',
+    height: '6vh',
     display: 'flex',
+    marginBottom:'20px'
     
 };
 
@@ -355,23 +377,20 @@ const nameContainer = {
     display: 'flex',
     alignItems: 'center',
     marginBottom: '10px',
-    width: '97.6%',
-    height: '4vh',
+    width: '100%',
+    height: '6vh',
     background: '#0740DA',
-    padding: '8px',
     borderRadius: '10px 10px 0px 0px',
-    justifyContent: 'space-between',
 };
 
 const buttonExitStyle = {
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    padding: '10px',
+    padding:'0px'
 };
 
 const NameStyle = {
-    fontSize: '13px',
     fontWeight: 'Bold',
     color: 'white',
     display: 'flex',

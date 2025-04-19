@@ -1,24 +1,19 @@
 import React from 'react';
 import CustomButton from './CustomButton';
-
+import TitleModal from './TittleModal';
 const FilterModal = ({ isOpen, onClose, onApply }) => {
     if (!isOpen) return null;
 
     return (
         <div style={overlayStyle} onClick={onClose}>
             <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-                <div style={nameContainer}>
-                    <span style={NameStyle}>Filtros</span>
-                    <button style={buttonExitStyle} onClick={onClose}>
-                        <img
-                            src="public/assets/btnClose.png"
-                            alt="btnClose"
-                            style={{ width: '15px', height: '15px', padding: '0px' }}
-                        />
-                    </button>
-                </div>
+                <TitleModal
+                    modalName="Filtros"
+                    NameStyle={NameStyle}
+                    nameContainer={nameContainer}
+                />
                 <div style={containerModal}>
-                    <span style={{ fontWeight: '600', color: 'black', marginRight: '240px', display: 'flex' }}>
+                    <span style={{ fontWeight: '600', color: 'black', marginRight: '240px', display: 'flex', fontSize:'20px' }}>
                         Filtrar por:
                     </span>
                     <label style={labelStyle}>
@@ -67,20 +62,21 @@ const overlayStyle = {
 const modalStyle = {
     background: 'white',
     borderRadius: '10px',
-    width: '45vw',
-    height: '37vh',
+    width: '41vw',
+    height: '32vh',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     display: 'flex',
     flexDirection: 'column',
+    alignItems:'center'
 };
 
 const containerModal = {
-    width: '100%',
+    width: '75%',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
-    alignItems: 'center'
+    gap: '25px',
+    marginTop:'2%'
 
 }
 
@@ -89,42 +85,35 @@ const nameContainer = {
     alignItems: 'center',
     marginBottom: '10px',
     width: '100%',
-    height: '7vh',
+    height: '8vh',
     background: '#0740DA',
     borderRadius: '10px 10px 0px 0px',
 
 };
 
-const buttonExitStyle = {
-    background: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '10px',
-
-};
-
 
 const NameStyle = {
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: 'Bold',
     fotFamily: 'Inter',
     color: 'white',
     display: 'flex',
-    marginLeft: '21vw',
+    marginLeft: '19.5vw',
     flex: '1',
 }
 
 const inputStyle = {
-    height: '3vh',
-    borderRadius: '3px',
-    border: '1.3px solid black',
-    marginTop: '3px'
+    height: '3.5vh',
+    borderRadius: '6px',
+    border: '2px solid black',
+    marginTop: '3px',
+    width:'55%'
 }
 
 const labelStyle = {
     display: 'flex',
     gap: '10px',
-    width: '50%',
+    width: '100%',
     marginRight: '90px'
 }
 
@@ -137,8 +126,8 @@ const buttonContainerStyle = {
 
 const imageButtonPlus = {
     display: 'flex',
-    width: '13px',
-    height: '13px',
+    width: '15px',
+    height: '16px',
     marginRight: '7px',
 };
 
@@ -147,7 +136,7 @@ const btnAddStyle = {
     color: '#0740DA',
     border: 'none',
     borderRadius: '4px',
-    padding: '4px 10px',
+    padding: '4px 22px',
     cursor: 'pointer',
     fontSize: '12px',
     display: 'flex',
@@ -157,10 +146,9 @@ const btnAddStyle = {
 
 const containerFilter = {
     display: 'flex',
-    gap: '30px',
+    gap: '13%',
     alignItems: 'center',
     fontWeight: 'regular'
-
 }
 
 
@@ -170,9 +158,9 @@ const checkboxLabelStyle = {
     alignItems: 'center',
     gap: '4px',
     cursor: 'pointer',
-  };
-  
-  const checkboxStyle = {
+};
+
+const checkboxStyle = {
     appearance: 'none', // Remove o estilo padrão do checkbox
     width: '16px',
     height: '16px',
@@ -183,11 +171,11 @@ const checkboxLabelStyle = {
     backgroundColor: 'white',
     display: 'inline-block',
     position: 'relative',
-  };
-  
-  const checkboxTextStyle = {
-    fontSize: '11px',
+};
+
+const checkboxTextStyle = {
+    fontSize: '15px',
     fontWeight: '400',
-  };
+};
 
 export default FilterModal;

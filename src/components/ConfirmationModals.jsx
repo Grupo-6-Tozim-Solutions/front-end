@@ -2,17 +2,16 @@ import React from 'react';
 import TitleModal from './TittleModal';
 
 
-const Modal = ({ isOpen, onClose, modalName, title, message, onConfirm,
-   confirmText = "Confirmar", cancelText = "Cancelar", NameStyle, imagem,
-  textButtonDelete}) => {
+const Modal = ({ isOpen, title, message, onConfirm, imagem,textButtonDelete, onClose}) => {
   if (!isOpen) return null;
 
   return (
     <div style={overlayStyle} onClick={onClose}>
-      <div style={contentStyle} onClick={e => e.stopPropagation()}>
+      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
       <TitleModal
-          modalName={modalName}
+          modalName="Sair"
           NameStyle={NameStyle}
+          nameContainer={nameContainer}
           onClose={onClose}
         />
         <div style={boxContainer}>
@@ -45,10 +44,33 @@ const overlayStyle = {
     zIndex: 1000,
   };
 
+  const nameContainer = {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '10px',
+    width: '75vh',
+    height: '5vh',
+    background: '#0740DA',
+    padding: '3px',
+    borderRadius: '10px 10px 0px 0px',
+  };
+
+  const NameStyle = {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    fontFamily: 'Inter',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    flex: '1',
+    marginLeft:'12%'
+};
+
+
 
   const imageButton = {
-    width: '15px',
-    height: '15px',
+    width: '18px',
+    height: '18px',
     display: 'flex',
     padding: '0px',
   };
@@ -57,8 +79,8 @@ const overlayStyle = {
     display: 'flex',
     alignItems: 'center',
     backgroundColor: '#FFC9C9',
-    height: '25px',
-    width: '9vw',
+    height: '32px',
+    width: '6vw',
     gap: '5px',
     borderRadius: '5px',
     border: 'none',
@@ -66,13 +88,14 @@ const overlayStyle = {
     marginBottom: '25px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
+    justifyContent:'center'
 
   }
 
 
   const textButtonDeleteStyle = {
-    fontSize: '13px',
-    fontWeight: 'semibold',
+    fontSize: '14px',
+    fontWeight: '600',
     fotFamily: 'Inter',
     color: '#FF0D0D',
     display: 'flex',
@@ -80,7 +103,8 @@ const overlayStyle = {
 
 
   const modalInformation = {
-    fontSize: '12px',
+    fontSize: '13px',
+    fontWeight: '600'
 
   }
 
@@ -89,24 +113,26 @@ const overlayStyle = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop:'4%'
     }
 
 
   const titleStyle = {
-    fontSize: '20px',
-    fontWeight: 'semibold',
+    fontSize: '22px',
+    fontWeight: '600',
     fotFamily: 'Inter',
   };
 
   const messageStyle = {
-    fontSize: '13px',
+    fontSize: '14px',
+    fontWeight:'500'
   };
   
-  const contentStyle = {
+  const modalStyle = {
     background: 'white',   
     borderRadius: '10px 10px 10px 10px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    height: '205px',
+    height: '32%',
   };
   
   

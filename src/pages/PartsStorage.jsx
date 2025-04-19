@@ -128,15 +128,6 @@ export function PartsStorage() {
         textButtonDelete="Excluir"
         imagem="public/assets/trashCanImage.png"
         onConfirm={handleConfirmDelete}
-        NameStyle={{
-          fontSize: '15px',
-          fontWeight: 'Bold',
-          fotFamily: 'Inter',
-          color: 'white',
-          display: 'flex',
-          marginLeft: '17vw',
-          flex: '1',
-        }}
 
       />
 
@@ -149,15 +140,7 @@ export function PartsStorage() {
         textButtonDelete="Sair"
         imagem="public/assets/logoutImage.png"
         onConfirm={() => console.log("Usuário deslogado!")}
-        NameStyle={{
-          fontSize: '15px',
-          fontWeight: 'Bold',
-          fotFamily: 'Inter',
-          color: 'white',
-          display: 'flex',
-          marginLeft: '20vw',
-          flex: '1',
-        }}
+        
       />
     </div>
   );

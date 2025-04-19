@@ -15,23 +15,23 @@ const defaultButtonStyle = {
   color: '#FF0D0D',
   border: 'none',
   borderRadius: '4px',
-  padding: '4px 10px',
+  padding: '8px 28px',
   cursor: 'pointer',
-  fontSize: '12px',
+  fontSize: '16px',
   display: 'flex',
   alignItems: 'center',
-  gap: '3px',
+  gap: '7px',
 };
 
 const defaultImageStyle = {
-  width: '16px',
-  height: '16px',
+  width: '20px',
+  height: '20px',
   marginRight: '7px',
 };
 
 const defaultTextStyle = {
-  fontSize: '12px',
-  fontWeight: 'bold',
+  fontSize: '16px',
+  fontWeight: '600',
 };
 
 export default CustomButton;
