@@ -2,15 +2,21 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    margin: 0rem 2rem 2rem 0;
-    gap: 1rem;
+    justify-content: space-between;
+    width: 110%;
+    height: 12%;
+    /* background-color: blue; */
+    border-bottom: solid 3px black;
+    margin-top: -1% ;
+   
   }
-  
   .header-text {
     display: flex;
     flex-direction: column;
+    margin-left: 2%;
+    /* background-color: aquamarine; */
+    margin-right: -10%;
   }
-  
   .header-title {
     color: #000;
     font-family: Inter;
@@ -32,6 +38,7 @@
     text-align: start;
     letter-spacing: 0.4px;
     margin: 0.3rem 0 0 0;
+
   }
 
   .header-actions {
@@ -39,7 +46,8 @@
     align-items: center;
     gap: 0.75rem;
     justify-content: center;
-    align-items: center;    
+    align-items: center; 
+
   }
   
   .buttons-group {

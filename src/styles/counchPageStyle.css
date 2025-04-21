@@ -1,0 +1,126 @@
+.Counch-Page{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+}
+
+.SideBar-Counch {
+  display: flex;
+  flex-direction: column;
+  width: 6.5%;
+  height: 100%;
+  background-color: rgba(7, 64, 218, 1);
+  align-items: center;
+  cursor: pointer;
+  transition: width 0.3s ease; 
+  z-index: 5;
+  img{
+    width: 60%;;
+    object-fit: cover;
+    margin-top: 3%;
+  }
+}
+
+.SideBar-Counch.expanded {
+  width: 15%; 
+}
+
+.SideBar-Counch .navigation-list {
+  list-style: none;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease; 
+}
+
+.SideBar-Counch .navigation-list li {
+  margin-top: 10px 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease; 
+}
+
+.SideBar-Counch.expanded .navigation-list {
+  opacity: 1;
+} 
+.main-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  
+}
+.sofa-grid{
+  margin-top:2%;
+  display:grid;
+  width: 105%;
+  height: 90%;
+  gap:2%;
+  grid-template-columns: repeat(4,1fr);
+  /* background-color: blue; */
+}
+.imput-card{
+  position: absolute;
+  top: 5%;
+  left: 6%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border-radius: 40%;
+}
+.custom-checkbox {
+  display: inline-block;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  user-select: none;
+  position: absolute;
+  top: 9%;
+  right: 83%;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 24px;
+  width: 24px;
+  background-color: #eee;
+  border-radius: 6px; /* canto arredondado */
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo quando marcado */
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #0057ff; /* azul igual ao da imagem */
+}
+
+/* Desenho do check */
+.checkmark::after {
+  content: "";
+  display: none;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Mostrar o check quando marcado */
+.custom-checkbox input:checked ~ .checkmark::after {
+  display: block;
+}

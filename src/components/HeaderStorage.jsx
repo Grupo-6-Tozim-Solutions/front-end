@@ -20,7 +20,7 @@ const HeaderStorage = ({ title, subtitle, onFilter, onAdd, onHistory, onLogout }
             onClick={onFilter}
             backgroundColor="rgba(201, 231, 255, 1)"
             textColor="rgba(7, 64, 218, 1)"
-            width="120px"
+            width="190px"
           />
           <ButtonStorage
             icon="../../public/assets/addPartsStorage.png"
@@ -28,7 +28,7 @@ const HeaderStorage = ({ title, subtitle, onFilter, onAdd, onHistory, onLogout }
             onClick={onAdd}
             backgroundColor="rgba(201, 231, 255, 1)"
             textColor="rgba(7, 64, 218, 1)"
-            width="150px"
+            width="220px"
           />
         </div>
 
