@@ -1,52 +1,38 @@
-import { useState } from "react";
+import React from "react";
 
 const SideBar = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   return (
-    <div>
-      <div
-        style={{
-          ...styles.sidebar,
-          width: isExpanded ? "10vw" : "3vw",
-        }}
-      >
-        <div style={styles.container}>
-          {/* A logo agora é o botão de expandir/recolher */}
-          <div onClick={toggleExpand} style={styles.logoButton}>
-            <img
-              src="public/assets/logo.png"
-              alt="Logo"
-              style={{ width: "100%", height: "auto", cursor: "pointer" }}
-            />
-          </div>
-          <ul style={styles.navLinks}>
-            <li style={styles.navItem}>
-              <a href="#home" style={styles.navLink}>
-                Home
-              </a>
-            </li>
-            <li style={styles.navItem}>
-              <a href="#about" style={styles.navLink}>
-                Peças
-              </a>
-            </li>
-            <li style={styles.navItem}>
-              <a href="#services" style={styles.navLink}>
-                Sofás
-              </a>
-            </li>
-            <li style={styles.navItem}>
-              <a href="#contact" style={styles.navLink}>
-                Dashboard
-              </a>
-            </li>
-          </ul>
+    <div style={styles.sidebar}>
+      <div style={styles.container}>
+        <div style={styles.logo}>
+          <img
+            src="public/assets/logo.png"
+            alt="Logo"
+            style={{ width: "100%", height: "auto" }}
+          />
         </div>
+        <ul style={styles.navLinks}>
+          <li style={styles.navItem}>
+            <a href="#home" style={styles.navLink}>
+              Home
+            </a>
+          </li>
+          <li style={styles.navItem}>
+            <a href="#about" style={styles.navLink}>
+              Peças
+            </a>
+          </li>
+          <li style={styles.navItem}>
+            <a href="#services" style={styles.navLink}>
+              Sofás
+            </a>
+          </li>
+          <li style={styles.navItem}>
+            <a href="#contact" style={styles.navLink}>
+              Dashboard
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   );
@@ -58,10 +44,9 @@ const styles = {
     top: 0,
     left: 0,
     height: "100vh",
+    width: "250px",
     backgroundColor: "#0740DA",
     color: "#fff",
-    overflowX: "hidden",
-    transition: "width 0.3s ease-in-out",
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
@@ -75,12 +60,11 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
-    height: "100vh",
   },
 
-  logoButton: {
-    width: "2.8vw",
-    cursor: "pointer", // Adiciona o cursor de ponteiro para indicar que é clicável
+  logo: {
+    width: "100%",
+    marginBottom: "20px",
   },
 
   navLinks: {

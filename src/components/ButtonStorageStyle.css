@@ -12,7 +12,7 @@
     font-size: 16px;
     font-weight: 600;
     white-space: nowrap;
-  }
+}
   
   .custom-button-storage:hover {
     filter: brightness(1.1);
