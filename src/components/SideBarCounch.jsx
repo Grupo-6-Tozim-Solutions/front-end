@@ -16,17 +16,22 @@ const SideBarCounch = () => {
   ];
 
   return (
-    <div className={`SideBar-Counch ${isExpanded ? 'expanded' : ''}`}>
-      <img src="../../public/assets/box.png" onClick={handleExpand} alt="Expand Sidebar" className="expand-icon" />
-      <ul className="navigation-list">
-        {menuItems.map((item, index) => (
-          <li key={index} className="menu-item">
-            <img src={item.icon} alt={`${item.title} Icon`} />
-            {isExpanded && <span>{item.title}</span>}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <div className={`SideBar-Counch ${isExpanded ? 'expanded' : ''}`}>
+        <img src="../../public/assets/box.png" onClick={handleExpand} alt="Expand Sidebar" className="expand-icon" />
+        <ul className="navigation-list">
+          {menuItems.map((item, index) => (
+            <li key={index} className="menu-item">
+              <img src={item.icon} alt={`${item.title} Icon`} className='icone'/>
+              {isExpanded && <span>{item.title}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="main-content">
+        {/* Main content will be placed here */}
+      </div>
+    </>
   );
 };
 

@@ -8,16 +8,25 @@ const HeaderStorage = ({
   filterText, 
   filterIcon, 
   filterWidth, 
-  produceText, 
-  produceCount, 
+  filterBackgroundColor, 
+  filterTextColor, 
+  addText, 
+  addIcon, 
+  addWidth, 
+  addBackgroundColor, 
+  addTextColor, 
   historyText, 
   historyIcon, 
   historyWidth, 
+  historyBackgroundColor, 
+  historyTextColor, 
   logoutText, 
   logoutIcon, 
   logoutWidth, 
+  logoutBackgroundColor, 
+  logoutTextColor, 
   onFilter, 
-  onProduce, 
+  onAdd, 
   onHistory, 
   onLogout 
 }) => {
@@ -34,13 +43,18 @@ const HeaderStorage = ({
             icon={filterIcon}
             label={filterText}
             onClick={onFilter}
-            backgroundColor="rgba(201, 231, 255, 1)"
-            textColor="rgba(7, 64, 218, 1)"
+            backgroundColor={filterBackgroundColor}
+            textColor={filterTextColor}
             width={filterWidth}
           />
-          <button className="produce-button" onClick={onProduce}>
-            <span className="quantity">({produceCount})</span> Produzir <span className="arrow">▲</span>
-          </button>
+          <ButtonStorage
+            icon={addIcon}
+            label={addText}
+            onClick={onAdd}
+            backgroundColor={addBackgroundColor}
+            textColor={addTextColor}
+            width={addWidth}
+          />
         </div>
         <DividerPartsStorage />
         <div className="buttons-group">
@@ -48,16 +62,16 @@ const HeaderStorage = ({
             icon={historyIcon}
             label={historyText}
             onClick={onHistory}
-            backgroundColor="rgba(201, 231, 255, 1)"
-            textColor="rgba(7, 64, 218, 1)"
+            backgroundColor={historyBackgroundColor}
+            textColor={historyTextColor}
             width={historyWidth}
           />
           <ButtonStorage
             icon={logoutIcon}
             label={logoutText}
             onClick={onLogout}
-            backgroundColor="rgba(255, 201, 201, 1)"
-            textColor="rgba(255, 13, 13, 1)"
+            backgroundColor={logoutBackgroundColor}
+            textColor={logoutTextColor}
             width={logoutWidth}
           />
         </div>

@@ -2,6 +2,12 @@
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
+  color: black;
+    input{
+      background-color: white;
+      color: black;
+      text-align: center;
+    }
  }
 
 /* .logo {

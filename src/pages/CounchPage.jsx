@@ -14,6 +14,14 @@ const CounchPage = () => {
     { id: 6, name: "Sofá Tipo 1", image: genericImage },
     { id: 7, name: "Sofá Tipo 2", image: genericImage },
     { id: 8, name: "Sofá Tipo 3", image: genericImage },
+    { id: 1, name: "Sofá Tipo 1", image: genericImage },
+    { id: 2, name: "Sofá Tipo 2", image: genericImage },
+    { id: 3, name: "Sofá Tipo 3", image: genericImage },
+    { id: 4, name: "Sofá Tipo 4", image: genericImage },
+    { id: 5, name: "Sofá Tipo 5", image: genericImage },
+    { id: 6, name: "Sofá Tipo 1", image: genericImage },
+    { id: 7, name: "Sofá Tipo 2", image: genericImage },
+    { id: 8, name: "Sofá Tipo 3", image: genericImage },
 
   ];
 
@@ -24,18 +32,30 @@ const CounchPage = () => {
         <HeaderStorage
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
-          filterText="adicionar"
+          filterText="Adicionar"
           filterIcon="../../public/assets/addPartsStorage.png"
-          filterWidth="19vw"
-          historyText="Ver Histórico"
+          filterWidth="10vw"
+          filterBackgroundColor="#C9E7FF"
+          filterTextColor="rgba(7, 64, 218, 1)"
+          onFilter={() => alert("Filtros aplicados")}
+          addText="() Produzir   "
+         
+          addWidth="15vw"
+          addBackgroundColor="rgba(201, 231, 255, 1)"
+          addTextColor="rgba(7, 64, 218, 1)"
+          onAdd={() => alert("Adicionar Sofá")}
+          historyText="Histórico de Sofás"
           historyIcon="../../public/assets/historyPartsStorage.png"
-          historyWidth="250px"
+          historyWidth="18vw"
+          historyBackgroundColor="rgba(201, 231, 255, 1)"
+          historyTextColor="rgba(7, 64, 218, 1)"
           logoutText="Sair"
           logoutIcon="../../public/assets/logoutPartsStorage.png"
-          logoutWidth="120px"
-          onFilter={() => alert("Filtros")}
-          onHistory={() => alert("Histórico")}
-          onLogout={() => alert("Sair")}
+          logoutWidth="10vw"
+          logoutBackgroundColor="rgba(255, 201, 201, 1)"
+          logoutTextColor="rgba(255, 13, 13, 1)"
+          onHistory={() => alert("Histórico de Sofás")}
+          onLogout={() => alert("Sair do sistema")}
         />
         <div className="sofa-grid">
           {sofas.map((sofa) => (

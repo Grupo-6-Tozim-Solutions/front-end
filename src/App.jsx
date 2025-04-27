@@ -7,6 +7,7 @@ import CouchPage from './pages/CounchPage'
 import './App.css';
 import AccessibilityButton from './components/AccessibilityButton';
 import { useEffect } from 'react';
+import SideBarCounch from './components/SideBarCounch'
 
 function App() {
   useEffect(() => {
@@ -31,10 +32,8 @@ function App() {
 
   return (
     <div>
-
-     <CouchPage/>
-
-
+      {/* <CouchPage /> */}
+      <PartsStorage />
     </div>
   );
 }
