@@ -100,16 +100,11 @@ export function PartsStorage() {
             const name = peca.nome;
             const quantity = peca.quantidade;
 
-            let warningLevel = null;
-            if (quantity < 6) warningLevel = "critical";
-            else if (quantity < 15) warningLevel = "warning";
+            // Define o nível de alerta como "critical" se a quantidade for menor que o limite de estoque baixo
+            const warningLevel = quantity < peca.lowStockThreshold ? "critical" : null;
 
-            const status =
-              warningLevel === "critical"
-                ? "Estoque próximo do fim!"
-                : warningLevel === "warning"
-                ? "Estoque baixo"
-                : "Estoque OK";
+            // Define o status como "Estoque Baixo" se o nível de alerta for "critical"
+            const status = warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
 
             const formattedId = String(peca.id).padStart(3, "0");
             const formattedQty = String(quantity).padStart(2, "0");
@@ -121,7 +116,7 @@ export function PartsStorage() {
                 name={name}
                 quantity={formattedQty}
                 status={status}
-                warningLevel={warningLevel}
+                warningLevel={warningLevel} // Passa o nível de alerta para estilização
                 index={index}
                 onEdit={() => handleEdit(peca)}
                 onDelete={() => handleDelete(peca)}
@@ -135,7 +130,16 @@ export function PartsStorage() {
       <AddPartModal
         isOpen={isAddModalOpen}
         onClose={() => setAddModalOpen(false)}
-        onSave={(newPart) => setPecas((prevPecas) => [...prevPecas, newPart])} // Adiciona uma nova peça
+        onSave={(newPart) => {
+          // Calcula o próximo ID com base no maior ID existente
+          const nextId = Math.max(...pecas.map((peca) => peca.id), 0) + 1;
+
+          // Adiciona o ID ao objeto da nova peça
+          const partWithId = { id: nextId, ...newPart };
+
+          // Atualiza o estado com a nova peça
+          setPecas((prevPecas) => [...prevPecas, partWithId]);
+        }}
       />
 
       <FilterModal
