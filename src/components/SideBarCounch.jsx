@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/counchPageStyle.css';
+import '../styles/sideBarStyle.css'; // Updated to use the new sidebar styles
 
 const SideBarCounch = () => {
   const [isExpanded, setIsExpanded] = useState(false);

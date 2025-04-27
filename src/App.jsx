@@ -2,13 +2,9 @@
 import './App.css'
 import Navbar from './components/SideBar'
 import PartsStorage from './pages/PartsStorage'
-
 import FilterModal from './components/FilterModal'
 import CouchPage from './pages/CounchPage'
-
-
 import './App.css';
-import PartsStorage from './pages/PartsStorage';
 import AccessibilityButton from './components/AccessibilityButton';
 import { useEffect } from 'react';
 
@@ -38,11 +34,6 @@ function App() {
 
      <CouchPage/>
 
-     {/* <LoginPage/> */}
-     <PartsStorage/>
-
-
-      <PartsStorage />
 
     </div>
   );
