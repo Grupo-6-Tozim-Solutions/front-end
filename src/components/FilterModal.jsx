@@ -1,46 +1,103 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CustomButton from './CustomButton';
+import TitleModal from './TittleModal';
 
-const FilterModal = ({ isOpen, onClose, onApply }) => {
+const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
+    const [filterName, setFilterName] = useState('');
+    const [filterByLargest, setFilterByLargest] = useState(false);
+    const [filterBySmallest, setFilterBySmallest] = useState(false);
+
+    const handleApplyFilter = () => {
+        // Define os critérios de filtro
+        const criteria = {
+            name: filterName,
+            order: filterByLargest ? 'largest' : filterBySmallest ? 'smallest' : null,
+        };
+
+        // Envia os critérios de filtro para o componente pai
+        onFilter(criteria);
+        onApply(); // Fecha o modal
+    };
+
+    const handleCheckboxChange = (type) => {
+        if (type === 'largest') {
+            setFilterByLargest(!filterByLargest);
+            setFilterBySmallest(false); // Desativa o outro filtro
+        } else if (type === 'smallest') {
+            setFilterBySmallest(!filterBySmallest);
+            setFilterByLargest(false); // Desativa o outro filtro
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
         <div style={overlayStyle} onClick={onClose}>
             <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-                <div style={nameContainer}>
-                    <span style={NameStyle}>Filtros</span>
-                    <button style={buttonExitStyle} onClick={onClose}>
-                        <img
-                            src="public/assets/btnClose.png"
-                            alt="btnClose"
-                            style={{ width: '15px', height: '15px', padding: '0px' }}
-                        />
-                    </button>
-                </div>
+                <TitleModal
+                    modalName="Filtros"
+                    NameStyle={NameStyle}
+                    nameContainer={nameContainer}
+                    onClose={onClose}
+                />
                 <div style={containerModal}>
-                    <span style={{ fontWeight: '600', color: 'black', marginRight: '240px', display: 'flex' }}>
+                    <span
+                        style={{
+                            fontWeight: '600',
+                            color: 'black',
+                            marginRight: '240px',
+                            display: 'flex',
+                            fontSize: '20px',
+                        }}
+                    >
                         Filtrar por:
                     </span>
                     <label style={labelStyle}>
-                        <img style={{ width: '2vw', height: '3.5vh', marginTop: '3px' }} src="./assets/lupa.png" alt="" />
-                        <input style={inputStyle} type="text" placeholder='Filtrar por nome' />
+                        <img
+                            style={{ width: '2vw', height: '3.5vh', marginTop: '3px' }}
+                            src="./assets/lupa.png"
+                            alt=""
+                        />
+                        <input
+                            style={inputStyle}
+                            type="text"
+                            placeholder="Filtrar por nome"
+                            value={filterName}
+                            onChange={(e) => setFilterName(e.target.value)}
+                        />
                         <div style={buttonContainerStyle}>
                             <CustomButton
                                 imageSrc="./assets/imagePlus.png"
                                 imageStyle={imageButtonPlus}
                                 text="Aplicar"
                                 buttonStyle={btnAddStyle}
-                                onClick={onApply}
+                                onClick={handleApplyFilter}
                             />
                         </div>
                     </label>
                     <div style={containerFilter}>
                         <label style={checkboxLabelStyle}>
-                            <input type="checkbox" style={checkboxStyle} />
+                            <input
+                                type="checkbox"
+                                style={{
+                                    ...checkboxStyle,
+                                    ...(filterByLargest ? checkboxCheckedStyle : {}),
+                                }}
+                                checked={filterByLargest}
+                                onChange={() => handleCheckboxChange('largest')}
+                            />
                             <span style={checkboxTextStyle}>Maior Número de peças</span>
                         </label>
                         <label style={checkboxLabelStyle}>
-                            <input type="checkbox" style={checkboxStyle} />
+                            <input
+                                type="checkbox"
+                                style={{
+                                    ...checkboxStyle,
+                                    ...(filterBySmallest ? checkboxCheckedStyle : {}),
+                                }}
+                                checked={filterBySmallest}
+                                onChange={() => handleCheckboxChange('smallest')}
+                            />
                             <span style={checkboxTextStyle}>Menor Número de peças</span>
                         </label>
                     </div>
@@ -67,78 +124,67 @@ const overlayStyle = {
 const modalStyle = {
     background: 'white',
     borderRadius: '10px',
-    width: '45vw',
-    height: '37vh',
+    width: '41vw',
+    height: '32vh',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
 };
 
 const containerModal = {
-    width: '100%',
+    width: '75%',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
-    alignItems: 'center'
-
-}
+    gap: '25px',
+    marginTop: '2%',
+};
 
 const nameContainer = {
     display: 'flex',
     alignItems: 'center',
     marginBottom: '10px',
     width: '100%',
-    height: '7vh',
+    height: '8vh',
     background: '#0740DA',
     borderRadius: '10px 10px 0px 0px',
-
 };
-
-const buttonExitStyle = {
-    background: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '10px',
-
-};
-
 
 const NameStyle = {
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: 'Bold',
     fotFamily: 'Inter',
     color: 'white',
     display: 'flex',
-    marginLeft: '21vw',
+    marginLeft: '15.5vw',
     flex: '1',
-}
+};
 
 const inputStyle = {
-    height: '3vh',
-    borderRadius: '3px',
-    border: '1.3px solid black',
-    marginTop: '3px'
-}
+    height: '3.5vh',
+    borderRadius: '6px',
+    border: '2px solid black',
+    marginTop: '3px',
+    width: '55%',
+};
 
 const labelStyle = {
     display: 'flex',
     gap: '10px',
-    width: '50%',
-    marginRight: '90px'
-}
-
+    width: '100%',
+    marginRight: '90px',
+};
 
 const buttonContainerStyle = {
     display: 'flex',
     marginLeft: '20px',
-
 };
 
 const imageButtonPlus = {
     display: 'flex',
-    width: '13px',
-    height: '13px',
+    width: '15px',
+    height: '16px',
     marginRight: '7px',
 };
 
@@ -147,7 +193,7 @@ const btnAddStyle = {
     color: '#0740DA',
     border: 'none',
     borderRadius: '4px',
-    padding: '4px 10px',
+    padding: '4px 22px',
     cursor: 'pointer',
     fontSize: '12px',
     display: 'flex',
@@ -157,22 +203,19 @@ const btnAddStyle = {
 
 const containerFilter = {
     display: 'flex',
-    gap: '30px',
+    gap: '13%',
     alignItems: 'center',
-    fontWeight: 'regular'
-
-}
-
-
+    fontWeight: 'regular',
+};
 
 const checkboxLabelStyle = {
     display: 'flex',
     alignItems: 'center',
     gap: '4px',
     cursor: 'pointer',
-  };
-  
-  const checkboxStyle = {
+};
+
+const checkboxStyle = {
     appearance: 'none', // Remove o estilo padrão do checkbox
     width: '16px',
     height: '16px',
@@ -183,11 +226,17 @@ const checkboxLabelStyle = {
     backgroundColor: 'white',
     display: 'inline-block',
     position: 'relative',
+};
+
+const checkboxCheckedStyle = {
+    backgroundColor: '#0740DA',
   };
-  
-  const checkboxTextStyle = {
-    fontSize: '11px',
+
+
+
+const checkboxTextStyle = {
+    fontSize: '15px',
     fontWeight: '400',
-  };
+};
 
 export default FilterModal;

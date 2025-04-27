@@ -1,39 +1,52 @@
 import React, { useState } from 'react';
 import '../LoginPage.css';
-import LoginForm from '../components/LoginForm';
 import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
-import LoginHelp from '../components/LoginHelp';
-import LoginPage from './LoginPage';
 import CadastroForm from '../components/CadastroForm';
 import LinkCadastro from '../components/LinkCadastro';
+import axios from 'axios';
+
 const CadastroPage = () => {
   const [loginStatus, setLoginStatus] = useState({ type: null, message: '' });
 
-  const handleLogin = (credentials) => {
-    // Simulação de login - substituir por chamada real à API
-    console.log('Credenciais:', credentials);
-    if (credentials.credencial && credentials.senha) {
-      setLoginStatus({ type: 'sucesso', message: 'Login realizado com sucesso!' });
-    } else {
-      setLoginStatus({ type: 'erro', message: 'Credenciais inválidas' });
+  const handleCadastro = ({ nome, email, senha, senhaConfirmacao }) => {
+    if (senha !== senhaConfirmacao) {
+      setLoginStatus({ type: 'erro', message: 'As senhas não coincidem.' });
+      return;
     }
+
+    axios.post('http://localhost:8080/usuario', {
+      nome,
+      email,
+      senha,
+    })
+    .then((response) => {
+      console.log('Resposta do servidor:', response);
+      if (response.status === 200 || response.status === 201) {
+        setLoginStatus({ type: 'sucesso', message: 'Cadastro realizado com sucesso!' });
+      }
+    })
+    .catch((error) => {
+      console.error('Erro na requisição:', error);
+      const errorMessage =
+        error.response?.data?.message || 'Erro ao realizar cadastro.';
+      setLoginStatus({ type: 'erro', message: errorMessage });
+    });
   };
 
   return (
     <div className="login-page">
       <LoginLeft />
       <div className="right-panel">
-    <TituloLogin titulo="Cadastro"/>
+        <TituloLogin titulo="Cadastro" />
         <CadastroForm 
-          onLogin={handleLogin} 
+          onCadastro={handleCadastro} 
           loginStatus={loginStatus} 
-        /> <div className="div-link-cadastro">
-         <LinkCadastro textoBase="Já possui conta?" textoLink="Clique aqui."/>
-
-         </div>
-      </div> 
-      
+        />
+        <div className="div-link-cadastro">
+          <LinkCadastro textoBase="Já possui conta?" textoLink="Clique aqui." />
+        </div>
+      </div>
     </div>
   );
 };

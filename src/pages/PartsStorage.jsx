@@ -3,24 +3,36 @@ import HeaderStorage from "../components/HeaderStorage";
 import TableStructurePartsStorage from "../components/TableStructurePartsStorage";
 import SideBar from "../components/SideBar";
 import TableRowPartsStorage from "../components/TableRowPartsStorage";
-import pecas from "../data/DataMock";
 import AddPartModal from "../components/AddPartModal";
 import FilterModal from "../components/FilterModal";
 import EditPartModal from "../components/EditPartModal";
 import ConfirmationModal from "../components/ConfirmationModals";
 import "./PartsStorageStyle.css";
+import initialPecas from "../data/DataMock"; // Importa os dados iniciais
 
 export function PartsStorage() {
+  const [pecas, setPecas] = useState(initialPecas); // Estado para armazenar as peças
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [selectedPart, setSelectedPart] = useState(null);
+  const [filterCriteria, setFilterCriteria] = useState({ name: "", order: null }); // Critérios de filtro
 
   const handleEdit = (peca) => {
-    setSelectedPart(peca);
-    setEditModalOpen(true);
+    setSelectedPart(peca); // Define a peça selecionada
+    setEditModalOpen(true); // Abre o modal de edição
+  };
+
+  const handleSaveEdit = (updatedPart) => {
+    // Atualiza a peça editada na lista
+    setPecas((prevPecas) =>
+      prevPecas.map((peca) =>
+        peca.id === updatedPart.id ? updatedPart : peca
+      )
+    );
+    setEditModalOpen(false); // Fecha o modal de edição
   };
 
   const handleDelete = (peca) => {
@@ -32,21 +44,41 @@ export function PartsStorage() {
     setLogoutModalOpen(true);
   };
 
-  const handleApplyFilter = () => {
-    console.log("Filtro aplicado!");
-    setFilterModalOpen(false);
-  };
-
-  const handleSave = (updatedPart) => {
-    console.log("Peça salva:", updatedPart);
-    setEditModalOpen(false);
-    setAddModalOpen(false);
+  const handleApplyFilter = (filteredCriteria) => {
+    setFilterCriteria(filteredCriteria); // Atualiza os critérios de filtro
+    setFilterModalOpen(false); // Fecha o modal de filtro
   };
 
   const handleConfirmDelete = () => {
-    console.log("Peça excluída:", selectedPart);
-    setConfirmationModalOpen(false);
+    // Remove a peça selecionada
+    setPecas((prevPecas) => prevPecas.filter((peca) => peca.id !== selectedPart.id));
+    setConfirmationModalOpen(false); // Fecha o modal de confirmação
   };
+
+  // Ordena e filtra os itens dinamicamente
+  const getFilteredAndSortedParts = () => {
+    let sortedParts = [...pecas];
+
+    // Ordenar por maior ou menor número de peças
+    if (filterCriteria.order === "largest") {
+      sortedParts.sort((a, b) => b.quantidade - a.quantidade);
+    } else if (filterCriteria.order === "smallest") {
+      sortedParts.sort((a, b) => a.quantidade - b.quantidade);
+    }
+
+    // Filtrar por nome (não oculta itens, mas prioriza os correspondentes)
+    if (filterCriteria.name) {
+      sortedParts = sortedParts.sort((a, b) => {
+        const aMatches = a.nome.toLowerCase().includes(filterCriteria.name.toLowerCase());
+        const bMatches = b.nome.toLowerCase().includes(filterCriteria.name.toLowerCase());
+        return bMatches - aMatches; // Itens correspondentes aparecem primeiro
+      });
+    }
+
+    return sortedParts;
+  };
+
+  const filteredParts = getFilteredAndSortedParts();
 
   return (
     <div className="SideBarContainer">
@@ -64,7 +96,7 @@ export function PartsStorage() {
         <div className="table-container">
           <TableStructurePartsStorage />
 
-          {pecas.map((peca, index) => {
+          {filteredParts.map((peca, index) => {
             const name = peca.nome;
             const quantity = peca.quantidade;
 
@@ -103,20 +135,22 @@ export function PartsStorage() {
       <AddPartModal
         isOpen={isAddModalOpen}
         onClose={() => setAddModalOpen(false)}
-        onSave={handleSave}
+        onSave={(newPart) => setPecas((prevPecas) => [...prevPecas, newPart])} // Adiciona uma nova peça
       />
 
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setFilterModalOpen(false)}
-        onApply={handleApplyFilter}
+        onApply={() => setFilterModalOpen(false)}
+        items={pecas} // Passa os itens originais para o modal
+        onFilter={handleApplyFilter} // Lida com os critérios de filtro
       />
 
       <EditPartModal
         isOpen={isEditModalOpen}
         onClose={() => setEditModalOpen(false)}
         partData={selectedPart}
-        onSave={handleSave}
+        onSave={handleSaveEdit}
       />
 
       <ConfirmationModal
@@ -128,16 +162,6 @@ export function PartsStorage() {
         textButtonDelete="Excluir"
         imagem="public/assets/trashCanImage.png"
         onConfirm={handleConfirmDelete}
-        NameStyle={{
-          fontSize: '15px',
-          fontWeight: 'Bold',
-          fotFamily: 'Inter',
-          color: 'white',
-          display: 'flex',
-          marginLeft: '17vw',
-          flex: '1',
-        }}
-
       />
 
       <ConfirmationModal
@@ -149,15 +173,6 @@ export function PartsStorage() {
         textButtonDelete="Sair"
         imagem="public/assets/logoutImage.png"
         onConfirm={() => console.log("Usuário deslogado!")}
-        NameStyle={{
-          fontSize: '15px',
-          fontWeight: 'Bold',
-          fotFamily: 'Inter',
-          color: 'white',
-          display: 'flex',
-          marginLeft: '20vw',
-          flex: '1',
-        }}
       />
     </div>
   );
