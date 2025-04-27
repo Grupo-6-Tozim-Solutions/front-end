@@ -12,7 +12,11 @@
   max-width: 1200px;
   margin: -0.1rem auto;
   box-sizing: border-box;
+  
+
 }
+
+
 
 
 .col-id, .col-name, .col-quantity, .col-status {
