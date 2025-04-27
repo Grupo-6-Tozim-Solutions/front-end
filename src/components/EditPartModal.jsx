@@ -342,6 +342,7 @@ const boxInputButton = {
     alignItems: 'center',
     marginTop: '15px',
     width: '100%',
+    textAlign: 'center',
   
 };
 
@@ -459,7 +460,8 @@ const inputStyle = {
     width: '4vw',
     height: '6vh',
     display: 'flex',
-    marginBottom:'20px'
+    marginBottom:'20px',
+    textAlign: 'center',
     
 };
 
