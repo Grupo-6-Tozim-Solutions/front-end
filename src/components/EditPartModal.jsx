@@ -1,139 +1,229 @@
-import React from 'react';
-import CustomButton from './CustomButton';
+import React, { useState, useEffect } from "react";
+import CustomButton from "./CustomButton";
 
 const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
-    if (!isOpen) return null;
+  if (!isOpen || !partData) return null; // Garante que o modal só será renderizado se estiver aberto e partData estiver definido
 
-    const handleSave = () => {
-        onSave(partData);
-        onClose();
-    };
+  const [initialQuantity, setInitialQuantity] = useState(partData.quantity || 0);
+  const [addedQuantity, setAddedQuantity] = useState(0); // Quantidade adicionada
+  const [removedQuantity, setRemovedQuantity] = useState(0); // Quantidade removida
+  const [addInputValue, setAddInputValue] = useState(""); // Valor do input para adicionar
+  const [removeInputValue, setRemoveInputValue] = useState(""); // Valor do input para remover
 
-    return (
-        <div style={overlayStyle} onClick={onClose}>
-            <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-                <div style={nameContainer}>
-                    <div style={boxNameContainer}>
-                    <div style={idPartStyle}>
-                        <span style={idTextStyle}>ID</span>
-                        <span style={idStyle}>001</span>
-                    </div>
-                    <span style={NameStyle}>Nome da Peça</span>
-                    <button style={buttonExitStyle} onClick={onClose}>
-                        <img
-                            src="public/assets/btnClose.png"
-                            alt="btnClose"
-                            style={{ width: '16px', height: '16px' }}
-                        />
-                    </button>
-                    </div>
-                </div>
-                <div style={editPartContainer}>
-                    <div style={actions}>
-                        <span style={tittleActions}>Ações</span>
-                        <div style={containerActionStyle}>
-                        <label style={labelStyle}>
-                            <span style={textOperationStyle}>Digite a quantidade de peças que deseja adicionar:</span>
-                            <div style={boxInputButton}>
-                                <input
-                                    type="number"
-                                    defaultValue={partData.quantity}
-                                    style={inputStyle}
-                                    onChange={(e) => (partData.quantity = e.target.value)}
-                                />
-                                <CustomButton
-                                    imageSrc="./assets/imagePlus.png"
-                                    imageStyle={imageButtonPlus}
-                                    text="Adicionar"
-                                    buttonStyle={btnAddStyle}
-                                    onClick={() => console.log('Adicionar clicado')}
-                                />
-                                <div style={{display:'flex', position:'absolute'}}>
-                                    <img src="./assets/Line.png" alt="" style={{ width: '94%', height: '1.5px',  marginTop: '55px',}} />
-                                </div>
-                            </div>
-                        </label>
-                        <label style={labelStyle}>
-                            <span style={textOperationStyle}>Digite a quantidade de peças que deseja retirar:</span>
-                            <div style={boxInputButton}>
-                                <input
-                                    type="number"
-                                    defaultValue={partData.quantity}
-                                    style={inputStyle}
-                                    onChange={(e) => (partData.quantity = e.target.value)}
-                                />
-                                <CustomButton
-                                    imageSrc="./assets/imageSub.png"
-                                    imageStyle={imageButtonSub}
-                                    text="Remover"
-                                    buttonStyle={btnRemoveStyle}
-                                    onClick={() => console.log('Remover clicado')}
-                                />
-                                <div style={{display:'flex', position:'absolute'}}>
-                                    <img src="./assets/Line.png" alt="" style={{ width: '94%', height: '1.5px',  marginTop: '55px',  }} />
-                                </div>
-                            </div>
-                        </label>
-                        <div style={containerButtons}>
-                            <CustomButton
-                                imageSrc="./assets/check.png"
-                                text="Salvar"
-                                buttonStyle={{ backgroundColor: '#B8FFAA', color: '#16BC00' }}
-                                onClick={handleSave}
-                            />
-                            <CustomButton
-                                imageSrc="./assets/trashCanImage.png"
-                                text="Descartar Alterações"
-                                buttonStyle={btnRemoveStyle}
-                                onClick={() => console.log('Excluir clicado')}
-                            />
-                        </div>
-                        </div>
-                    </div>
-                    <div style={summary}>
-                        <span style={tittleSumaryStyle}>
-                            Resumo
-                        </span>
-                        <img src="./assets/Line.png" alt="" style={{ width: '96%', height: '0.8px', marginTop: '4px' }} />
-                        <div style={{ display: 'flex', gap: '5px', marginTop: '22px' }}>
-                            <span style={{fontWeight:'600', fontSize: '17px'}} >Peça:</span>
-                            <span style={{fontSize: '13px', marginTop:'5px', fontWeight:'500'}} >Peça Sinistra</span> 
-                        </div>
-                        <div style={boxContainer}>
-                            <div style={boxResult}>
-                                <span style={informationOperationStyle}>Qtd Anterior:</span> 
-                                <span style={PointsStyle}>..............................................</span>
-                                <span style={resultOperationStyle}>40</span>   
-                            </div>
-                            <div style={boxResult}>
-                                <span style={informationOperationStyle} >Entrada:</span> 
-                                <span style={PointsStyle}>........................................................</span>
-                                <span style={resultOperationStyle}>40</span>   
-                            </div>
-                            <div style={boxResult}>
-                                <span style={informationOperationStyle}>Saída:</span> 
-                                <span style={PointsStyle}>............................................................</span>
-                                <span style={resultOperationStyle}>00</span>  
-                            </div> 
-                        </div>
-                        <div style={{marginTop: '35%', display: 'flex', flexDirection: 'column', gap: '5px'}}>
-                            <span style={{fontSize: '12px', fontFamily: 'Inter', lineHeight: '14px' }} >
-                            Esse registro poderá ser encontrado no seu <span style={{color:'#0740DA', fontWeight:'bold', fontStyle:'italic', margin:'0' }}>Histórico</span>
-                            </span>
-                            <div style={{width:'100%'}}>
-                            <img src="./assets/Line.png" alt="" style={{ width: '100%', height: '0.8px', margin:'0', display: 'block' }} />
-                            </div>
-                            <span style={{fontSize: '20px', fontFamily:'Inter', fontWeight:'600', marginRight:'75%', marginTop:'0px'}} >
-                                Total:80
-                            </span>
-                        </div>
-                
-                    </div>
-                </div>
+  useEffect(() => {
+    if (partData && partData.quantity !== undefined) {
+      setInitialQuantity(partData.quantity); // Atualiza a quantidade inicial
+      setAddedQuantity(0); // Reseta a quantidade adicionada
+      setRemovedQuantity(0); // Reseta a quantidade removida
+    }
+  }, [partData]);
+
+  const handleAdd = () => {
+    const valueToAdd = parseInt(addInputValue || 0, 10); // Converte para número
+    if (valueToAdd > 0) {
+      setAddedQuantity((prev) => prev + valueToAdd);
+      setAddInputValue(""); // Limpa o campo de entrada
+    }
+  };
+
+  const handleRemove = () => {
+    const valueToRemove = parseInt(removeInputValue || 0, 10); // Converte para número
+    if (valueToRemove > 0) {
+      setRemovedQuantity((prev) => prev + valueToRemove);
+      setRemoveInputValue(""); // Limpa o campo de entrada
+    }
+  };
+
+  const handleSave = () => {
+    const finalQuantity = initialQuantity + addedQuantity - removedQuantity;
+    onSave({ ...partData, quantity: finalQuantity }); // Atualiza a peça com a nova quantidade
+    onClose();
+  };
+
+  const totalQuantity = initialQuantity + addedQuantity - removedQuantity; // Calcula o total
+
+  return (
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+        <div style={nameContainer}>
+          <div style={boxNameContainer}>
+            <div style={idPartStyle}>
+              <span style={idTextStyle}>ID</span>
+              <span style={idStyle}>{partData.id}</span>
             </div>
+            <span style={NameStyle}>{partData.nome}</span>
+            <button style={buttonExitStyle} onClick={onClose}>
+              <img
+                src="public/assets/btnClose.png"
+                alt="btnClose"
+                style={{ width: "16px", height: "16px" }}
+              />
+            </button>
+          </div>
         </div>
-    );
+        <div style={editPartContainer}>
+          <div style={actions}>
+            <span style={tittleActions}>Ações</span>
+            <div style={containerActionStyle}>
+              <label style={labelStyle}>
+                <span style={textOperationStyle}>
+                  Digite a quantidade de peças que deseja adicionar:
+                </span>
+                <div style={boxInputButton}>
+                  <input
+                    type="number"
+                    value={addInputValue}
+                    style={inputStyle}
+                    onChange={(e) => setAddInputValue(e.target.value)} // Atualiza o estado local para adicionar
+                  />
+                  <CustomButton
+                    imageSrc="./assets/imagePlus.png"
+                    imageStyle={imageButtonPlus}
+                    text="Adicionar"
+                    buttonStyle={btnAddStyle}
+                    onClick={handleAdd}
+                  />
+                </div>
+              </label>
+              <label style={labelStyle}>
+                <span style={textOperationStyle}>
+                  Digite a quantidade de peças que deseja retirar:
+                </span>
+                <div style={boxInputButton}>
+                  <input
+                    type="number"
+                    value={removeInputValue}
+                    style={inputStyle}
+                    onChange={(e) => setRemoveInputValue(e.target.value)} // Atualiza o estado local para remover
+                  />
+                  <CustomButton
+                    imageSrc="./assets/imageSub.png"
+                    imageStyle={imageButtonSub}
+                    text="Remover"
+                    buttonStyle={btnRemoveStyle}
+                    onClick={handleRemove}
+                  />
+                </div>
+              </label>
+              <div style={containerButtons}>
+                <CustomButton
+                  imageSrc="./assets/check.png"
+                  text="Salvar"
+                  buttonStyle={{ backgroundColor: "#B8FFAA", color: "#16BC00" }}
+                  onClick={handleSave}
+                />
+                <CustomButton
+                  imageSrc="./assets/trashCanImage.png"
+                  text="Descartar Alterações"
+                  buttonStyle={btnRemoveStyle}
+                  onClick={onClose}
+                />
+              </div>
+            </div>
+          </div>
+          <div style={summary}>
+            <span style={tittleSumaryStyle}>Resumo</span>
+            <img
+              src="./assets/Line.png"
+              alt=""
+              style={{ width: "96%", height: "0.8px", marginTop: "4px" }}
+            />
+            <div style={{ display: "flex", gap: "5px", marginTop: "22px" }}>
+              <span style={{ fontWeight: "600", fontSize: "17px" }}>Peça:</span>
+              <span
+                style={{
+                  fontSize: "13px",
+                  marginTop: "5px",
+                  fontWeight: "500",
+                }}
+              >
+                {partData.nome}
+              </span>
+            </div>
+            <div style={boxContainer}>
+              <div style={boxResult}>
+                <span style={informationOperationStyle}>Qtd Anterior:</span>
+                <span style={PointsStyle}>
+                  ..............................................
+                </span>
+                <span style={resultOperationStyle}>{initialQuantity}</span>
+              </div>
+              <div style={boxResult}>
+                <span style={informationOperationStyle}>Entrada:</span>
+                <span style={PointsStyle}>
+                  ........................................................
+                </span>
+                <span style={resultOperationStyle}>{addedQuantity}</span>
+              </div>
+              <div style={boxResult}>
+                <span style={informationOperationStyle}>Saída:</span>
+                <span style={PointsStyle}>
+                  ............................................................
+                </span>
+                <span style={resultOperationStyle}>{removedQuantity}</span>
+              </div>
+            </div>
+            <div
+              style={{
+                marginTop: "35%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "5px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "12px",
+                  fontFamily: "Inter",
+                  lineHeight: "14px",
+                }}
+              >
+                Esse registro poderá ser encontrado no seu{" "}
+                <span
+                  style={{
+                    color: "#0740DA",
+                    fontWeight: "bold",
+                    fontStyle: "italic",
+                    margin: "0",
+                  }}
+                >
+                  Histórico
+                </span>
+              </span>
+              <div style={{ width: "100%" }}>
+                <img
+                  src="./assets/Line.png"
+                  alt=""
+                  style={{
+                    width: "100%",
+                    height: "0.8px",
+                    margin: "0",
+                    display: "block",
+                  }}
+                />
+              </div>
+              <span
+                style={{
+                  fontSize: "20px",
+                  fontFamily: "Inter",
+                  fontWeight: "600",
+                  marginRight: "75%",
+                  marginTop: "0px",
+                }}
+              >
+                Total: {totalQuantity}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
+
+
+
+// Estilos (mantidos do código anterior)
 
 // Estilos
 const overlayStyle = {

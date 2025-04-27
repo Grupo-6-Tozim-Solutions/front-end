@@ -1,57 +1,61 @@
 import React, { useState } from 'react';
 import PasswordInput from './PasswordInput';
-import RememberMeCheckbox from './RememberMeCheckbox';
 import LoginButton from './LoginButton';
-import LoginHelp from './LoginHelp';
 import LoginStatus from './LoginStatus';
-const LoginForm = ({ onLogin, loginStatus }) => {
-  const [credencial, setCredencial] = useState('');
+
+const CadastroForm = ({ onCadastro, loginStatus }) => {
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-    const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
-  
+  const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ credencial, senha, senhaConfirmacao });
+    onCadastro({ nome, email, senha, senhaConfirmacao });
   };
 
   return (
-    
     <form onSubmit={handleSubmit} className="login-form" noValidate>
-      <label htmlFor="input-credencial">Nome:</label>
+      <label htmlFor="input-nome">Nome:</label>
       <input
+        className="input-credencial"
         type="text"
-        id="input-credencial"
-        value={credencial}
-        onChange={(e) => setCredencial(e.target.value)}
+        id="input-nome"
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
         placeholder="Digite seu nome aqui."
         required
       />
-      <label htmlFor="input-credencial">Email:</label>
+
+      <label htmlFor="input-email">Email:</label>
       <input
-        type="text"
-        id="input-credencial"
-        value={credencial}
-        onChange={(e) => setCredencial(e.target.value)}
+        className="input-credencial"
+        type="email"
+        id="input-email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         placeholder="Digite seu email aqui."
         required
       />
 
       <label htmlFor="input-senha">Senha:</label>
-      <PasswordInput 
+      <PasswordInput
+        id="input-senha"
         value={senha}
         onChange={(e) => setSenha(e.target.value)}
       />
 
-    <label htmlFor="input-senha" className='input-confirma-senha'>Confirmar Senha:</label>
-      <PasswordInput 
+      <label htmlFor="input-senha-confirmacao">Confirmar Senha:</label>
+      <PasswordInput
+        id="input-senha-confirmacao"
         value={senhaConfirmacao}
         onChange={(e) => setSenhaConfirmacao(e.target.value)}
-      />   
-      <LoginButton entrar="Criar Conta"/>
+      />
+
+      <LoginButton entrar="Criar Conta" />
       <LoginStatus type={loginStatus.type} message={loginStatus.message} />
-     
     </form>
   );
 };
 
-export default LoginForm;
+export default CadastroForm;

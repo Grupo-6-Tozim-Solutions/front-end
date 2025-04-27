@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PasswordInput = ({ value, onChange }) => {
+const PasswordInput = ({ id, value, onChange }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -11,7 +11,8 @@ const PasswordInput = ({ value, onChange }) => {
     <div className="password-container">
       <input
         type={showPassword ? 'text' : 'password'}
-        id="input-senha"
+        id={id} // Agora cada PasswordInput tem seu id correto
+        className="input-credencial" // mantém padrão do input normal
         value={value}
         onChange={onChange}
         placeholder="Digite sua senha aqui."

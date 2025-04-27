@@ -78,7 +78,7 @@ font-size: 110%;
     font-size: 1.1vw;
 }
 
-.login-form #input-credencial,
+.login-form .input-credencial,
 .login-form #input-senha {
     width: 96%;
     height: 100%;

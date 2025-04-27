@@ -133,7 +133,7 @@ const inputQtdStyle = {
     borderRadius: '5px',
     border: '2px solid black',
     padding: '6px',
-    width: '30px',
+    width: '50px',
     fontSize: '14px',
 };
 
@@ -181,8 +181,8 @@ const alertInfoStyle = {
 
 const boxBtn = {
     display: 'flex',
-    marginLeft: '75%',
-    marginTop: '60px',
+    marginLeft: '65%',
+    marginTop: '65px',
 };
 
 const imageButtonPlus = {

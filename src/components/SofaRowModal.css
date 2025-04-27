@@ -1,0 +1,77 @@
+.sofa-row {
+    display: flex;
+    align-items: center;
+    height: 12.5%;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 7px;;
+  }
+  
+  .container-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+  }
+  
+  .text-style {
+    overflow: hidden; /* Garante que o texto não ultrapasse o limite */
+    text-overflow: ellipsis; /* Adiciona os "..." ao final do texto */
+    white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+    max-width: 250px; /* Define o limite máximo de largura */
+    display: inline-block; /* Garante que o comportamento de truncamento funcione */
+    text-align: left; /* Alinha o texto à esquerda */
+    font-size: 16px;
+    font-weight:400
+}
+
+/* Adiciona um fundo com bolinhas para preencher o espaço */
+.text-style::after {
+    content: ''; /* Remove as bolinhas */
+    display: none;
+
+}
+  
+  .container-buttons-style {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: space-between;
+  
+  }
+  
+  .container-buttons-operation {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .fast-forward-button {
+    background-color: #D2FFC9;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    outline: none;
+  }
+
+  .fast-forward-button:hover {
+    background-color: #0fd64195; /* azul mais forte */
+    transform: scale(1.05);
+    transition: background-color 0.3s, transform 0.2s;
+    outline: none;
+    border: none;
+  }
+  
+  .icon-style {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .quantity-style {
+    margin: 0 8px;
+    font-weight: bold;
+  }
+  
