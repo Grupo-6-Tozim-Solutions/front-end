@@ -14,18 +14,30 @@ const CounchPage = () => {
     { id: 6, name: "Sofá Tipo 1", image: genericImage },
     { id: 7, name: "Sofá Tipo 2", image: genericImage },
     { id: 8, name: "Sofá Tipo 3", image: genericImage },
+
   ];
 
   return (
-    <div className="Counch-Page">
+    <div className="Counch-Page" >
       <SideBarCouch />
       <div className="main-container">
         <HeaderStorage
-          title="Gerenciamento de Sofas"
-          subtitle={"Tozine Solutions"}
+          title="Gerenciamento de Sofás"
+          subtitle="Tozine Solutions"
+          filterText="adicionar"
+          filterIcon="../../public/assets/addPartsStorage.png"
+          filterWidth="19vw"
+          historyText="Ver Histórico"
+          historyIcon="../../public/assets/historyPartsStorage.png"
+          historyWidth="250px"
+          logoutText="Sair"
+          logoutIcon="../../public/assets/logoutPartsStorage.png"
+          logoutWidth="120px"
+          onFilter={() => alert("Filtros")}
           onHistory={() => alert("Histórico")}
+          onLogout={() => alert("Sair")}
         />
-        <div className="sofa-grid" >
+        <div className="sofa-grid">
           {sofas.map((sofa) => (
             <SofaCard key={sofa.id} name={sofa.name} image={sofa.image} />
           ))}

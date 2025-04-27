@@ -1,23 +1,21 @@
 .header-container {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 110%;
-    height: 12%;
-    /* background-color: blue; */
-    border-bottom: solid 3px black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 110%;
+    height: 15%;
+    border-bottom: solid 2px black;
     margin-top: -1% ;
-   
+    height: 10vh;
   }
-  .header-text {
-    display: flex;
-    flex-direction: column;
-    margin-left: 2%;
-    /* background-color: aquamarine; */
+.header-text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
     margin-right: -10%;
-  }
-  .header-title {
+}
+
+.header-title {
     color: #000;
     font-family: Inter;
     font-size: 32px;
@@ -26,10 +24,12 @@
     line-height: normal;
     letter-spacing: 0.64px;
     margin: 0;
-  }
-  
-  .header-subtitle {
-    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header-subtitle {
+  color: #000;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
@@ -38,41 +38,70 @@
     text-align: start;
     letter-spacing: 0.4px;
     margin: 0.3rem 0 0 0;
+}
 
-  }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  
+}
 
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    justify-content: center;
-    align-items: center; 
+.buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+ 
+.header-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
 
-  }
+.add-button {
+  background-color: #CCE5FF;
+  color: #007BFF;
+  font-weight: bold;
+}
+
+.produce-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #CCE5FF;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #007BFF;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.produce-button:hover {
+  background-color: #B0D4F1;
+}
+
+.quantity {
+  margin-right: 10px;
+}
+
+.arrow {
+  margin-left: 10px;
+}
+
+.history-button {
+  background-color: #CCE5FF;
+}
+
+.exit-button {
+  background-color: #FFCCCC;
   
-  .buttons-group {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .header-buttons {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .header-buttons button {
-    font-family: "Inter";
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: 0.48px;
-    height: 40px;
-    text-align: center;
-  }
-  
+}

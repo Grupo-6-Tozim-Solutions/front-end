@@ -1,51 +1,70 @@
 .Counch-Page{
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: row;
-}
+  /* width: 100vw; */
+  display: flex;
+  flex-direction: row;
 
+}
+.expand-icon{
+  width: 60%;
+  object-fit: cover;
+  margin-top: 3%;
+}
 .SideBar-Counch {
   display: flex;
   flex-direction: column;
-  width: 6.5%;
-  height: 100%;
+  width: 6%;
+  height: 100vw;
   background-color: rgba(7, 64, 218, 1);
   align-items: center;
   cursor: pointer;
   transition: width 0.3s ease; 
-  z-index: 5;
-  img{
-    width: 60%;;
-    object-fit: cover;
-    margin-top: 3%;
-  }
+  z-index: 5; 
+
 }
 
 .SideBar-Counch.expanded {
-  width: 15%; 
+  width: 13%; 
 }
 
 .SideBar-Counch .navigation-list {
   list-style: none;
   padding: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease; 
+  margin-top: 35%; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 80%;
 }
 
-.SideBar-Counch .navigation-list li {
-  margin-top: 10px 0;
-  font-size: 14px;
+.menu-item {
   display: flex;
   align-items: center;
+  gap: 10px;
   color: white;
+  font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease; 
+  transition: color 0.3s ease;
 }
 
-.SideBar-Counch.expanded .navigation-list {
-  opacity: 1;
-} 
+.menu-item img {
+  width: 30px;
+  height: 30px;
+}
+
+.SideBar-Counch.expanded .menu-item {
+  justify-content: flex-start;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.SideBar-Counch.expanded .menu-item span {
+  display: inline;
+}
+
+.SideBar-Counch .menu-item span {
+  display: none;
+}
 .main-container {
   display: flex;
   height: 100%;
@@ -62,6 +81,8 @@
   height: 90%;
   gap:2%;
   grid-template-columns: repeat(4,1fr);
+
+row-gap: 6%;
   /* background-color: blue; */
 }
 .imput-card{
@@ -118,9 +139,167 @@
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+
 }
 
 /* Mostrar o check quando marcado */
 .custom-checkbox input:checked ~ .checkmark::after {
   display: block;
+  
+}
+
+.sofa-card {
+  width: 99%;
+  background-color: #cac9c9; 
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 10px;
+  cursor: pointer;
+  height: 30vh;
+  transition: border 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+
+.sofa-card:hover {
+  border: 2px solid blue;
+}
+
+.sofa-image {
+  width: 75%;
+  height: auto;
+}
+
+.sofa-name {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.sofa-selected {
+  margin-top: 10px;
+}
+
+.sofa-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #cce5ff;
+  padding: 5px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.quantity {
+  margin-right: 10px;
+}
+
+.produce-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #CCE5FF;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #007BFF;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.produce-button:hover {
+  background-color: #B0D4F1;
+}
+
+.arrow {
+  margin-left: 10px;
+}
+
+.quantity-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.decrement-button,
+.increment-button {
+  background-color: #cce5ff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-button {
+  background-color: #fffac9;
+  color: #ff8e0d;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.delete-button {
+  background-color: #ffc9c9;
+  color: #ff0d0d;
+  border: none;
+  width: 50%;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  align-items: center;
+    img{
+      width: 15%;
+    }
+    
+}
+
+.proportional-button {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin: 5px;
+  align-items: center;
+
+  img{
+    height: 85%;
+    width: auto;
+  }
+}
+
+.icon-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 60%; 
+}
+
+.icon-list img {
+  width: 60%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.icon-list img:hover {
+  transform: scale(1.1);
 }
