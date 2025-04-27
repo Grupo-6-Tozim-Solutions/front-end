@@ -1,7 +1,7 @@
 .SideBar-Counch {
     display: flex;
     flex-direction: column;
-    width: 6%;
+    width: 6vw;
     height: 100vw;
     background-color: rgba(7, 64, 218, 1);
     align-items: center;
@@ -11,7 +11,7 @@
   }
   
   .SideBar-Counch.expanded {
-    width: 13%; 
+    width: 13vw; 
   }
   
   .expand-icon {
