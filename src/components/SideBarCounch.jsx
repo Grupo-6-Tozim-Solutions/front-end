@@ -10,7 +10,7 @@ const SideBarCounch = () => {
 
   const menuItems = [
     { icon: "../../public/assets/sofaIcone.png", title: "Sofás" },
-    { icon: "../../public/assets/prego-ico.png", title: "Estoque de Peças" },
+    { icon: "../../public/assets/prego-ico.png", title: "Peças" },
     { icon: "../../public/assets/dash-ico.png", title: "Dashboard" },
     { icon: "../../public/assets/ai-ico.png", title: "Chat" },
   ];

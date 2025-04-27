@@ -54,9 +54,8 @@ const SofaCard = ({ name, image }) => {
                 e.stopPropagation();
                 handleProduce();
               }}
-            >
-              <img src="../../public/assets/filterPartsStorage.png" alt="Produzir" />
-              Produzir!
+           >
+            ({quantity})  Produzir!   
             </button>
           <div className="quantity-controls">
             <button
@@ -66,7 +65,7 @@ const SofaCard = ({ name, image }) => {
                 decrementQuantity();
               }}
             >
-              ⬇
+              <img src="../../public/assets/decrement.svg" alt="" />
             </button>
             <span>{quantity}</span>
             <button
@@ -76,7 +75,7 @@ const SofaCard = ({ name, image }) => {
                 incrementQuantity();
               }}
             >
-              ⬆
+              <img src="../../public/assets/increment.svg" alt="" />
             </button>
           </div>
           <div className="action-buttons">
@@ -88,7 +87,7 @@ const SofaCard = ({ name, image }) => {
                 handleEdit();
               }}
             >
-              ✏️ Editar
+              <img src="../../public/assets/lapisIcone.png"></img> Editar
             </button>
             <button
               className="delete-button proportional-button"
