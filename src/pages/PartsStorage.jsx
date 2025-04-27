@@ -21,8 +21,18 @@ export function PartsStorage() {
   const [filterCriteria, setFilterCriteria] = useState({ name: "", order: null }); // Critérios de filtro
 
   const handleEdit = (peca) => {
-    setSelectedPart(peca);
-    setEditModalOpen(true);
+    setSelectedPart(peca); // Define a peça selecionada
+    setEditModalOpen(true); // Abre o modal de edição
+  };
+
+  const handleSaveEdit = (updatedPart) => {
+    // Atualiza a peça editada na lista
+    setPecas((prevPecas) =>
+      prevPecas.map((peca) =>
+        peca.id === updatedPart.id ? updatedPart : peca
+      )
+    );
+    setEditModalOpen(false); // Fecha o modal de edição
   };
 
   const handleDelete = (peca) => {
@@ -37,16 +47,6 @@ export function PartsStorage() {
   const handleApplyFilter = (filteredCriteria) => {
     setFilterCriteria(filteredCriteria); // Atualiza os critérios de filtro
     setFilterModalOpen(false); // Fecha o modal de filtro
-  };
-
-  const handleSave = (newPart) => {
-    // Adiciona a nova peça à lista
-    const newId = pecas.length > 0 ? Math.max(...pecas.map((peca) => peca.id)) + 1 : 1;
-    setPecas((prevPecas) => [
-      ...prevPecas,
-      { id: newId, ...newPart }, // Gera um novo ID e adiciona os valores da nova peça
-    ]);
-    setAddModalOpen(false); // Fecha o modal de adição
   };
 
   const handleConfirmDelete = () => {
@@ -135,7 +135,7 @@ export function PartsStorage() {
       <AddPartModal
         isOpen={isAddModalOpen}
         onClose={() => setAddModalOpen(false)}
-        onSave={handleSave} // Passa a função para salvar a nova peça
+        onSave={(newPart) => setPecas((prevPecas) => [...prevPecas, newPart])} // Adiciona uma nova peça
       />
 
       <FilterModal
@@ -150,7 +150,7 @@ export function PartsStorage() {
         isOpen={isEditModalOpen}
         onClose={() => setEditModalOpen(false)}
         partData={selectedPart}
-        onSave={handleSave}
+        onSave={handleSaveEdit}
       />
 
       <ConfirmationModal

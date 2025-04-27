@@ -4,15 +4,15 @@ import CustomButton from "./CustomButton";
 const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
   if (!isOpen || !partData) return null; // Garante que o modal só será renderizado se estiver aberto e partData estiver definido
 
-  const [initialQuantity, setInitialQuantity] = useState(partData.quantity || 0);
+  const [initialQuantity, setInitialQuantity] = useState(0); // Quantidade inicial
   const [addedQuantity, setAddedQuantity] = useState(0); // Quantidade adicionada
   const [removedQuantity, setRemovedQuantity] = useState(0); // Quantidade removida
   const [addInputValue, setAddInputValue] = useState(""); // Valor do input para adicionar
   const [removeInputValue, setRemoveInputValue] = useState(""); // Valor do input para remover
 
   useEffect(() => {
-    if (partData && partData.quantity !== undefined) {
-      setInitialQuantity(partData.quantity); // Atualiza a quantidade inicial
+    if (partData && partData.quantidade !== undefined) {
+      setInitialQuantity(partData.quantidade); // Atualiza a quantidade inicial
       setAddedQuantity(0); // Reseta a quantidade adicionada
       setRemovedQuantity(0); // Reseta a quantidade removida
     }
@@ -36,7 +36,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
 
   const handleSave = () => {
     const finalQuantity = initialQuantity + addedQuantity - removedQuantity;
-    onSave({ ...partData, quantity: finalQuantity }); // Atualiza a peça com a nova quantidade
+    onSave({ ...partData, quantidade: finalQuantity }); // Atualiza a peça com a nova quantidade
     onClose();
   };
 
@@ -207,8 +207,9 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                   fontSize: "20px",
                   fontFamily: "Inter",
                   fontWeight: "600",
-                  marginRight: "75%",
                   marginTop: "0px",
+                  width: "100%",
+                  display: "flex",
                 }}
               >
                 Total: {totalQuantity}
@@ -220,7 +221,6 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
     </div>
   );
 };
-
 
 
 // Estilos (mantidos do código anterior)

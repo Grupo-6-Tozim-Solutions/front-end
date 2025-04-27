@@ -7,7 +7,7 @@ function App() {
   return (
     <div>
      {/* <LoginPage/> */}
-     <CadastroPage/>
+     <PartsStorage/>
     </div>
   )
 }
