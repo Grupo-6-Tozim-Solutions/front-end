@@ -11,6 +11,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
   const [leftItems, setLeftItems] = useState(pecas); // Usa o JSON do DataMock como estado inicial
   const [rightItems, setRightItems] = useState([]); // Dados dinâmicos para o RightContainer
   const [isImageSelected, setIsImageSelected] = useState(false); // Estado para rastrear se uma imagem foi selecionada
+  const [sofaName, setSofaName] = useState("Novo Sofá"); // Estado para o nome do sofá
 
   const fileInputRef = useRef(null); // Referência para o input de arquivo
 
@@ -47,11 +48,12 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         {/* Título */}
         <TitleModal
-          modalName="Nome do Sofá"
+          modalName={sofaName} // Passa o nome do sofá
           NameStyle={nameStyle}
           nameContainer={nameContainerStyle}
           isEditable={true}
           onClose={onClose}
+          onNameChange={(newName) => setSofaName(newName)} // Atualiza o nome do sofá
         />
 
         {/* Conteúdo */}
@@ -127,7 +129,13 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                 text="Salvar"
                 buttonStyle={saveButtonStyle}
                 imageStyle={iconFooterStyle}
-                onClick={onSave}
+                onClick={() => {
+                  const newSofa = {
+                    name: sofaName, // Usa o nome do sofá atualizado
+                    image: "../../public/assets/generic-sofa.png", // Substitua por uma imagem selecionada, se necessário
+                  };
+                  onSave(newSofa); // Chama a função onSave com os dados do novo sofá
+                }}
                 enableHover={true} // Habilita o efeito de hover
               />
             </div>
@@ -137,6 +145,8 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     </div>
   );
 };
+
+
 // Estilos
 const overlayStyle = {
   position: 'fixed',
@@ -190,7 +200,7 @@ const contentStyle = {
   width: '95%',
   alignItems: 'center',
   justifyContent: 'center',
-  
+
 };
 
 const summaryHeaderStyle = {
@@ -250,7 +260,7 @@ const saveButtonStyle = {
   width: '38%',
   justifyContent: 'center',
   height: '100%',
-  outline:'none'
+  outline: 'none'
 };
 
 const iconFooterStyle = {
