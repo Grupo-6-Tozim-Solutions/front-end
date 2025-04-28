@@ -36,7 +36,7 @@ const CounchPage = () => {
           filterBackgroundColor="#C9E7FF"
           filterTextColor="rgba(7, 64, 218, 1)"
           onFilter={() => setAddSofaModalOpen(true)}
-          addText="Produzir"
+          addText="()Produzir"
           addWidth="15vw"
           addBackgroundColor="rgba(201, 231, 255, 1)"
           addTextColor="rgba(7, 64, 218, 1)"
