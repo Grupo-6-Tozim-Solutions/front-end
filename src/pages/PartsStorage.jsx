@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Importa o hook useNavigate
 import HeaderStorage from "../components/HeaderStorage";
 import TableStructurePartsStorage from "../components/TableStructurePartsStorage";
 import SideBar from "../components/SideBar";
@@ -24,6 +25,8 @@ export function PartsStorage() {
     order: null,
   }); // Critérios de filtro
 
+  const navigate = useNavigate(); // Inicializa o hook useNavigate
+
   const handleEdit = (peca) => {
     setSelectedPart(peca); // Define a peça selecionada
     setEditModalOpen(true); // Abre o modal de edição
@@ -44,6 +47,11 @@ export function PartsStorage() {
 
   const handleLogout = () => {
     setLogoutModalOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    setLogoutModalOpen(false);
+    navigate('/login'); // Redireciona para a página de login
   };
 
   const handleApplyFilter = (filteredCriteria) => {
@@ -92,7 +100,6 @@ export function PartsStorage() {
     <div className="parts-storage">
       
           <SideBarCounch />
-    
       
         <div className="main-container">
           <HeaderStorage
@@ -123,7 +130,7 @@ export function PartsStorage() {
             onFilter={() => setFilterModalOpen(true)}
             onAdd={() => setAddModalOpen(true)}
             onHistory={() => alert("Histórico")}
-            onLogout={handleLogout}
+            onLogout={() => setLogoutModalOpen(true)} // Abre o modal de confirmação
           />
           <div className="table-container">
             <TableStructurePartsStorage />
@@ -210,7 +217,7 @@ export function PartsStorage() {
         message="Você precisará fazer login novamente."
         textButtonDelete="Sair"
         imagem="public/assets/logoutImage.png"
-        onConfirm={() => console.log("Usuário deslogado!")}
+        onConfirm={handleLogoutConfirm} // Redireciona para login ao confirmar
       />
     </div>
   );

@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Im
 import PartsStorage from './pages/PartsStorage';
 import CounchPage from './pages/CounchPage';
 import AccessibilityButton from './components/AccessibilityButton';
+import LoginPage from './pages/LoginPage';
+import CadastroPage from './pages/CadastroPage';
 import { useEffect } from 'react';
 function App() {
   useEffect(() => {
@@ -25,12 +27,23 @@ function App() {
     };
   }, []);
 
- 
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<PartsStorage />} /> {/* Default route */}
-        <Route path="/counch" element={<CounchPage />} /> {/* Route for CounchPage */}
+        {/* Rota inicial para CadastroPage */}
+        <Route path="/" element={<CadastroPage />} />
+
+        {/* Rota para LoginPage */}
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Rota para PartsStorage */}
+        <Route path="/parts-storage" element={<PartsStorage />} />
+
+        {/* Rota para CounchPage */}
+        <Route path="/counch" element={<CounchPage />} />
+
+        {/* Redirecionamento padrão caso a rota não exista */}
       </Routes>
     </Router>
   );

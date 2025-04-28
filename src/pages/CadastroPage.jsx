@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa o hook useNavigate
 import '../LoginPage.css';
 import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
@@ -8,13 +9,14 @@ import axios from 'axios';
 
 const CadastroPage = () => {
   const [loginStatus, setLoginStatus] = useState({ type: null, message: '' });
+  const navigate = useNavigate(); // Inicializa o hook useNavigate
 
   const handleCadastro = ({ nome, email, senha, senhaConfirmacao }) => {
     if (senha !== senhaConfirmacao) {
       setLoginStatus({ type: 'erro', message: 'As senhas não coincidem.' });
       return;
     }
-
+  
     axios.post('http://localhost:8080/usuario', {
       nome,
       email,
@@ -24,6 +26,7 @@ const CadastroPage = () => {
       console.log('Resposta do servidor:', response);
       if (response.status === 200 || response.status === 201) {
         setLoginStatus({ type: 'sucesso', message: 'Cadastro realizado com sucesso!' });
+        navigate('/login'); // Redireciona para a página de login
       }
     })
     .catch((error) => {

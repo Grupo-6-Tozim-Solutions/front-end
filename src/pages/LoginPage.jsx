@@ -1,37 +1,68 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa o hook useNavigate
 import '../LoginPage.css';
 import LoginForm from '../components/LoginForm';
 import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
-import LoginHelp from '../components/LoginHelp';
 import LinkCadastro from '../components/LinkCadastro';
+import axios from 'axios'; // Importa o axios para requisições HTTP
+
 const LoginPage = () => {
   const [loginStatus, setLoginStatus] = useState({ type: null, message: '' });
-
+  const [isLoading, setIsLoading] = useState(false); // Estado para controlar o carregamento
+  const navigate = useNavigate(); // Inicializa o hook useNavigate
+  
   const handleLogin = (credentials) => {
-    // Simulação de login - substituir por chamada real à API
-    console.log('Credenciais:', credentials);
-    if (credentials.credencial && credentials.senha) {
-      setLoginStatus({ type: 'sucesso', message: 'Login realizado com sucesso!' });
-    } else {
-      setLoginStatus({ type: 'erro', message: 'Credenciais inválidas' });
-    }
+    console.log('Enviando credenciais:', {
+      email: credentials.credencial,
+      senha: credentials.senha,
+    });
+  
+    setIsLoading(true); // Ativa o estado de carregamento
+  
+    axios.get('http://localhost:8080/usuario/login', {
+      params: {
+        email: credentials.credencial,
+        senha: credentials.senha,
+      },
+    })
+    .then((response) => {
+      console.log('Resposta do servidor:', response);
+      if (response.status === 200) {
+        setLoginStatus({ type: 'sucesso', message: 'Login realizado com sucesso!' });
+        setTimeout(() => {
+          navigate('/counch'); // Redireciona para a página CounchPage após 2 segundos
+        }, 2000);
+      }
+    })
+    .catch((error) => {
+      console.error('Erro na autenticação:', error);
+      const errorMessage =
+        error.response?.data?.message || 'Erro ao realizar login.';
+      setLoginStatus({ type: 'erro', message: errorMessage });
+    })
+    .finally(() => {
+      setIsLoading(false); // Desativa o estado de carregamento
+    });
   };
 
   return (
     <div className="login-page">
       <LoginLeft />
       <div className="right-panel">
-    <TituloLogin titulo="Bem-vindo"/>
-        <LoginForm 
-          onLogin={handleLogin} 
-          loginStatus={loginStatus} 
-        />
-      <div className="div-link-cadastro">
-      <LinkCadastro textoBase="Problemas no Logins?" textoLink="Clique aqui."/>
+        <TituloLogin titulo="Bem-vindo" />
+        {isLoading ? (
+          <div className="loading">Carregando...</div> // Indicador de carregamento
+        ) : (
+          <LoginForm 
+            onLogin={handleLogin} 
+            loginStatus={loginStatus} 
+          />
+        )}
+        <div className="div-link-cadastro">
+          <LinkCadastro textoBase="Problemas no Login?" textoLink="Clique aqui." />
+        </div>
       </div>
-      </div> 
-      
     </div>
   );
 };

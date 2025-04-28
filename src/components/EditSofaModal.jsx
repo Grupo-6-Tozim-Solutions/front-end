@@ -7,21 +7,18 @@ import LeftWrapper from './LeftWrapper';
 import RightContainer from './RightContainer';
 import pecas from '../data/DataMock'; // Importa o JSON do DataMock
 
-const EditSofaModal = ({ isOpen, onClose, onSave }) => {
-  const [leftItems, setLeftItems] = useState(pecas); // Usa o JSON do DataMock como estado inicial
-  const [rightItems, setRightItems] = useState([]); // Dados dinâmicos para o RightContainer
+const EditSofaModal = ({ isOpen, onClose, onSave, title }) => { // Recebe o título como prop
+  const [leftItems, setLeftItems] = useState(pecas);
+  const [rightItems, setRightItems] = useState([]);
 
   const handleFastForward = (item) => {
-    // Adiciona o item ao RightContainer
     setRightItems((prev) => {
-      // Evita duplicados no resumo
       if (prev.some((i) => i.id === item.id)) return prev;
       return [...prev, item];
     });
   };
 
   const handleDelete = (id) => {
-    // Remove o item do RightContainer
     setRightItems((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -32,7 +29,7 @@ const EditSofaModal = ({ isOpen, onClose, onSave }) => {
       <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
         {/* Título */}
         <TitleModal
-          modalName="Editar Sofá"
+          modalName={title} // Exibe apenas o nome do sofá
           NameStyle={nameStyle}
           nameContainer={nameContainerStyle}
           isEditable={true}
@@ -41,18 +38,17 @@ const EditSofaModal = ({ isOpen, onClose, onSave }) => {
 
         {/* Conteúdo */}
         <div style={contentStyle}>
-          {/* Lista esquerda */}
           <LeftWrapper>
             {leftItems.map((item, index) => (
               <SofaRowModal
                 key={item.id}
-                text={item.nome} // Usa a propriedade "nome" do DataMock
-                quantity={item.quantidade} // Usa a propriedade "quantidade" do DataMock
+                text={item.nome}
+                quantity={item.quantidade}
                 onDecrease={() =>
                   setLeftItems((prev) =>
                     prev.map((i) =>
                       i.id === item.id
-                        ? { ...i, quantidade: Math.max(Number(i.quantidade) - 1, 0) } // Garante que quantidade seja um número
+                        ? { ...i, quantidade: Math.max(Number(i.quantidade) - 1, 0) }
                         : i
                     )
                   )
@@ -61,7 +57,7 @@ const EditSofaModal = ({ isOpen, onClose, onSave }) => {
                   setLeftItems((prev) =>
                     prev.map((i) =>
                       i.id === item.id
-                        ? { ...i, quantidade: Number(i.quantidade) + 1 } // Garante que quantidade seja um número
+                        ? { ...i, quantidade: Number(i.quantidade) + 1 }
                         : i
                     )
                   )
@@ -72,16 +68,15 @@ const EditSofaModal = ({ isOpen, onClose, onSave }) => {
             ))}
           </LeftWrapper>
 
-          {/* Resumo à direita */}
           <RightContainer>
             <div style={summaryHeaderStyle}>Resumo</div>
             <div style={summaryContentStyle}>
               {rightItems.map((item) => (
                 <SofaSummaryRowModal
                   key={item.id}
-                  text={item.nome} // Usa a propriedade "nome" do DataMock
-                  quantidade={item.quantidade} // Usa a propriedade "quantidade" do DataMock
-                  isEditMode={true} // Permite edição no resumo
+                  text={item.nome}
+                  quantidade={item.quantidade}
+                  isEditMode={true}
                   onDelete={() => handleDelete(item.id)}
                 />
               ))}
@@ -103,7 +98,6 @@ const EditSofaModal = ({ isOpen, onClose, onSave }) => {
     </div>
   );
 };
-
 // Estilos
 const overlayStyle = {
   position: 'fixed',

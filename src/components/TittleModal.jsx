@@ -61,8 +61,8 @@ const titleWrapperStyle = {
   alignItems: 'center', // Espaço entre o título e o botão de edição
   justifyContent: 'center',
   width: '100%',
-  marginLeft: '10%',
-  gap: '2%',
+  marginLeft: '8%',
+  gap: '1%',
 
 };
 
@@ -70,6 +70,7 @@ const buttonExitStyle = {
   background: 'transparent',
   border: 'none',
   cursor: 'pointer',
+  padding: '18px',
 };
 
 const buttonEditStyle = {

@@ -43,6 +43,7 @@ const SofaRowModal = ({ text, quantity: initialQuantity, onDecrease, onIncrease,
               onClick={handleDecrease}
               name="decrease-button"
               backgroundColor="#FFC9C9"
+              buttonStyle={{ padding: '6px 8px 6px 6px', width: '25px', height: '25px' }}
               styleImage={{ width: '12px', height: '12px' }}
             />
             {isEditing ? (
@@ -73,6 +74,7 @@ const SofaRowModal = ({ text, quantity: initialQuantity, onDecrease, onIncrease,
               onClick={handleIncrease}
               name="increase-button"
               backgroundColor="#A5D7FF"
+              buttonStyle={{ padding: '6px 8px 6px 6px', width: '25px', height: '25px' }}
               styleImage={{ width: '20px', height: '12px' }}
             />
           </div>

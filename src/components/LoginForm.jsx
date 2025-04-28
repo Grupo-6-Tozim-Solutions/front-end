@@ -17,10 +17,10 @@ const LoginForm = ({ onLogin, loginStatus }) => {
 
   return (
     <form onSubmit={handleSubmit} className="login-form" noValidate>
-      <label htmlFor="input-credencial">Nome ou Email:</label>
+      <label htmlFor="input-credencial">Email:</label>
       <input
         type="text"
-        id="input-credencial"
+        className="input-credencial"
         value={credencial}
         onChange={(e) => setCredencial(e.target.value)}
         placeholder="Digite seu email ou seu nome aqui."
@@ -29,6 +29,7 @@ const LoginForm = ({ onLogin, loginStatus }) => {
 
       <label htmlFor="input-senha">Senha:</label>
       <PasswordInput 
+        className="input-credencial"
         value={senha}
         onChange={(e) => setSenha(e.target.value)}
       />

@@ -11,8 +11,8 @@ const SideBarCounch = () => {
   };
 
   const menuItems = [
-    { icon: "../../public/assets/sofaIcone.png", title: "Sofás", onClick: () => navigate('/counch') }, // Navigate to CounchPage
-    { icon: "../../public/assets/prego-ico.png", title: "Peças", onClick: () => navigate('/') }, // Navigate to PartsStorage
+    { icon: "../../public/assets/sofaIcone.png", title: "Sofás", onClick: () => navigate('/counch') }, // Navega para CounchPage
+    { icon: "../../public/assets/prego-ico.png", title: "Peças", onClick: () => navigate('/parts-storage') }, // Navega para PartsStorage
     { icon: "../../public/assets/dash-ico.png", title: "Dashboard" },
     { icon: "../../public/assets/ai-ico.png", title: "Chat" },
   ];

@@ -1,6 +1,7 @@
 import "./HeaderStorageStyle.css";
 import ButtonStorage from "./ButtonStorage.jsx";
 import DividerPartsStorage from "./DividerPartsStorage.jsx";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const HeaderStorage = ({ 
   title, 
@@ -31,8 +32,10 @@ const HeaderStorage = ({
   onFilter, 
   onAdd, 
   onHistory, 
-  onLogout 
+  onLogout // Update to use onLogout for modal confirmation
 }) => {
+  const navigate = useNavigate(); // Add useNavigate hook
+
   return (
     <div className="header-container" style={{ marginBottom: headerMarginBottom }}>
       <div className="header-text">
@@ -72,7 +75,7 @@ const HeaderStorage = ({
           <ButtonStorage
             icon={logoutIcon}
             label={logoutText}
-            onClick={onLogout}
+            onClick={onLogout} // Update to use onLogout for modal confirmation
             backgroundColor={logoutBackgroundColor}
             textColor={logoutTextColor}
             width={logoutWidth}

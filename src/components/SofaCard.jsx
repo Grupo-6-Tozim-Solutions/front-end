@@ -1,32 +1,12 @@
 import React, { useState } from "react";
 import "../styles/counchPageStyle.css";
 
-const SofaCard = ({ name, image }) => {
+const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete" como prop
   const [isSelected, setIsSelected] = useState(false);
   const [quantity, setQuantity] = useState(0);
 
   const toggleState = () => {
     setIsSelected(!isSelected);
-  };
-
-  const incrementQuantity = () => {
-    setQuantity(quantity + 1);
-  };
-
-  const decrementQuantity = () => {
-    if (quantity > 0) setQuantity(quantity - 1);
-  };
-
-  const handleEdit = () => {
-    alert(`Editar ${name}`);
-  };
-
-  const handleDelete = () => {
-    alert(`Excluir ${name}`);
-  };
-
-  const handleProduce = () => {
-    alert(`Produzir ${quantity} unidades de ${name}`);
   };
 
   return (
@@ -49,20 +29,20 @@ const SofaCard = ({ name, image }) => {
       ) : (
         <div className="sofa-selected">
           <button
-              className="produce-button proportional-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleProduce();
-              }}
-           >
-            ({quantity})  Produzir!   
-            </button>
+            className="produce-button proportional-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              alert(`Produzir ${quantity} unidades de ${name}`);
+            }}
+          >
+            ({quantity}) Produzir!
+          </button>
           <div className="quantity-controls">
             <button
               className="decrement-button"
               onClick={(e) => {
                 e.stopPropagation();
-                decrementQuantity();
+                setQuantity((prev) => Math.max(prev - 1, 0));
               }}
             >
               <img src="../../public/assets/decrement.svg" alt="" />
@@ -72,28 +52,27 @@ const SofaCard = ({ name, image }) => {
               className="increment-button"
               onClick={(e) => {
                 e.stopPropagation();
-                incrementQuantity();
+                setQuantity((prev) => prev + 1);
               }}
             >
               <img src="../../public/assets/increment.svg" alt="" />
             </button>
           </div>
           <div className="action-buttons">
-            
             <button
               className="edit-button proportional-button"
               onClick={(e) => {
                 e.stopPropagation();
-                handleEdit();
+                onEdit(); // Chama a função de edição passada como prop
               }}
             >
-              <img src="../../public/assets/lapisIcone.png"></img> Editar
+              <img src="../../public/assets/lapisIcone.png" alt="Editar" /> Editar
             </button>
             <button
               className="delete-button proportional-button"
               onClick={(e) => {
                 e.stopPropagation();
-                handleDelete();
+                onDelete(); // Chama a função de exclusão passada como prop
               }}
             >
               <img src="../../public/assets/trashCanPartsStorage.png" alt="Excluir" />
