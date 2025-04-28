@@ -53,8 +53,6 @@ const CounchPage = () => {
           logoutTextColor="rgba(255, 13, 13, 1)"
           buttonMarginLeft="20px" 
           // buttonMarginRight="25px" 
-          onFilter={() => alert("Filtros aplicados")}
-          onAdd={() => alert("Adicionar Sofá")}
           onHistory={() => alert("Histórico de Sofás")}
           onLogout={() => alert("Sair do sistema")}
         />
