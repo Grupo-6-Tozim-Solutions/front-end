@@ -3,7 +3,7 @@
     padding: 0;
     text-align: center;
 }
-.header-storage{
+.parts-storage{
     display: flex;
     flex-direction: row;
 }
@@ -35,5 +35,5 @@ body {
     width: 100%;
     height: 95vh;
     padding: 1rem 0;
-    margin: 0 4rem;
+    margin: 0 4rem ;
 }
