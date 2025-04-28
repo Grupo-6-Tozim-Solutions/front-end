@@ -2,11 +2,12 @@
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
+  font-family: "Inter", sans-serif;
   color: black;
-    input{
+    /* input{
       background-color: white;
       color: black;
-    }
+    } */
  }
 
 /* .logo {
