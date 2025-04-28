@@ -37,13 +37,10 @@ const CounchPage = () => {
           filterWidth="10vw"
           filterBackgroundColor="#C9E7FF"
           filterTextColor="rgba(7, 64, 218, 1)"
-          onFilter={() => alert("Filtros aplicados")}
-          addText="() Produzir   "
-         
+          addText="() Produzir"
           addWidth="15vw"
           addBackgroundColor="rgba(201, 231, 255, 1)"
           addTextColor="rgba(7, 64, 218, 1)"
-          onAdd={() => alert("Adicionar Sofá")}
           historyText="Histórico de Sofás"
           historyIcon="../../public/assets/historyPartsStorage.png"
           historyWidth="18vw"
@@ -51,9 +48,13 @@ const CounchPage = () => {
           historyTextColor="rgba(7, 64, 218, 1)"
           logoutText="Sair"
           logoutIcon="../../public/assets/logoutPartsStorage.png"
-          logoutWidth="10vw"
+          logoutWidth="7vw"
           logoutBackgroundColor="rgba(255, 201, 201, 1)"
           logoutTextColor="rgba(255, 13, 13, 1)"
+          buttonMarginLeft="20px" 
+          // buttonMarginRight="25px" 
+          onFilter={() => alert("Filtros aplicados")}
+          onAdd={() => alert("Adicionar Sofá")}
           onHistory={() => alert("Histórico de Sofás")}
           onLogout={() => alert("Sair do sistema")}
         />

@@ -25,20 +25,23 @@ const HeaderStorage = ({
   logoutWidth, 
   logoutBackgroundColor, 
   logoutTextColor, 
+  buttonMarginLeft, 
+  buttonMarginRight, 
+  headerMarginBottom, // New prop for bottom margin
   onFilter, 
   onAdd, 
   onHistory, 
   onLogout 
 }) => {
   return (
-    <div className="header-container">
+    <div className="header-container" style={{ marginBottom: headerMarginBottom }}>
       <div className="header-text">
         <h1 className="header-title">{title}</h1>
         <p className="header-subtitle">{subtitle}</p>
       </div>
       <div className="header-actions">
-        <DividerPartsStorage />
-        <div className="buttons-group">
+        <DividerPartsStorage className="divider-left" />
+        <div className="buttons-group" style={{ marginLeft: buttonMarginLeft, marginRight: buttonMarginRight }}>
           <ButtonStorage
             icon={filterIcon}
             label={filterText}
@@ -57,7 +60,7 @@ const HeaderStorage = ({
           />
         </div>
         <DividerPartsStorage />
-        <div className="buttons-group">
+        <div className="buttons-group" style={{ marginLeft: buttonMarginLeft, marginRight: buttonMarginRight }}>
           <ButtonStorage
             icon={historyIcon}
             label={historyText}
@@ -75,7 +78,7 @@ const HeaderStorage = ({
             width={logoutWidth}
           />
         </div>
-        <DividerPartsStorage />
+        <div className="espacinho"></div>
       </div>
     </div>
   );

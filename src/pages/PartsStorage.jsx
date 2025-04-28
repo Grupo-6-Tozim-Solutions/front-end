@@ -19,7 +19,10 @@ export function PartsStorage() {
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [selectedPart, setSelectedPart] = useState(null);
-  const [filterCriteria, setFilterCriteria] = useState({ name: "", order: null }); // Critérios de filtro
+  const [filterCriteria, setFilterCriteria] = useState({
+    name: "",
+    order: null,
+  }); // Critérios de filtro
 
   const handleEdit = (peca) => {
     setSelectedPart(peca); // Define a peça selecionada
@@ -29,9 +32,7 @@ export function PartsStorage() {
   const handleSaveEdit = (updatedPart) => {
     // Atualiza a peça editada na lista
     setPecas((prevPecas) =>
-      prevPecas.map((peca) =>
-        peca.id === updatedPart.id ? updatedPart : peca
-      )
+      prevPecas.map((peca) => (peca.id === updatedPart.id ? updatedPart : peca))
     );
     setEditModalOpen(false); // Fecha o modal de edição
   };
@@ -52,7 +53,9 @@ export function PartsStorage() {
 
   const handleConfirmDelete = () => {
     // Remove a peça selecionada
-    setPecas((prevPecas) => prevPecas.filter((peca) => peca.id !== selectedPart.id));
+    setPecas((prevPecas) =>
+      prevPecas.filter((peca) => peca.id !== selectedPart.id)
+    );
     setConfirmationModalOpen(false); // Fecha o modal de confirmação
   };
 
@@ -70,8 +73,12 @@ export function PartsStorage() {
     // Filtrar por nome (não oculta itens, mas prioriza os correspondentes)
     if (filterCriteria.name) {
       sortedParts = sortedParts.sort((a, b) => {
-        const aMatches = a.nome.toLowerCase().includes(filterCriteria.name.toLowerCase());
-        const bMatches = b.nome.toLowerCase().includes(filterCriteria.name.toLowerCase());
+        const aMatches = a.nome
+          .toLowerCase()
+          .includes(filterCriteria.name.toLowerCase());
+        const bMatches = b.nome
+          .toLowerCase()
+          .includes(filterCriteria.name.toLowerCase());
         return bMatches - aMatches; // Itens correspondentes aparecem primeiro
       });
     }
@@ -82,34 +89,38 @@ export function PartsStorage() {
   const filteredParts = getFilteredAndSortedParts();
 
   return (
-    <div className="header-storage">
-      <SideBarCounch />
-      <div className="main-content">
+    <div className="parts-storage">
+      
+          <SideBarCounch />
+    
+      
         <div className="main-container">
           <HeaderStorage
             title="Gerenciamento de Peças"
             subtitle="Tozine Solutions"
-            filterText="Filtro" // New button
+            filterText="Filtro"
             filterIcon="../../public/assets/filterIcon.png"
-            filterWidth="9vw"
+            filterWidth="10vw"
             filterBackgroundColor="#FFFAC9"
             filterTextColor="#FF8E0D"
-            onFilter={() => setFilterModalOpen(true)} // Action for the new button
             addText="Adicionar"
             addIcon="../../public/assets/addPartsStorage.png"
-            addWidth="13vw"
+            addWidth="15vw"
             addBackgroundColor="rgba(201, 231, 255, 1)"
             addTextColor="rgba(7, 64, 218, 1)"
             historyText="Ver Histórico"
             historyIcon="../../public/assets/historyPartsStorage.png"
-            historyWidth="250px"
+            historyWidth="16vw"
             historyBackgroundColor="rgba(201, 231, 255, 1)"
             historyTextColor="rgba(7, 64, 218, 1)"
             logoutText="Sair"
             logoutIcon="../../public/assets/logoutPartsStorage.png"
-            logoutWidth="120px"
+            logoutWidth="7.5vw"
             logoutBackgroundColor="rgba(255, 201, 201, 1)"
             logoutTextColor="rgba(255, 13, 13, 1)"
+            buttonMarginLeft="2%"
+            headerMarginBottom="6%" // Set bottom margin
+            onFilter={() => setFilterModalOpen(true)}
             onAdd={() => setAddModalOpen(true)}
             onHistory={() => alert("Histórico")}
             onLogout={handleLogout}
@@ -122,10 +133,12 @@ export function PartsStorage() {
               const quantity = peca.quantidade;
 
               // Define o nível de alerta como "critical" se a quantidade for menor que o limite de estoque baixo
-              const warningLevel = quantity < peca.lowStockThreshold ? "critical" : null;
+              const warningLevel =
+                quantity < peca.lowStockThreshold ? "critical" : null;
 
               // Define o status como "Estoque Baixo" se o nível de alerta for "critical"
-              const status = warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
+              const status =
+                warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
 
               const formattedId = String(peca.id).padStart(3, "0");
               const formattedQty = String(quantity).padStart(2, "0");
@@ -146,8 +159,7 @@ export function PartsStorage() {
             })}
           </div>
         </div>
-      </div>
-
+   
       {/* Modais */}
       <AddPartModal
         isOpen={isAddModalOpen}
