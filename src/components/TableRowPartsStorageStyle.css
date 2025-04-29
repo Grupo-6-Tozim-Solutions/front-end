@@ -67,7 +67,15 @@
   .trashcan:hover {
     background-color: rgba(255, 201, 201, 1);
   }
+  .trashcan {
+   height: 25px;
+   width: 25px;
+  }
 
+  .pencil {
+    height: 25px;
+    width: 25px;
+   }
   .pencil:hover {
     background-color: rgba(165, 215, 255, 1);
   }
