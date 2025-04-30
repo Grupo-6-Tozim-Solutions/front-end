@@ -15,7 +15,7 @@ const CounchPage = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false); // Estado para o modal de exclusão
   const [sofaToEdit, setSofaToEdit] = useState(null);
   const [sofaToDelete, setSofaToDelete] = useState(null); // Estado para o sofá a ser excluído
-  const [sofas, setSofas] = useState([
+  const [ sofas, setSofas] = useState([
     { id: 1, name: "Sofá Tipo 1", image: "../../public/assets/generic-sofa.png", pecas: [] },
     { id: 2, name: "Sofá Tipo 2", image: "../../public/assets/generic-sofa.png", pecas: [] },
     { id: 3, name: "Sofá Tipo 3", image: "../../public/assets/generic-sofa.png", pecas: [] },
@@ -78,9 +78,9 @@ const CounchPage = () => {
           addBackgroundColor="rgba(201, 231, 255, 1)"
           addTextColor="rgba(7, 64, 218, 1)"
           onAdd={() => alert("Produzir Sofá")}
-          historyText="Histórico de Sofás"
+          historyText="Ver historico"
           historyIcon="../../public/assets/historyPartsStorage.png"
-          historyWidth="18vw"
+          historyWidth="16vw"
           historyBackgroundColor="rgba(201, 231, 255, 1)"
           historyTextColor="rgba(7, 64, 218, 1)"
           logoutText="Sair"

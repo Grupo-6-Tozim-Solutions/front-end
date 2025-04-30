@@ -81,7 +81,6 @@ const HeaderStorage = ({
             width={logoutWidth}
           />
         </div>
-        <div className="espacinho"></div>
       </div>
     </div>
   );

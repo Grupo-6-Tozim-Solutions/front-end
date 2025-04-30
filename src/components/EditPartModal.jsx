@@ -397,7 +397,7 @@ const tittleActions = {
     fontSize: '15px',
     fontWeight: 'bold',
     color: 'white',
-    backgroundColor: '#127ADC',
+    backgroundColor: 'var(--primary-color)',
     height: '6.5vh',
     alignItems: 'center',
     display: 'flex',
@@ -408,7 +408,7 @@ const tittleActions = {
 
 const actions = { 
     width: '60%',
-    border: '2px solid #127ADC',
+    border: '2px solid var(--primary-color)',
     height: '100%',
     borderRadius: '10px',
     position: 'relative',
@@ -471,7 +471,7 @@ const nameContainer = {
     marginBottom: '10px',
     width: '100%',
     height: '6vh',
-    background: '#0740DA',
+    background: 'var(--primary-color)',
     borderRadius: '10px 10px 0px 0px',
 };
 

@@ -6,7 +6,7 @@ const RightContainer = ({ children }) => {
     height: '91%',
     display: 'flex',
     flexDirection: 'column',
-    border: '3px solid #0740DA',
+    border: '3px solid var(--primary-color)',
     borderRadius: '16px',
   };
 

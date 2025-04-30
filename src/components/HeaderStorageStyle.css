@@ -48,10 +48,9 @@
   align-items: center;
   gap: 20px;
   flex: 2;
-  margin-left: 25%;
-  /* justify-content: flex-end; */
-  /* background-color: #FFCCCC;  */
-  position: relative;
+  /* background-color: var(--primary-color); */
+  position:static;
+  margin-left: 20%;
 }
 
 .header-actions > .divider-left {
@@ -63,6 +62,7 @@
   display: flex;
   align-items: center;
   gap: 19px;
+   
 }
 
 .header-button {
@@ -73,11 +73,12 @@
   border-radius: 4px;
   padding: 5px 10px;
   cursor: pointer;
+ 
 }
 
 .add-button {
   background-color: #CCE5FF;
-  color: #007BFF;
+  color: var(--primary-color);
   font-weight: bold;
 }
 
@@ -89,7 +90,8 @@
   border: none;
   border-radius: 8px;
   padding: 10px 15px;
-  color: #007BFF;
+  color: var(--primary-color);
+   
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
@@ -115,7 +117,75 @@
 
 .exit-button {
   background-color: #FFCCCC;
+  
 }
-.espacinho{
-  width: 3vw;
+
+@media (max-width: 1200px) {
+  .buttons-group{
+    display: flex;
+    flex-direction: column;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .header-text {
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .header-title {
+    font-size: 5px;
+    margin-right: 0;
+  }
+
+  .header-subtitle {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    margin-left: 0;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .buttons-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .produce-button {
+    width: 100%;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 20px;
+  }
+
+  .header-subtitle {
+    font-size: 14px;
+  }
+
+  .produce-button {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
 }

@@ -20,7 +20,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
             className="custom-checkbox"
             onClick={(e) => e.stopPropagation()} // Evita que o clique na checkbox altere o estado do card
           >
-            <input type="checkbox" readOnly />
+            <input type="checkbox" className="check-box" readOnly />
             <span className="checkmark"></span>
           </label>
           <img src={image} alt={name} className="sofa-image" />
@@ -28,6 +28,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
         </>
       ) : (
         <div className="sofa-selected">
+          <p className="sofa-selected-name">{name}</p> {/* Display sofa name */}
           <button
             className="produce-button proportional-button"
             onClick={(e) => {
@@ -47,7 +48,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
             >
               <img src="../../public/assets/decrement.svg" alt="" />
             </button>
-            <span>{quantity}</span>
+            <span className="numero-produzir">{quantity}</span>
             <button
               className="increment-button"
               onClick={(e) => {

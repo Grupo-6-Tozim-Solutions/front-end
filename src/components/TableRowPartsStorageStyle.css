@@ -7,8 +7,8 @@
     max-width: 1200px;
     margin: 0 auto;
     box-sizing: border-box;
-    border-left: 2px solid #127ADC;
-    border-right: 2px solid #127ADC;
+    border-left: 2px solid var(--primary-color);
+    border-right: 2px solid var(--primary-color);
     color: #000;
     column-gap: 0.5rem;
   }

@@ -47,7 +47,11 @@ const CadastroPage = () => {
           loginStatus={loginStatus} 
         />
         <div className="div-link-cadastro">
-          <LinkCadastro textoBase="Já possui conta?" textoLink="Clique aqui." />
+          <LinkCadastro 
+            textoBase="Já possui conta?" 
+            textoLink="Clique aqui." 
+            onClick={() => navigate('/login')} // Navega para a página de login
+          />
         </div>
       </div>
     </div>

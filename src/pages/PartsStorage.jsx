@@ -8,7 +8,7 @@ import AddPartModal from "../components/AddPartModal";
 import FilterModal from "../components/FilterModal";
 import EditPartModal from "../components/EditPartModal";
 import ConfirmationModal from "../components/ConfirmationModals";
-import "./PartsStorageStyle.css";
+import "../styles/PartsStorageStyle.css";
 import initialPecas from "../data/DataMock"; // Importa os dados iniciais
 import SideBarCounch from "../components/SideBarCounch";
 
@@ -98,9 +98,7 @@ export function PartsStorage() {
 
   return (
     <div className="parts-storage">
-      
           <SideBarCounch />
-      
         <div className="main-container">
           <HeaderStorage
             title="Gerenciamento de Peças"

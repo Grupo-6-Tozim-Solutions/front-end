@@ -50,7 +50,7 @@ const overlayStyle = {
     marginBottom: '10px',
     width: '75vh',
     height: '5vh',
-    background: '#0740DA',
+    background: 'var(--primary-color)',
     padding: '3px',
     borderRadius: '10px 10px 0px 0px',
   };

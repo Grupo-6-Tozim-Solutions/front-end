@@ -60,7 +60,11 @@ const LoginPage = () => {
           />
         )}
         <div className="div-link-cadastro">
-          <LinkCadastro textoBase="Problemas no Login?" textoLink="Clique aqui." />
+          <LinkCadastro 
+            textoBase="Problemas no Login?" 
+            textoLink="Clique aqui." 
+            onClick={() => navigate('/')} // Navega para a página de cadastro
+          />
         </div>
       </div>
     </div>

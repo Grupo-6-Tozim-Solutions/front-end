@@ -121,7 +121,7 @@ const nameContainer = {
     alignItems: 'center',
     width: '100%',
     height: '7vh',
-    background: '#0740DA',
+    background: 'var(--primary-color)',
     borderRadius: '10px 10px 0px 0px',
     justifyContent: 'center'
 };

@@ -42,8 +42,6 @@ function App() {
 
         {/* Rota para CounchPage */}
         <Route path="/counch" element={<CounchPage />} />
-
-        {/* Redirecionamento padrão caso a rota não exista */}
       </Routes>
     </Router>
   );

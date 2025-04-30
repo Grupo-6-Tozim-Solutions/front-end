@@ -178,7 +178,7 @@ const nameContainerStyle = {
   display: 'flex',
   alignItems: 'center',
   height: '60px',
-  background: '#0740DA',
+  background: 'var(--primary-color)',
   borderRadius: '10px 10px 0 0',
   width: '100%',
 };
@@ -204,7 +204,7 @@ const contentStyle = {
 };
 
 const summaryHeaderStyle = {
-  background: '#0740DA',
+  background: 'var(--primary-color)',
   color: 'white',
   fontWeight: 'bold',
   textAlign: 'center',
@@ -224,7 +224,7 @@ const summaryContentStyle = {
 const lineStyle = {
   width: '100%',
   height: '3px',
-  background: '#0740DA',
+  background: 'var(--primary-color)',
   marginTop: '8px',
 };
 

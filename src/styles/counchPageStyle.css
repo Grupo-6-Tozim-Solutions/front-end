@@ -70,7 +70,7 @@ row-gap: 6%;
 
 /* Estilo quando marcado */
 .custom-checkbox input:checked ~ .checkmark {
-  background-color: #0057ff; /* azul igual ao da imagem */
+  background-color: var(--primary-color); /* azul igual ao da imagem */
 }
 
 /* Desenho do check */
@@ -106,13 +106,18 @@ row-gap: 6%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  overflow-y: auto;
-  
-
+  overflow-y: unset; 
+  transition: ease-in-out;
+ 
 }
-
+.check-box{
+display: flex;
+justify-content: center;
+align-items: center;
+}
 .sofa-card:hover {
   border: 2px solid blue;
+  transition: ease-in-out;
 }
 
 .sofa-image {
@@ -165,7 +170,9 @@ row-gap: 6%;
     height: 100%;
   }
 }
-
+.numero-produzir{
+  margin-top: 6%;
+}
 .produce-button:hover {
   background-color: #B0D4F1;
 }
@@ -179,6 +186,7 @@ row-gap: 6%;
   justify-content: center;
   align-items: center;
   gap: 12px;
+  
 }
 
 .decrement-button {
@@ -196,6 +204,7 @@ row-gap: 6%;
   height: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
+  margin-top: 6%;
 
   img{
    height: 150%;
@@ -221,6 +230,7 @@ row-gap: 6%;
   height: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
+  margin-top: 6%;
   img{
     height: 150%;
   }
@@ -272,11 +282,13 @@ row-gap: 6%;
   align-items: center;
   margin-left: -46%;
   font-weight: 730;
+
     img{
     height: 85%;
     width: auto;
     margin-right: 30%;
   }
+
 }
 
 .icon-list {
@@ -295,4 +307,81 @@ row-gap: 6%;
 
 .icon-list img:hover {
   transform: scale(1.1);
+}
+
+.sofa-selected-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.sofa-selected-name{
+  font-size: 110%;
+ margin-top: -3%;
+}
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+  .sofa-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* .Counch-Page {
+    flex-direction: column;
+  } */
+
+  .main-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .sofa-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5%;
+  }
+
+  .sofa-card {
+    height: auto;
+    padding: 8px;
+  }
+
+  .produce-button {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .increment-button, .decrement-button {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sofa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sofa-card {
+    width: 100%;
+  }
+
+  .icon-list {
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .icon-list img {
+    width: 40%;
+  }
+
+  .proportional-button {
+    width: 100%;
+    margin-left: 0;
+    font-size: 12px;
+  }
 }
