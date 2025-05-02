@@ -1,0 +1,17 @@
+
+.bar-chart-card {
+    background-color: #f5f5f5;
+    padding: 0 10px 8.6% 10px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    width: 60vw;
+    height: 60vh;
+  }
+  
+  .bar-chart-title {
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  
