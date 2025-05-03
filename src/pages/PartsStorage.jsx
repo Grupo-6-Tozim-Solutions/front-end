@@ -124,7 +124,7 @@ export function PartsStorage() {
             logoutBackgroundColor="rgba(255, 201, 201, 1)"
             logoutTextColor="rgba(255, 13, 13, 1)"
             buttonMarginLeft="2%"
-            headerMarginBottom="6%" // Set bottom margin
+            headerMarginBottom="5%" // Set bottom margin
             onFilter={() => setFilterModalOpen(true)}
             onAdd={() => setAddModalOpen(true)}
             onHistory={() => alert("Histórico")}

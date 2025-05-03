@@ -1,20 +1,23 @@
 .table-header {
   display: grid;
-  grid-template-columns: 80px 1.5fr 1fr 1.5fr 80px;
+  grid-template-columns: minmax(60px, 80px) 1.5fr 1fr 1.5fr minmax(60px, 80px);
   border-radius: 18px 18px 0 0;
   background: var(--primary-color);
   color: white;
+  align-items: center;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   font-size: 0.95rem;
   border: var(--primary-color) 2px solid;
-  width: calc(100vw - 50px);
-  max-width: 1200px;
-  margin: -0.1rem auto;
+  width: 100%;
+  max-width: 78vw;
+  margin: 0 -0.1vw;
   box-sizing: border-box;
+  position: fixed;
+  top: 15%;
+  min-width: 600px;
+  z-index: 10;
 }
-
-
 
 
 .col-id, .col-name, .col-quantity, .col-status {
@@ -22,4 +25,33 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .table-header {
+    grid-template-columns: 1fr 2fr 1fr; /* Menos colunas */
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .col-id,
+  .col-status {
+    display: none; /* Oculta colunas menos importantes em telas pequenas */
+  }
+
+  .table-container {
+    max-height: none;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-header {
+    grid-template-columns: 1fr 2fr;
+    font-size: 0.75rem;
+  }
+
+  .col-quantity {
+    display: none;
+  }
 }
