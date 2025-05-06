@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { TextField, IconButton, Box } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
 
-const TittleModal = ({ modalName, onClose, NameStyle, nameContainer, isEditable, onNameChange }) => {
+const TittleModal = ({ modalName, onClose, isEditable, onNameChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentName, setCurrentName] = useState(modalName);
 
@@ -14,86 +17,76 @@ const TittleModal = ({ modalName, onClose, NameStyle, nameContainer, isEditable,
 
   const handleInputBlur = () => {
     setIsEditing(false);
-    if (onNameChange) onNameChange(currentName); // Notifica o componente pai sobre a mudança
+    if (onNameChange) onNameChange(currentName);
   };
 
   return (
-    <div style={nameContainer}>
-      <div style={titleWrapperStyle}>
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between" // Ensures proper spacing between elements
+      bgcolor="var(--primary-color)"
+      color="white"
+      textAlign="center"
+      height="6vh"
+      p={1}
+      borderRadius="8px 8px 0 0"
+      width="100%"
+    >
+      <Box flex="1" /> {/* Empty space to balance alignment */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        fontWeight="bold"
+        fontSize="18px"
+        whiteSpace="nowrap"
+        overflow="hidden"
+        flex="1"
+      >
         {isEditing ? (
-          <input
-            type="text"
-            value={currentName}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            style={inputStyle}
-            autoFocus
-          />
-        ) : (
-          <span style={NameStyle}>{currentName}</span>
-        )}
-        {isEditable && (
-          <button style={buttonEditStyle} onClick={handleEditClick}>
-            <img
-              src="./assets/pencilWhite.png"
-              alt="Editar"
-              style={{ width: '17px', height: '17px', padding: '0px', alignItems: 'center' }}
+          <Box display="flex" alignItems="center" gap={1} width="100%">
+            <TextField
+              value={currentName}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              variant="outlined"
+              size="small"
+              autoFocus
+              fullWidth
+              sx={{
+                input: { color: 'white', fontWeight: 'bold' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: 'white' },
+                },
+              }}
             />
-          </button>
+            <IconButton size="small" sx={{ color: 'white' }}>
+              <EditIcon />
+            </IconButton>
+          </Box>
+        ) : (
+          <>
+            {currentName}
+            {isEditable && (
+              <IconButton
+                onClick={handleEditClick}
+                size="small"
+                sx={{ color: 'white', ml: 1 }}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
+          </>
         )}
-      </div>
-      <button style={buttonExitStyle} onClick={onClose}>
-        <img
-          src="./assets/btnClose.png"
-          alt="Fechar"
-          style={{ width: '17px', height: '17px', padding: '0px', alignItems: 'center' }}
-        />
-      </button>
-    </div>
+      </Box>
+      <Box flex="1" display="flex" justifyContent="flex-end">
+        <IconButton onClick={onClose} size="small" sx={{ color: 'white' }}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+    </Box>
   );
-};
-
-// Estilos padrão
-
-
-const titleWrapperStyle = {
-  display: 'flex',
-  alignItems: 'center', // Espaço entre o título e o botão de edição
-  justifyContent: 'center',
-  width: '100%',
-  marginLeft: '8%',
-  gap: '1%',
-
-};
-
-const buttonExitStyle = {
-  background: 'transparent',
-  border: 'none',
-  cursor: 'pointer',
-  padding: '18px',
-};
-
-const buttonEditStyle = {
-  background: 'transparent',
-  border: 'none',
-  cursor: 'pointer',
-  padding: '0px',
-  width: '2%',
-  height: '100%',
-  outline: 'none',
-};
-
-const inputStyle = {
-  fontSize: '18px',
-  fontWeight: 'bold',
-  color: 'white',
-  border: 'none',
-  borderRadius: '4px',
-  padding: '4px',
-  width: 'auto',
-  backgroundColor: '#0740DA',
-  width: '15%',
-  outline: 'none',
 };
 
 export default TittleModal;

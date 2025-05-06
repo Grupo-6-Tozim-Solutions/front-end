@@ -134,7 +134,6 @@ const NameStyle = {
     display: 'flex',
     justifyContent: 'center',
     flex: '1',
-    marginLeft:'9%'
 };
 
 
