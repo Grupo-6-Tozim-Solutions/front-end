@@ -3,7 +3,7 @@ import { TextField, IconButton, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 
-const TittleModal = ({ modalName, onClose, isEditable, onNameChange }) => {
+const TittleModal = ({ modalName, onClose, isEditable, onNameChange, headerStyle }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentName, setCurrentName] = useState(modalName);
 
@@ -22,6 +22,7 @@ const TittleModal = ({ modalName, onClose, isEditable, onNameChange }) => {
 
   return (
     <Box
+      value={headerStyle}
       display="flex"
       alignItems="center"
       justifyContent="space-between" // Ensures proper spacing between elements

@@ -49,8 +49,6 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
         {/* Título */}
         <TitleModal
           modalName={sofaName} // Passa o nome do sofá
-          NameStyle={nameStyle}
-          nameContainer={nameContainerStyle}
           isEditable={true}
           onClose={onClose}
           onNameChange={(newName) => setSofaName(newName)} // Atualiza o nome do sofá
@@ -174,23 +172,6 @@ const modalStyle = {
   justifyContent: 'center',
 };
 
-const nameContainerStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  height: '60px',
-  background: 'var(--primary-color)',
-  borderRadius: '10px 10px 0 0',
-  width: '100%',
-};
-
-
-const nameStyle = {
-  fontSize: '18px',
-  fontWeight: 'bold',
-  color: 'white',
-  fontFamily: 'Inter',
-
-};
 
 const contentStyle = {
   display: 'flex',
