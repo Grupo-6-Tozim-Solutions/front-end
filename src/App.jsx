@@ -5,6 +5,7 @@ import CounchPage from './pages/CounchPage';
 import AccessibilityButton from './components/AccessibilityButton';
 import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
+import Dashboard from './pages/Dashboard';
 import { useEffect } from 'react';
 function App() {
   useEffect(() => {
@@ -42,6 +43,9 @@ function App() {
 
         {/* Rota para CounchPage */}
         <Route path="/counch" element={<CounchPage />} />
+
+        {/* Rota para CounchPage */}
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
