@@ -20,7 +20,7 @@ const AccessibilityButton = () => {
         position: "fixed",
         bottom: "20px",
         right: "20px",
-        backgroundColor: "#0740DA",
+        backgroundColor: "var(--primary-color)",
         color: "white",
         border: "none",
         borderRadius: "50%",

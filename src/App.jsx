@@ -6,6 +6,7 @@ import AccessibilityButton from './components/AccessibilityButton';
 import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
 import { useEffect } from 'react';
+import Dashboard from './pages/Dashboard';
 function App() {
   useEffect(() => {
     // Inicializa o Hand Talk
@@ -32,7 +33,7 @@ function App() {
     <Router>
       <Routes>
         {/* Rota inicial para CadastroPage */}
-        <Route path="/" element={<CadastroPage />} />
+        <Route path="/" element={<Dashboard  />} />
 
         {/* Rota para LoginPage */}
         <Route path="/login" element={<LoginPage />} />

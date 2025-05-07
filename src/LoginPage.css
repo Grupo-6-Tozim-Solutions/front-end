@@ -15,11 +15,12 @@
 }
 .imagem-logo-esquerda{
     height: 78%;
-    opacity: 74%;
+    width: auto;
+    opacity: 90%;
 }
 .left-panel {
     width: 40%;
-    background-color: rgba(7, 64, 218, 1);
+    background-color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -5,9 +5,8 @@
     height: 100vw;
     background-color: var(--primary-color);
     align-items: center;
-    transition: width 0.3s ease; 
-    z-index: 5; 
-    
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth and longer animation */ 
+    z-index: 5;     
     img{
       cursor: pointer;
     }
@@ -22,6 +21,7 @@
     width: 55%;
     object-fit: cover;
     margin-top: 12%;
+    cursor: pointer;
   }
   
   .SideBar-Counch .navigation-list {
@@ -48,20 +48,6 @@
   .menu-item img {
     width: 30px;
     height: 30px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-  }
-  
-  .menu-item img:hover {
-    transform: scale(1.2);
-    opacity: 0.8;
-    background-color: (var(--primary-color) + white);
-    border-radius: 30%;
-
-  }
-  
-  .menu-item:hover {
-    color: white;
-   
   }
   
   .SideBar-Counch.expanded .menu-item {
@@ -94,4 +80,9 @@
   
   .icon-list img:hover {
     transform: scale(1.1);
+  }
+
+  .icone {
+    width: 30px;
+    height: 30px;
   }

@@ -24,11 +24,10 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
             <span className="checkmark"></span>
           </label>
           <img src={image} alt={name} className="sofa-image" />
-          <p className="sofa-name">{name}</p>
+        
         </>
       ) : (
         <div className="sofa-selected">
-          <p className="sofa-selected-name">{name}</p> {/* Display sofa name */}
           <button
             className="produce-button proportional-button"
             onClick={(e) => {
@@ -79,9 +78,13 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
               <img src="../../public/assets/trashCanPartsStorage.png" alt="Excluir" />
               Excluir
             </button>
+            
           </div>
         </div>
       )}
+       <div className="sofa-text-container"> 
+        <p className="sofa-name">{name}</p>
+        </div>
     </div>
   );
 };

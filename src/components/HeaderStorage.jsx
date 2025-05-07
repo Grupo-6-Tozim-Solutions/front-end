@@ -1,88 +1,47 @@
-import "./HeaderStorageStyle.css";
-import ButtonStorage from "./ButtonStorage.jsx";
-import DividerPartsStorage from "./DividerPartsStorage.jsx";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import React from "react";
+import { AppBar, Toolbar, Typography, Button, Box, Divider } from "@mui/material";
 
 const HeaderStorage = ({ 
   title, 
   subtitle, 
   filterText, 
-  filterIcon, 
-  filterWidth, 
-  filterBackgroundColor, 
-  filterTextColor, 
   addText, 
-  addIcon, 
-  addWidth, 
-  addBackgroundColor, 
-  addTextColor, 
   historyText, 
-  historyIcon, 
-  historyWidth, 
-  historyBackgroundColor, 
-  historyTextColor, 
   logoutText, 
-  logoutIcon, 
-  logoutWidth, 
-  logoutBackgroundColor, 
-  logoutTextColor, 
-  buttonMarginLeft, 
-  buttonMarginRight, 
-  headerMarginBottom, // New prop for bottom margin
   onFilter, 
   onAdd, 
   onHistory, 
-  onLogout // Update to use onLogout for modal confirmation
+  onLogout 
 }) => {
-  const navigate = useNavigate(); // Add useNavigate hook
-
   return (
-    <div className="header-container" style={{ marginBottom: headerMarginBottom }}>
-      <div className="header-text">
-        <h1 className="header-title">{title}</h1>
-        <p className="header-subtitle">{subtitle}</p>
-      </div>
-      <div className="header-actions">
-        <DividerPartsStorage className="divider-left" />
-        <div className="buttons-group" style={{ marginLeft: buttonMarginLeft, marginRight: buttonMarginRight }}>
-          <ButtonStorage
-            icon={filterIcon}
-            label={filterText}
-            onClick={onFilter}
-            backgroundColor={filterBackgroundColor}
-            textColor={filterTextColor}
-            width={filterWidth}
-          />
-          <ButtonStorage
-            icon={addIcon}
-            label={addText}
-            onClick={onAdd}
-            backgroundColor={addBackgroundColor}
-            textColor={addTextColor}
-            width={addWidth}
-          />
-        </div>
-        <DividerPartsStorage />
-        <div className="buttons-group" style={{ marginLeft: buttonMarginLeft, marginRight: buttonMarginRight }}>
-          <ButtonStorage
-            icon={historyIcon}
-            label={historyText}
-            onClick={onHistory}
-            backgroundColor={historyBackgroundColor}
-            textColor={historyTextColor}
-            width={historyWidth}
-          />
-          <ButtonStorage
-            icon={logoutIcon}
-            label={logoutText}
-            onClick={onLogout} // Update to use onLogout for modal confirmation
-            backgroundColor={logoutBackgroundColor}
-            textColor={logoutTextColor}
-            width={logoutWidth}
-          />
-        </div>
-      </div>
-    </div>
+    <AppBar position="static" color="default" sx={{ padding: "10px" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box>
+          <Typography variant="h6" component="div">
+            {title}
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+            {subtitle}
+          </Typography>
+        </Box>
+          
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Button variant="contained" color="primary" onClick={onFilter}>
+            {filterText}
+          </Button>
+          <Button variant="contained" color="secondary" onClick={onAdd}>
+            {addText}
+          </Button>
+          <Divider orientation="vertical" flexItem />
+          <Button variant="outlined" color="primary" onClick={onHistory}>
+            {historyText}
+          </Button>
+          <Button variant="outlined" color="error" onClick={onLogout}>
+            {logoutText}
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 
