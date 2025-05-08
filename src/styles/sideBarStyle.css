@@ -1,88 +1,81 @@
 .SideBar-Counch {
-    display: flex;
-    flex-direction: column;
-    width: 6vw;
-    height: 100vw;
-    background-color: var(--primary-color);
-    align-items: center;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth and longer animation */ 
-    z-index: 5;     
-    img{
-      cursor: pointer;
-    }
-   
-  }
-  
-  .SideBar-Counch.expanded {
-    width: 13vw; 
-  }
-  
-  .expand-icon {
-    width: 55%;
-    object-fit: cover;
-    margin-top: 12%;
+  display: flex;
+  flex-direction: column;
+  width: 6vw;
+  height: 100vw;
+  background-color: rgba(7, 64, 218, 1);
+  align-items: center;
+  transition: width 0.3s ease; 
+  z-index: 5; 
+  img{
     cursor: pointer;
   }
-  
-  .SideBar-Counch .navigation-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 65%; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    cursor: pointer;
-  }
-  
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  
-  .menu-item img {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .SideBar-Counch.expanded .menu-item {
-    justify-content: flex-start;
-    width: 100%;
-    padding-left: 10px;
-  }
-  
-  .SideBar-Counch.expanded .menu-item span {
-    display: inline;
-  }
-  
-  .SideBar-Counch .menu-item span {
-    display: none;
-  }
-  
-  .icon-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    margin-top: 60%; 
-  }
-  
-  .icon-list img {
-    width: 60%;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .icon-list img:hover {
-    transform: scale(1.1);
-  }
+}
 
-  .icone {
-    width: 30px;
-    height: 30px;
-  }
+.SideBar-Counch.expanded {
+  width: 13vw; 
+}
+
+.expand-icon {
+  width: 55%;
+  object-fit: cover;
+  margin-top: 12%;
+}
+
+.SideBar-Counch .navigation-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 65%; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.menu-item img {
+  width: 30px;
+  height: 30px;
+}
+
+.SideBar-Counch.expanded .menu-item {
+  justify-content: flex-start;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.SideBar-Counch.expanded .menu-item span {
+  display: inline;
+}
+
+.SideBar-Counch .menu-item span {
+  display: none;
+}
+
+.icon-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 60%; 
+}
+
+.icon-list img {
+  width: 60%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.icon-list img:hover {
+  transform: scale(1.1);
+}
