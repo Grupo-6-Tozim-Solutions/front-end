@@ -7,6 +7,9 @@ import AddSofaModal from "../components/AddSofaModal";
 import EditSofaModal from "../components/EditSofaModal";
 import ConfirmationModal from "../components/ConfirmationModals";
 import '../styles/counchPageStyle.css';
+import MaterialSofaCard from '../components/MaterialSofaCard';
+import Card from '../components/card'; // Importa o componente Card
+import { Box } from '@mui/material';
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
@@ -22,6 +25,9 @@ const CounchPage = () => {
     { id: 4, name: "Sofá Tipo 4", image: "../../public/assets/sofa-novo.png", pecas: [] },
     { id: 5, name: "Sofá Tipo 5", image: "../../public/assets/sofa-novo.png", pecas: [] },
     { id: 6, name: "Sofá Tipo 6", image: "../../public/assets/sofa-novo.png", pecas: [] },
+    { id: 7, name: "Sofá Tipo 7", image: "../../public/assets/sofa-novo.png", pecas: [] },
+    { id: 8, name: "Sofá Tipo 8", image: "../../public/assets/sofa-novo.png", pecas: [] },
+  
   ]);
 
   const navigate = useNavigate();
@@ -63,7 +69,7 @@ const CounchPage = () => {
   return (
     <div className="Counch-Page">
       <SideBarCouch />
-      <div className="main-container">
+      <Box sx={{ width: "100%"}}> 
         <HeaderStorage
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
@@ -76,9 +82,9 @@ const CounchPage = () => {
           onHistory={() => alert("Histórico de Sofás")}
           onLogout={() => setLogoutModalOpen(true)}
         />
-        <div className="sofa-grid">
+        <Box sx={{ display: "grid", gridTemplateColumns: " repeat(4,1fr)", gap: 2 , rowGap: "6%", padding: 2 }}>
           {sofas.map((sofa) => (
-            <SofaCard
+            <MaterialSofaCard
               key={sofa.id}
               name={sofa.name}
               image={sofa.image}
@@ -86,9 +92,12 @@ const CounchPage = () => {
               onEdit={() => handleEditSofa(sofa)}
               onDelete={() => openDeleteModal(sofa)} // Passa a função para abrir o modal de exclusão
             />
+            
+            
           ))}
-        </div>
-      </div>
+          
+        </Box>
+      </Box>
 
       <AddSofaModal
         isOpen={isAddSofaModalOpen}
@@ -124,6 +133,7 @@ const CounchPage = () => {
         imagem="public/assets/logoutImage.png"
         onConfirm={handleLogoutConfirm}
       />
+      
     </div>
   );
 };

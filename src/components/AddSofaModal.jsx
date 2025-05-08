@@ -130,7 +130,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                 onClick={() => {
                   const newSofa = {
                     name: sofaName, // Usa o nome do sofá atualizado
-                    image: "../../public/assets/generic-sofa.png", // Substitua por uma imagem selecionada, se necessário
+                    image: "../../public/assets/sofa-novo.png", // Substitua por uma imagem selecionada, se necessário
                   };
                   onSave(newSofa); // Chama a função onSave com os dados do novo sofá
                 }}

@@ -12,21 +12,22 @@
 
 .main-container {
   display: flex;
-  height: 100%;
-  width: 100%;
   flex-direction: column;
-  justify-content: flex-start;  
+  height: 100vh; /* Ensure it spans the full viewport height */
+  width: 100%;
+  overflow-y: auto; /* Add vertical scrolling if content overflows */
+  padding: 16px; /* Add padding for better spacing */
+  box-sizing: border-box; /* Include padding and border in width/height */
 }
 .sofa-grid{
   margin-top:2%;
   display:grid;
-  width: 105%;
+  width: 90%;
   height: 90%;
   gap:2%;
   grid-template-columns: repeat(4,1fr);
-
-row-gap: 6%;
-  /* background-color: blue; */
+  row-gap: 6%;
+  
 }
 .imput-card{
   position: absolute;

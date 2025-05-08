@@ -6,14 +6,14 @@ import Header from '../components/HeaderStorage';
 import { barChartData, sofasMaisSaida, pecasMaisSaida } from '../data/DataMockDash';
 import './DashboardStyle.css';
 import SideBarCounch from '../components/SideBarCounch';
-import HeaderStorage from '../components/HeaderStorage';
+import HeaderDash from '../components/HeaderDash';
 
 const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <SideBarCounch />
             <div className="dashboard-content">
-                <HeaderDash title="Dashboard" subtitle="Tozine Solutions"/>
+                <HeaderDash/>
                 <div className="dashboard">
                     <div className="dashboard-row">
                         <BarChartCard data={barChartData} />
