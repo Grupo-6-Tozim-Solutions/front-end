@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
-import ArrowButton from './ArrowButton';
-import './SofaSummaryRowModal.css';
+import React, { useState } from "react";
+import { Box, Typography, IconButton, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-const SofaSummaryRowModal = ({ text, quantidade: initialQuantidade, isEditMode, onEdit, onDelete, onIncrease, onDecrease }) => {
+const SofaSummaryRowModal = ({
+  text,
+  quantidade: initialQuantidade,
+  isEditMode,
+  onEdit,
+  onDelete,
+  onIncrease,
+  onDecrease,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [quantidade, setQuantidade] = useState(Number(initialQuantidade) || 0); // Garante que seja um número válido
+  const [quantidade, setQuantidade] = useState(Number(initialQuantidade) || 0);
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -23,49 +34,148 @@ const SofaSummaryRowModal = ({ text, quantidade: initialQuantidade, isEditMode, 
   };
 
   return (
-    <div className="summary-item">
-      <div className="summary-text">{text}</div>
-      <div className="summary-quantity">
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        padding: "8px 10px",
+        borderBottom: "1px solid #ccc",
+        backgroundColor: "#F5F5F5",
+        width: "100%",
+      }}
+    >
+      {/* Text Section */}
+      <Typography
+        sx={{
+          flex: 2,
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          textAlign: "left",
+          paddingLeft: "10px",
+          fontSize: "16px",
+        }}
+      >
+        {text}
+      </Typography>
+
+      {/* Quantity Section */}
+      <Box
+        sx={{
+          flex: 3,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {isEditing ? (
-          <div className="edit-actions">
-            <ArrowButton
-              iconSrc="./assets/DownArrow.png"
-              altText="Diminuir"
+          <Box sx={{ display: "flex", alignItems: "center", }}>
+            <IconButton
               onClick={handleDecrease}
-              backgroundColor="#FFC9C9"
-              buttonStyle={{ padding: '6px 8px 6px 6px', width: '25px', height: '25px' }}
-              imageStyle={{ width: '12px', height: '12px' }}
-            />
+              color="error"
+            >
+              <RemoveIcon/>
+            </IconButton>
             <input
               type="number"
-              value={quantidade || 0} // Garante que o valor seja um número válido
-              onChange={(e) => setQuantidade(Number(e.target.value) || 0)} // Converte para número
+              value={quantidade}
+              onChange={(e) => setQuantidade(Number(e.target.value) || 0)}
               className="quantity-input"
+              style={{
+                width: "40px",
+                height: "30px",
+                textAlign: "center",
+                fontSize: "16px",
+                fontWeight: "bold",
+                border: "none",
+                padding: 0,
+                outline: "none",
+                appearance: "none",
+                MozAppearance: "textfield",
+                WebkitAppearance: "none",
+              }}
             />
-            <ArrowButton
-              iconSrc="./assets/upArrow.png"
-              altText="Aumentar"
+            {/* Remove spinner arrows */}
+            <style>
+              {`
+                input[type="number"]::-webkit-inner-spin-button,
+                input[type="number"]::-webkit-outer-spin-button {
+                  -webkit-appearance: none;
+                  margin: 0;
+                }
+                input[type="number"] {
+                  -moz-appearance: textfield;
+                }
+              `}
+            </style>
+            <IconButton
               onClick={handleIncrease}
-              backgroundColor="#A5D7FF"
-              buttonStyle={{ padding: '6px 8px 6px 6px', width: '25px', height: '25px' }}
-              imageStyle={{ width: '12px', height: '12px' }}
-            />
-          </div>
+              color="primary"
+            >
+              <AddIcon/>
+            </IconButton>
+          </Box>
         ) : (
-          <span className="quantity-text">x{String(quantidade || 0)}</span> // Converte para string ao exibir
+          <Typography
+            sx={{
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            x{String(quantidade || 0)}
+          </Typography>
         )}
-      </div>
-      <div className="summary-actions">
+      </Box>
+
+      {/* Actions Section */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          gap: 1,
+        }}
+      >
         {isEditMode && (
-          <button className="icon-button-edit" onClick={handleEditClick}>
-            <img src="./assets/pencilPartsStorage.png" alt="Editar" className="icon-image" />
-          </button>
+          <IconButton
+            onClick={handleEditClick}
+            sx={{
+              backgroundColor: "#A5D7FF",
+              borderRadius: "4px",
+              "&:hover": { backgroundColor: "#80C6FF" },
+              width: "30px",
+              height: "32px",
+            }}
+          >
+            <EditIcon
+            color="primary"
+              sx={{
+                fontSize: "25px",
+                
+              }}
+             />
+          </IconButton>
         )}
-        <button className="icon-button-delete" onClick={onDelete}>
-          <img src="./assets/trashCanImage.png" alt="Excluir" className="icon-image" />
-        </button>
-      </div>
-    </div>
+        <IconButton
+          onClick={onDelete}
+          sx={{
+            backgroundColor: "#FFC9C9",
+            "&:hover": { backgroundColor: "#FFAAAA" },
+            width: "30px",
+            height: "32px",
+            borderRadius: "4px",
+          }}
+        >
+          <DeleteIcon
+            color="error"
+            sx={{
+              fontSize: "25px",
+              
+            }}
+           />
+        </IconButton>
+      </Box>
+    </Box>
   );
 };
 

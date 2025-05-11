@@ -1,73 +1,95 @@
-import React, { useState, useRef } from 'react';
-import SofaRowModal from './SofaRowModal';
-import SofaSummaryRowModal from './SofaSummaryRowModal';
-import TitleModal from './TittleModal';
-import CustomButton from './CustomButton';
-import LeftWrapper from './LeftWrapper';
-import RightContainer from './RightContainer';
-import pecas from '../data/DataMock'; // Importa o JSON do DataMock
+import React, { useState, useRef } from "react";
+import { Box, Modal, Typography, Button, Divider } from "@mui/material";
+import SofaRowModal from "./SofaRowModal";
+import SofaSummaryRowModal from "./SofaSummaryRowModal";
+import TitleModal from "./TittleModal";
+import CustomButton from "./CustomButton";
+import LeftWrapper from "./LeftWrapper";
+import RightContainer from "./RightContainer";
+import pecas from "../data/DataMock"; // Importa o JSON do DataMock
 
 const AddSofaModal = ({ isOpen, onClose, onSave }) => {
-  const [leftItems, setLeftItems] = useState(pecas); // Usa o JSON do DataMock como estado inicial
-  const [rightItems, setRightItems] = useState([]); // Dados dinâmicos para o RightContainer
-  const [isImageSelected, setIsImageSelected] = useState(false); // Estado para rastrear se uma imagem foi selecionada
-  const [sofaName, setSofaName] = useState("Novo Sofá"); // Estado para o nome do sofá
+  const [leftItems, setLeftItems] = useState(pecas);
+  const [rightItems, setRightItems] = useState([]);
+  const [isImageSelected, setIsImageSelected] = useState(false);
+  const [sofaName, setSofaName] = useState("Novo Sofá");
 
-  const fileInputRef = useRef(null); // Referência para o input de arquivo
+  const fileInputRef = useRef(null);
 
   const handleAddPhotoClick = () => {
-    fileInputRef.current.click(); // Aciona o input de arquivo
+    fileInputRef.current.click();
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('Arquivo selecionado:', file.name); // Substitua por lógica para salvar ou exibir a imagem
-      setIsImageSelected(true); // Atualiza o estado para indicar que uma imagem foi selecionada
+      console.log("Arquivo selecionado:", file.name);
+      setIsImageSelected(true);
     }
   };
 
   const handleFastForward = (item) => {
-    // Adiciona o item ao RightContainer
     setRightItems((prev) => {
-      // Evita duplicados no resumo
       if (prev.some((i) => i.id === item.id)) return prev;
       return [...prev, item];
     });
   };
 
   const handleDelete = (id) => {
-    // Remove o item do RightContainer
     setRightItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   if (!isOpen) return null;
 
   return (
-    <div style={overlayStyle} onClick={onClose}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+    <Modal open={isOpen} onClose={onClose}>
+      <Box
+        sx={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "white",
+          borderRadius: "10px",
+          width: "70%",
+          height: "72%",
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+          overflow: "hidden",
+        }}
+      >
         {/* Título */}
         <TitleModal
-          modalName={sofaName} // Passa o nome do sofá
+          modalName={sofaName}
           isEditable={true}
           onClose={onClose}
-          onNameChange={(newName) => setSofaName(newName)} // Atualiza o nome do sofá
+          onNameChange={(newName) => setSofaName(newName)}
         />
 
         {/* Conteúdo */}
-        <div style={contentStyle}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "2%",
+            height: "100%",
+            width: "100%",
+            overflow: "hidden",
+            padding: "20px",
+          }}
+        >
           {/* Lista esquerda */}
           <LeftWrapper>
             {leftItems.map((item, index) => (
               <SofaRowModal
                 key={item.id}
-                text={item.nome} // Usa a propriedade "nome" do DataMock
-                quantity={item.quantidade || 0} // Garante que quantidade seja um número
+                text={item.nome}
+                quantity={item.quantidade || 0}
                 onDecrease={() =>
                   setLeftItems((prev) =>
                     prev.map((i) =>
                       i.id === item.id
-                        ? { ...i, quantidade: Math.max(Number(i.quantidade) - 1, 0) } // Garante que quantidade seja um número
+                        ? { ...i, quantidade: Math.max(Number(i.quantidade) - 1, 0) }
                         : i
                     )
                   )
@@ -76,7 +98,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                   setLeftItems((prev) =>
                     prev.map((i) =>
                       i.id === item.id
-                        ? { ...i, quantidade: Number(i.quantidade) + 1 } // Garante que quantidade seja um número
+                        ? { ...i, quantidade: Number(i.quantidade) + 1 }
                         : i
                     )
                   )
@@ -89,164 +111,114 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
 
           {/* Resumo à direita */}
           <RightContainer>
-            <div style={summaryHeaderStyle}>Resumo</div>
-            <div style={summaryContentStyle}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                padding: "10px",
+                borderRadius: "10px 16px 0 0",
+              }}
+            >
+              Resumo
+            </Typography>
+            <Divider sx={{}}/>
+            <Box
+              sx={{
+                width: "100%",
+                height: "80%",
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "auto",
+              }}
+            >
               {rightItems.map((item) => (
                 <SofaSummaryRowModal
                   key={item.id}
-                  text={item.nome} // Usa a propriedade "nome" do DataMock
-                  quantidade={Number(item.quantidade)} // Garante que quantidade seja um número
+                  text={item.nome}
+                  quantidade={Number(item.quantidade)}
                   isEditMode={false}
                   onDelete={() => handleDelete(item.id)}
                 />
               ))}
-            </div>
-            <div style={lineStyle}></div>
-            <div style={footerStyle}>
+            </Box>
+            <Divider />
+            <Box
+              sx={{
+                display: "flex",
+                gap: "5%",
+                padding: "12px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               {/* Botão de adicionar foto */}
               <CustomButton
-                imageSrc={isImageSelected ? './assets/folderSave.png' : './assets/folder.png'}
+                imageSrc={isImageSelected ? "./assets/folderSave.png" : "./assets/folder.png"}
                 text="Adicionar foto"
                 buttonStyle={{
-                  ...addPhotoButtonStyle,
-                  fontWeight: isImageSelected ? '600' : 'normal', // Define o texto em negrito se a imagem foi selecionada
+                  display: "flex",
+                  alignItems: "center",
+                  background: "#E0E0E0",
+                  height: "35px",
+                  borderRadius: "5px",
+                  alignItems: "center",
+                  textAlign: "center",
+                  cursor: "pointer",
+                  color: "black",
+                  width: "52%",
+                  fontWeight: isImageSelected ? "600" : "normal",
+                  "&:hover": {
+                    backgroundColor: "#D6D6D6", // Proper hover color
+                  },
                 }}
-                imageStyle={iconFooterStyle}
+                imageStyle={{ width: "25px", height: "25px" }}
                 onClick={handleAddPhotoClick}
               />
-              {/* Input de arquivo oculto */}
               <input
                 type="file"
                 accept="image/*"
                 ref={fileInputRef}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 onChange={handleFileChange}
               />
               <CustomButton
                 imageSrc="./assets/check.png"
                 text="Salvar"
-                buttonStyle={saveButtonStyle}
-                imageStyle={iconFooterStyle}
+                buttonStyle={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "#B8FFAA",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "0px 16px",
+                  cursor: "pointer",
+                  color: "#16BC00",
+                  fontWeight: "bold",
+                  width: "38%",
+                  justifyContent: "center",
+                  height: "100%",
+                  outline: "none",
+                  "&:hover": {
+                    backgroundColor: "#A8FF88", // Proper hover color
+                  },
+                }}
+                imageStyle={{ width: "25px", height: "25px" }}
                 onClick={() => {
                   const newSofa = {
-                    name: sofaName, // Usa o nome do sofá atualizado
-                    image: "../../public/assets/sofa-novo.png", // Substitua por uma imagem selecionada, se necessário
+                    name: sofaName,
+                    image: "../../public/assets/sofa-novo.png",
                   };
-                  onSave(newSofa); // Chama a função onSave com os dados do novo sofá
+                  onSave(newSofa);
                 }}
-                enableHover={true} // Habilita o efeito de hover
+                enableHover={true}
               />
-            </div>
+            </Box>
           </RightContainer>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Modal>
   );
-};
-
-
-// Estilos
-const overlayStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'rgba(0, 0, 0, 0.5)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 1000,
-};
-
-const modalStyle = {
-  background: 'white',
-  borderRadius: '10px',
-  width: '70%',
-  height: '72%',
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '0px',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-
-const contentStyle = {
-  display: 'flex',
-  gap: '2%',
-  overflow: 'hidden',
-  height: '90%',
-  width: '95%',
-  alignItems: 'center',
-  justifyContent: 'center',
-
-};
-
-const summaryHeaderStyle = {
-  background: 'var(--primary-color)',
-  color: 'white',
-  fontWeight: 'bold',
-  textAlign: 'center',
-  padding: '5px',
-  borderRadius: '10px 16px 0 0',
-
-};
-
-const summaryContentStyle = {
-  width: '100%',
-  height: '80%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflowY: 'auto',
-};
-
-const lineStyle = {
-  width: '100%',
-  height: '3px',
-  background: 'var(--primary-color)',
-  marginTop: '8px',
-};
-
-const footerStyle = {
-  display: 'flex',
-  gap: '5%',
-  padding: '12px',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const addPhotoButtonStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  background: '#E0E0E0',
-  height: '35px',
-  borderRadius: '5px',
-  padding: '0px 15px',
-  cursor: 'pointer',
-  color: 'black',
-};
-
-const saveButtonStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  background: '#B8FFAA',
-  border: 'none',
-  borderRadius: '5px',
-  padding: '0px 16px',
-  cursor: 'pointer',
-  color: '#16BC00',
-  fontWeight: 'bold',
-  width: '38%',
-  justifyContent: 'center',
-  height: '100%',
-  outline: 'none'
-};
-
-const iconFooterStyle = {
-  width: '25px',
-  height: '25px',
 };
 
 export default AddSofaModal;

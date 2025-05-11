@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import SofaRowModal from './SofaRowModal';
-import SofaSummaryRowModal from './SofaSummaryRowModal';
-import TitleModal from './TittleModal';
-import CustomButton from './CustomButton';
-import LeftWrapper from './LeftWrapper';
-import RightContainer from './RightContainer';
-import pecas from '../data/DataMock'; // Importa o JSON do DataMock
+import React, { useState } from "react";
+import { Box, Modal, Typography, Divider } from "@mui/material";
+import SofaRowModal from "./SofaRowModal";
+import SofaSummaryRowModal from "./SofaSummaryRowModal";
+import TitleModal from "./TittleModal";
+import CustomButton from "./CustomButton";
+import LeftWrapper from "./LeftWrapper";
+import RightContainer from "./RightContainer";
+import pecas from "../data/DataMock"; // Importa o JSON do DataMock
 
-const EditSofaModal = ({ isOpen, onClose, onSave, title }) => { // Recebe o título como prop
+const EditSofaModal = ({ isOpen, onClose, onSave, title }) => {
   const [leftItems, setLeftItems] = useState(pecas);
   const [rightItems, setRightItems] = useState([]);
 
@@ -25,25 +26,48 @@ const EditSofaModal = ({ isOpen, onClose, onSave, title }) => { // Recebe o tít
   if (!isOpen) return null;
 
   return (
-    <div style={overlayStyle} onClick={onClose}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+    <Modal open={isOpen} onClose={onClose}>
+      <Box
+        sx={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "white",
+          borderRadius: "10px",
+          width: "70%",
+          height: "72%",
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+          overflow: "hidden",
+        }}
+      >
         {/* Título */}
         <TitleModal
-          modalName={title} // Exibe apenas o nome do sofá
-          NameStyle={nameStyle}
-          nameContainer={nameContainerStyle}
+          modalName={title}
           isEditable={true}
           onClose={onClose}
         />
 
         {/* Conteúdo */}
-        <div style={contentStyle}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: "2%",
+            height: "100%",
+            width: "100%",
+            overflow: "hidden",
+            padding: "20px",
+          }}
+        >
+          {/* Lista esquerda */}
           <LeftWrapper>
             {leftItems.map((item, index) => (
               <SofaRowModal
                 key={item.id}
                 text={item.nome}
-                quantity={item.quantidade}
+                quantity={item.quantidade || 0}
                 onDecrease={() =>
                   setLeftItems((prev) =>
                     prev.map((i) =>
@@ -68,147 +92,83 @@ const EditSofaModal = ({ isOpen, onClose, onSave, title }) => { // Recebe o tít
             ))}
           </LeftWrapper>
 
+          {/* Resumo à direita */}
           <RightContainer>
-            <div style={summaryHeaderStyle}>Resumo</div>
-            <div style={summaryContentStyle}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                padding: "10px",
+                borderRadius: "10px 16px 0 0",
+              }}
+            >
+              Resumo
+            </Typography>
+            <Divider />
+            <Box
+              sx={{
+                width: "100%",
+                height: "80%",
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "auto",
+              }}
+            >
               {rightItems.map((item) => (
                 <SofaSummaryRowModal
                   key={item.id}
                   text={item.nome}
-                  quantidade={item.quantidade}
+                  quantidade={Number(item.quantidade)}
                   isEditMode={true}
                   onDelete={() => handleDelete(item.id)}
                 />
               ))}
-            </div>
-            <div style={lineStyle}></div>
-            <div style={footerStyle}>
+            </Box>
+            <Divider />
+            <Box
+              sx={{
+                display: "flex",
+                gap: "5%",
+                padding: "12px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* Botão de salvar */}
               <CustomButton
                 imageSrc="./assets/check.png"
                 text="Salvar"
-                buttonStyle={saveButtonStyle}
-                imageStyle={iconFooterStyle}
+                buttonStyle={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "#B8FFAA",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  color: "#16BC00",
+                  fontWeight: "bold",
+                  width: "100%",
+                  justifyContent: "center",
+                  height: "100%",
+                  transition: "background 0.3s",
+                  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+                  outline: "none",
+                  "&:hover": {
+                    backgroundColor: "#A8FF88",
+                  },
+                }}
+                imageStyle={{ width: "25px", height: "25px" }}
                 onClick={onSave}
                 enableHover={true}
               />
-            </div>
+            </Box>
           </RightContainer>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Modal>
   );
-};
-// Estilos
-const overlayStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'rgba(0, 0, 0, 0.5)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 1000,
-};
-
-const modalStyle = {
-  background: 'white',
-  borderRadius: '10px',
-  width: '70%',
-  height: '72%',
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '0px',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const nameContainerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    height: '60px',
-    background: 'var(--primary-color)',
-    borderRadius: '10px 10px 0 0',
-    width: '100%',
-  };
-  
-  
-  const nameStyle = {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    color: 'white',
-    fontFamily: 'Inter',
-  
-  };
-
-const contentStyle = {
-  display: 'flex',
-  gap: '2%',
-  overflow: 'hidden',
-  height: '90%',
-  width: '95%',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const summaryHeaderStyle = {
-  background: 'var(--primary-color)',
-  color: 'white',
-  fontWeight: 'bold',
-  textAlign: 'center',
-  padding: '5px',
-  borderRadius: '10px 16px 0 0',
-};
-
-const summaryContentStyle = {
-  width: '100%',
-  height: '80%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflowY: 'auto',
-};
-
-const lineStyle = {
-  width: '100%',
-  height: '3px',
-  background: 'var(--primary-color)',
-  marginTop: '8px',
-};
-
-const footerStyle = {
-  display: 'flex',
-  gap: '5%',
-  padding: '12px',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const saveButtonStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  background: '#B8FFAA',
-  border: 'none',
-  borderRadius: '10px',
-  padding: '8px 16px',
-  cursor: 'pointer',
-  color: '#16BC00',
-  fontWeight: 'bold',
-  width: '100%',
-  justifyContent: 'center',
-  height: '100%',
-  transition: 'background 0.3s',
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-  outline: 'none',
-
-};
-
-
-
-const iconFooterStyle = {
-  width: '25px',
-  height: '25px',
 };
 
 export default EditSofaModal;

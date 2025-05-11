@@ -1,19 +1,20 @@
-import React from 'react';
+import React from "react";
+import { Box } from "@mui/material";
 
 const RightContainer = ({ children }) => {
-  const rightContainerStyle = {
-    width: '40%',
-    height: '91%',
-    display: 'flex',
-    flexDirection: 'column',
-    border: '3px solid var(--primary-color)',
-    borderRadius: '16px',
-  };
-
   return (
-    <div style={rightContainerStyle}>
+    <Box
+      sx={{
+        width: "40%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        border: "3px solid var(--silver-color)",
+        borderRadius: "16px",
+      }}
+    >
       {children}
-    </div>
+    </Box>
   );
 };
 

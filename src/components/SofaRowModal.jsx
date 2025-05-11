@@ -1,97 +1,146 @@
-import React, { useState } from 'react';
-import ArrowButton from './ArrowButton';
-import './SofaRowModal.css'; // Importando o CSS
+import React, { useState } from "react";
+import { Box, Typography, IconButton, TextField, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import FastForwardIcon from "@mui/icons-material/FastForward";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-const SofaRowModal = ({ text, quantity: initialQuantity, onDecrease, onIncrease, onFastForward, isEven }) => {
-  const [quantity, setQuantity] = useState(initialQuantity); // Estado local para controlar a quantidade
-  const [isEditing, setIsEditing] = useState(false); // Estado para alternar entre visualização e edição
+const SofaRowModal = ({
+  text,
+  quantity: initialQuantity,
+  onDecrease,
+  onIncrease,
+  onFastForward,
+  isEven,
+}) => {
+  const [quantity, setQuantity] = useState(initialQuantity);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const backgroundColor = isEven ? '#D9D9D9' : '#F0F0F0';
+  const backgroundColor = isEven ? "#EBEBEB" : "#F8F8F8";
 
   const handleIncrease = () => {
-    setQuantity((prev) => prev + 1); // Incrementa a quantidade localmente
-    if (onIncrease) onIncrease(); // Chama a função de incremento, se fornecida
+    setQuantity((prev) => prev + 1);
+    if (onIncrease) onIncrease();
   };
 
   const handleDecrease = () => {
     if (quantity > 0) {
-      setQuantity((prev) => prev - 1); // Decrementa a quantidade localmente
-      if (onDecrease) onDecrease(); // Chama a função de decremento, se fornecida
+      setQuantity((prev) => prev - 1);
+      if (onDecrease) onDecrease();
     }
   };
 
   const handleQuantityChange = (e) => {
     const value = Number(e.target.value);
     if (value >= 0) {
-      setQuantity(value); // Atualiza a quantidade com o valor digitado
+      setQuantity(value);
     }
   };
 
   const toggleEditMode = () => {
-    setIsEditing(!isEditing); // Alterna entre os modos de edição e visualização
+    setIsEditing(!isEditing);
   };
 
   return (
-    <div className="sofa-row" style={{ backgroundColor }}>
-      <div className="container-left">
-        <span className="text-style" name="row-text">{text}</span>
-        <div className="container-buttons-style">
-          <div className="container-buttons-operation">
-            <ArrowButton
-              iconSrc="./assets/DownArrow.png"
-              altText="Diminuir"
-              onClick={handleDecrease}
-              name="decrease-button"
-              backgroundColor="#FFC9C9"
-              buttonStyle={{ padding: '6px 8px 6px 6px', width: '25px', height: '25px' }}
-              styleImage={{ width: '12px', height: '12px' }}
-            />
-            {isEditing ? (
-              <input
-                type="number"
-                value={quantity}
-                onChange={handleQuantityChange}
-                onBlur={toggleEditMode} // Sai do modo de edição ao perder o foco
-                className="quantity-input"
-              />
-            ) : (
-              <span
-                className="quantity-style"
-                name="quantity"
-                onClick={toggleEditMode} // Entra no modo de edição ao clicar
-                style={{
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                }}
-              >
-                {quantity}
-              </span>
-            )}
-            <ArrowButton
-              iconSrc="./assets/upArrow.png"
-              altText="Aumentar"
-              onClick={handleIncrease}
-              name="increase-button"
-              backgroundColor="#A5D7FF"
-              buttonStyle={{ padding: '6px 8px 6px 6px', width: '25px', height: '25px' }}
-              styleImage={{ width: '20px', height: '12px' }}
-            />
-          </div>
-          <button
-            className="fast-forward-button"
-            name="fast-forward-button"
-            onClick={onFastForward}
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        fontSize: "14px",
+        width: "100%",
+        borderRadius: "7px",
+        backgroundColor,
+        padding: "12px 16px",
+        height: "50px",
+      }}
+    >
+      {/* Text Section */}
+      <Box
+        sx={{
+          fontSize: "16px",
+          fontWeight: 400,
+          textAlign: "left",
+          width: "25%", // Adjust width as needed
+        }}
+      >
+        {text}
+      </Box>
+
+      {/* Quantity Controls */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center", // Center horizontally
+          alignItems: "center", // Center vertically
+           // Adjust width as needed
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <IconButton
+            onClick={handleDecrease}
+            color="error"
+            sx={{
+                          }}
           >
-            <img
-              src="./assets/fastForward.png"
-              alt="Avançar"
-              className="icon-style"
+            <RemoveIcon />
+          </IconButton>
+          {isEditing ? (
+            <TextField
+              type="number"
+              value={quantity}
+              onChange={handleQuantityChange}
+              onBlur={toggleEditMode}
+              size="small"
+              sx={{
+                width: "60px",
+                "& input": { textAlign: "center", fontWeight: "bold" },
+              }}
             />
-          </button>
-        </div>
-      </div>
-    </div>
+          ) : (
+            <Typography
+              onClick={toggleEditMode}
+              sx={{
+                cursor: "pointer",
+                fontSize: "16px",
+                fontWeight: "bold",
+              }}
+            >
+              {quantity}
+            </Typography>
+          )}
+          <IconButton
+            onClick={handleIncrease}
+            color="primary"
+                      >
+            <AddIcon />
+          </IconButton>
+        </Box>
+      </Box>
+
+      {/* Fast Forward Button */}
+      <Button
+        onClick={onFastForward}
+        variant="contained"
+        sx={{
+          backgroundColor: "#B8FFAA",
+          "&:hover": { backgroundColor: "#52B788" },
+          color: "white",
+          fontWeight: "bold",
+          padding: "6px 16px",
+          flexShrink:0,
+          textTransform: "none",
+        }}
+      >
+        <FastForwardIcon />
+      </Button>
+    </Box>
   );
 };
 

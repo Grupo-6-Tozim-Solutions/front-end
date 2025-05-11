@@ -13,9 +13,9 @@ const LeftWrapper = ({ children }) => {
 
 const leftWrapperStyle = {
     width: '60%',
-    border: '3px solid black',
-    height: '90%',
-    borderRadius: '12px',
+    border: '3px solid var(--silver-color)',
+    height: '100%',
+    borderRadius: '15px',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
