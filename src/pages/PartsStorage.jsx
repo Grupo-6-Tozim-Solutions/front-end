@@ -46,9 +46,9 @@ export function PartsStorage() {
     setConfirmationModalOpen(true);
   };
 
-  // const handleLogout = () => {
-  //   setLogoutModalOpen(true);
-  // };
+  const handleLogout = () => {
+    setLogoutModalOpen(true);
+  };
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
@@ -104,10 +104,13 @@ export function PartsStorage() {
         <HeaderStorage
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
-          filterText="Adicionar Sofá"
-          addText="Produzir"
+          filterText={"Filtros"}
+          addText="Adicionar"
           historyText="Ver histórico"
-          logoutText="Sair" />
+          logoutText="Sair"
+            onFilter={() => setFilterModalOpen(true)}
+          onAdd={() => setAddModalOpen(true)}
+          onLogout={() => setLogoutModalOpen(true)} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", marginTop: "40px" }}>
           <TableContainer sx={{ width: "94%", maxHeight: "600px", borderRadius: "16px" }} component={Paper}>
             <Table sx={{ borderRadius: "30%" }}>

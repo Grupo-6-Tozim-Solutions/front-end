@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 6vw;
-  height: 100vw;
+  height: 100vh;
   background-color: var(--primary-color);
   align-items: center;
   transition: width 0.3s ease; 
@@ -13,24 +13,24 @@
 }
 
 .SideBar-Counch.expanded {
-  width: 11vw; 
+  width: 15vw; 
 }
 
 .expand-icon {
   font-size: 2.1rem !important; /* Force size for Material UI icon */
   color: white; /* Set icon color */
   cursor: pointer;
+  margin: 10px 0;
 }
 
 .SideBar-Counch .navigation-list {
   list-style: none;
   padding: 0;
-  margin-top: 65%; 
+  margin-top: 20px; 
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  cursor: pointer;
 }
 
 .menu-item {
@@ -43,9 +43,9 @@
   transition: color 0.3s ease;
 }
 
-.menu-item img {
-  width: 30px;
-  height: 30px;
+.menu-icon {
+  font-size: 24px;
+  color: white;
 }
 
 .SideBar-Counch.expanded .menu-item {

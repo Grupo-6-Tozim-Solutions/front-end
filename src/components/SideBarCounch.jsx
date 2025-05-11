@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import MenuIcon from '@mui/icons-material/Menu'; // Import Material UI MenuIcon
+import { useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import WeekendIcon from '@mui/icons-material/Weekend'; // Sofa icon
+import BuildIcon from '@mui/icons-material/Build'; // Parts icon
+import DashboardIcon from '@mui/icons-material/Dashboard'; // Dashboard icon
 import '../styles/sideBarStyle.css';
-
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import HistoryIcon from '@mui/icons-material/History';
 const SideBarCounch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
 
   const handleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
   const menuItems = [
-    { icon: "../../public/assets/sofaIcone.png", title: "Sofás", onClick: () => navigate('/counch') }, // Navigate to CounchPage
-    { icon: "../../public/assets/prego-ico.png", title: "Peças", onClick: () => navigate('/parts-storage') }, // Navigate to PartsStorage
-    { icon: "../../public/assets/dash-ico.png", title: "Dashboard", onClick: () => navigate('/dashboard') },
-    { icon: "../../public/assets/ai-ico.png", title: "Chat" },
+    { icon: <WeekendIcon />, title: "Sofás", onClick: () => navigate('/counch') },
+    { icon: <BuildIcon />, title: "Peças", onClick: () => navigate('/parts-storage') },
+    { icon: <DashboardIcon />, title: "Dashboard", onClick: () => navigate('/dashboard') },
+    { icon: <AutoAwesomeIcon />, title: "Inteligência Artificial" },
+    { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/history') },
+    
   ];
 
   return (
@@ -25,7 +31,7 @@ const SideBarCounch = () => {
         <ul className="navigation-list">
           {menuItems.map((item, index) => (
             <li key={index} className="menu-item" onClick={item.onClick}>
-              <img src={item.icon} alt={`${item.title} Icon`} className='icone'/>
+              <div className="menu-icon">{item.icon}</div>
               {isExpanded && <span>{item.title}</span>}
             </li>
           ))}

@@ -20,7 +20,7 @@ const Dashboard = () => {
           historyText="Ver histórico"
           logoutText="Sair"
         />
-
+      <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent:"center", alignItems: "center" }}>
         <Box sx={{ width: "95%", height: "100%", display: "flex", gap: "40px", flexDirection: "row", justifyContent:"space evenly", padding: "20px" }}>
 
             <Box sx={{ width: "80%", height: "100%", display: "flex", flexDirection: "column",  alignItems: "center" }}>
@@ -30,6 +30,7 @@ const Dashboard = () => {
               <PieChartCard title="Sofás que mais saíram no mês" data={sofasMaisSaida} />
               <PieChartCard title="Peças que mais saíram no mês" data={pecasMaisSaida} />
             </Box>
+        </Box>
         </Box>
       </Box>
     </Box>
