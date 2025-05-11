@@ -1,56 +1,51 @@
-import React, { useState } from 'react';
+import React from "react";
+import { Button, Box, Typography } from "@mui/material";
 
 const CustomButton = ({ imageSrc, imageStyle, text, buttonStyle, onClick, enableHover = false }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const combinedButtonStyle = {
-    ...defaultButtonStyle,
-    ...buttonStyle,
-    ...(enableHover && isHovered ? hoverButtonStyle : {}),
-  };
-
   return (
-    <button
-      style={combinedButtonStyle}
+    <Button
       onClick={onClick}
-      onMouseEnter={() => enableHover && setIsHovered(true)}
-      onMouseLeave={() => enableHover && setIsHovered(false)}
+      sx={{
+        backgroundColor: "#FFC9C9",
+        color: "#FF0D0D",
+        borderRadius: "4px",
+        padding: "8px 28px",
+        fontSize: "16px",
+        display: "flex",
+        alignItems: "center",
+        gap: "7px",
+        textTransform: "none",
+        transition: "background-color 0.3s, transform 0.2s",
+        "&:hover": {
+          backgroundColor: enableHover ? "#FF6B6B" : "#FFC9C9",
+          transform: enableHover ? "scale(1.05)" : "none",
+        },
+        ...buttonStyle,
+      }}
     >
-      {imageSrc && <img src={imageSrc} alt="button-icon" style={{ ...defaultImageStyle, ...imageStyle }} />}
-      <span style={defaultTextStyle}>{text}</span>
-    </button>
+      {imageSrc && (
+        <Box
+          component="img"
+          src={imageSrc}
+          alt="button-icon"
+          sx={{
+            width: "20px",
+            height: "20px",
+            marginRight: "7px",
+            ...imageStyle,
+          }}
+        />
+      )}
+      <Typography
+        sx={{
+          fontSize: "16px",
+          fontWeight: "500",
+        }}
+      >
+        {text}
+      </Typography>
+    </Button>
   );
-};
-
-// Estilos padrão
-const defaultButtonStyle = {
-  color: '#FF0D0D',
-  border: 'none',
-  borderRadius: '4px',
-  padding: '8px 28px',
-  cursor: 'pointer',
-  fontSize: '16px',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '7px',
-  transition: 'background-color 0.3s, transform 0.2s',
-
-};
-
-const hoverButtonStyle = {
-  backgroundColor: '#A0E89B', // Cor levemente diferente
-  transform: 'scale(1.03)',   // Cresce no hover
-};
-
-const defaultImageStyle = {
-  width: '20px',
-  height: '20px',
-  marginRight: '7px',
-};
-
-const defaultTextStyle = {
-  fontSize: '16px',
-  fontWeight: '500',
 };
 
 export default CustomButton;
