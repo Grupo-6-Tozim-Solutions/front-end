@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import MenuIcon from '@mui/icons-material/Menu'; // Import Material UI MenuIcon
 import '../styles/sideBarStyle.css';
 
 const SideBarCounch = () => {
@@ -12,15 +13,15 @@ const SideBarCounch = () => {
 
   const menuItems = [
     { icon: "../../public/assets/sofaIcone.png", title: "Sofás", onClick: () => navigate('/counch') }, // Navigate to CounchPage
-    { icon: "../../public/assets/prego-ico.png", title: "Peças", onClick: () => navigate('/') }, // Navigate to PartsStorage
-    { icon: "../../public/assets/dash-ico.png", title: "Dashboard" },
+    { icon: "../../public/assets/prego-ico.png", title: "Peças", onClick: () => navigate('/parts-storage') }, // Navigate to PartsStorage
+    { icon: "../../public/assets/dash-ico.png", title: "Dashboard", onClick: () => navigate('/dashboard') },
     { icon: "../../public/assets/ai-ico.png", title: "Chat" },
   ];
 
   return (
     <>
       <div className={`SideBar-Counch ${isExpanded ? 'expanded' : ''}`}>
-        <img src="../../public/assets/box.png" onClick={handleExpand} alt="Expand Sidebar" className="expand-icon" />
+        <MenuIcon onClick={handleExpand} className="expand-icon" /> {/* Replace box image with MenuIcon */}
         <ul className="navigation-list">
           {menuItems.map((item, index) => (
             <li key={index} className="menu-item" onClick={item.onClick}>

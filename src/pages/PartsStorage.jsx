@@ -11,6 +11,7 @@ import ConfirmationModal from "../components/ConfirmationModals";
 import "../styles/PartsStorageStyle.css";
 import initialPecas from "../data/DataMock"; // Importa os dados iniciais
 import SideBarCounch from "../components/SideBarCounch";
+import { Box, Table, TableContainer, TableBody, Paper } from '@mui/material';
 
 export function PartsStorage() {
   const [pecas, setPecas] = useState(initialPecas); // Estado para armazenar as peças
@@ -45,9 +46,9 @@ export function PartsStorage() {
     setConfirmationModalOpen(true);
   };
 
-  const handleLogout = () => {
-    setLogoutModalOpen(true);
-  };
+  // const handleLogout = () => {
+  //   setLogoutModalOpen(true);
+  // };
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
@@ -99,71 +100,55 @@ export function PartsStorage() {
   return (
     <div className="parts-storage">
           <SideBarCounch />
-        <div className="main-container">
-          <HeaderStorage
-            title="Gerenciamento de Peças"
-            subtitle="Tozine Solutions"
-            filterText="Filtro"
-            filterIcon="../../public/assets/filterIcon.png"
-            filterWidth="10vw"
-            filterBackgroundColor="#FFFAC9"
-            filterTextColor="#FF8E0D"
-            addText="Adicionar"
-            addIcon="../../public/assets/addPartsStorage.png"
-            addWidth="15vw"
-            addBackgroundColor="rgba(201, 231, 255, 1)"
-            addTextColor="rgba(7, 64, 218, 1)"
-            historyText="Ver Histórico"
-            historyIcon="../../public/assets/historyPartsStorage.png"
-            historyWidth="16vw"
-            historyBackgroundColor="rgba(201, 231, 255, 1)"
-            historyTextColor="rgba(7, 64, 218, 1)"
-            logoutText="Sair"
-            logoutIcon="../../public/assets/logoutPartsStorage.png"
-            logoutWidth="7.5vw"
-            logoutBackgroundColor="rgba(255, 201, 201, 1)"
-            logoutTextColor="rgba(255, 13, 13, 1)"
-            buttonMarginLeft="2%"
-            headerMarginBottom="5%" // Set bottom margin
-            onFilter={() => setFilterModalOpen(true)}
-            onAdd={() => setAddModalOpen(true)}
-            onHistory={() => alert("Histórico")}
-            onLogout={() => setLogoutModalOpen(true)} // Abre o modal de confirmação
-          />
-          <div className="table-container">
-            <TableStructurePartsStorage />
+        <Box sx={{ width: "100%"}}>
+        <HeaderStorage
+          title="Gerenciamento de Sofás"
+          subtitle="Tozine Solutions"
+          filterText="Adicionar Sofá"
+          addText="Produzir"
+          historyText="Ver histórico"
+          logoutText="Sair" />
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", marginTop: "40px" }}>
+          <TableContainer sx={{ width: "94%", maxHeight: "600px", borderRadius: "16px" }} component={Paper}>
+            <Table sx={{ borderRadius: "30%" }}>
 
-            {filteredParts.map((peca, index) => {
-              const name = peca.nome;
-              const quantity = peca.quantidade;
+              <TableStructurePartsStorage />
 
-              // Define o nível de alerta como "critical" se a quantidade for menor que o limite de estoque baixo
-              const warningLevel =
-                quantity < peca.lowStockThreshold ? "critical" : null;
+              <TableBody>
+                {filteredParts.map((peca, index) => {
+                  const name = peca.nome;
+                  const quantity = peca.quantidade;
 
-              // Define o status como "Estoque Baixo" se o nível de alerta for "critical"
-              const status =
-                warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
+                  // Define o nível de alerta como "critical" se a quantidade for menor que o limite de estoque baixo
+                  const warningLevel =
+                    quantity < peca.lowStockThreshold ? "critical" : null;
 
-              const formattedId = String(peca.id).padStart(3, "0");
-              const formattedQty = String(quantity).padStart(2, "0");
+                  // Define o status como "Estoque Baixo" se o nível de alerta for "critical"
+                  const status =
+                    warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
 
-              return (
-                <TableRowPartsStorage
-                  key={peca.id}
-                  id={formattedId}
-                  name={name}
-                  quantity={formattedQty}
-                  status={status}
-                  warningLevel={warningLevel} // Passa o nível de alerta para estilização
-                  index={index}
-                  onEdit={() => handleEdit(peca)}
-                  onDelete={() => handleDelete(peca)}
-                />
-              );
-            })}
-          </div>
-        </div>
+                  const formattedId = String(peca.id).padStart(3, "0");
+                  const formattedQty = String(quantity).padStart(2, "0");
+
+                  return (
+                    <TableRowPartsStorage
+                      key={peca.id}
+                      id={formattedId}
+                      name={name}
+                      quantity={formattedQty}
+                      status={status}
+                      warningLevel={warningLevel} // Passa o nível de alerta para estilização
+                      index={index}
+                      onEdit={() => handleEdit(peca)}
+                      onDelete={() => handleDelete(peca)}
+                    />
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        </Box>
    
       {/* Modais */}
       <AddPartModal

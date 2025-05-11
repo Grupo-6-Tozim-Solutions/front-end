@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 6vw;
   height: 100vw;
-  background-color: rgba(7, 64, 218, 1);
+  background-color: var(--primary-color);
   align-items: center;
   transition: width 0.3s ease; 
   z-index: 5; 
@@ -13,13 +13,13 @@
 }
 
 .SideBar-Counch.expanded {
-  width: 13vw; 
+  width: 11vw; 
 }
 
 .expand-icon {
-  width: 55%;
-  object-fit: cover;
-  margin-top: 12%;
+  font-size: 2.1rem !important; /* Force size for Material UI icon */
+  color: white; /* Set icon color */
+  cursor: pointer;
 }
 
 .SideBar-Counch .navigation-list {

@@ -25,8 +25,7 @@ const CounchPage = () => {
     { id: 4, name: "Sofá Tipo 4", image: "../../public/assets/sofa-novo.png", pecas: [] },
     { id: 5, name: "Sofá Tipo 5", image: "../../public/assets/sofa-novo.png", pecas: [] },
     { id: 6, name: "Sofá Tipo 6", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 7, name: "Sofá Tipo 7", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 8, name: "Sofá Tipo 8", image: "../../public/assets/sofa-novo.png", pecas: [] },
+   
   
   ]);
 
@@ -92,10 +91,7 @@ const CounchPage = () => {
               onEdit={() => handleEditSofa(sofa)}
               onDelete={() => openDeleteModal(sofa)} // Passa a função para abrir o modal de exclusão
             />
-            
-            
           ))}
-          
         </Box>
       </Box>
 
