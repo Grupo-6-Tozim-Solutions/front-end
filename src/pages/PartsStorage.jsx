@@ -104,7 +104,7 @@ export function PartsStorage() {
         <HeaderStorage
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
-          filterText={"Filtros"}
+          filterText={ "Filtros"}
           addText="Adicionar"
           historyText="Ver histórico"
           logoutText="Sair"

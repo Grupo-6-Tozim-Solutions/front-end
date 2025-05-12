@@ -7,6 +7,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard'; // Dashboard icon
 import '../styles/sideBarStyle.css';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import HistoryIcon from '@mui/icons-material/History';
+import BarChartIcon from '@mui/icons-material/BarChart';
 const SideBarCounch = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const SideBarCounch = () => {
   const menuItems = [
     { icon: <WeekendIcon />, title: "Sofás", onClick: () => navigate('/counch') },
     { icon: <BuildIcon />, title: "Peças", onClick: () => navigate('/parts-storage') },
-    { icon: <DashboardIcon />, title: "Dashboard", onClick: () => navigate('/dashboard') },
+    { icon: <BarChartIcon />, title: "Dashboard", onClick: () => navigate('/dashboard') },
     { icon: <AutoAwesomeIcon />, title: "Inteligência Artificial" },
     { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/history') },
     
