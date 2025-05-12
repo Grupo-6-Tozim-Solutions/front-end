@@ -5,6 +5,7 @@ import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
 import CadastroForm from '../components/CadastroForm';
 import LinkCadastro from '../components/LinkCadastro';
+import { api } from "../provider/apiProvider";
 import axios from 'axios';
 
 const CadastroPage = () => {
@@ -17,7 +18,7 @@ const CadastroPage = () => {
       return;
     }
   
-    axios.post('http://localhost:8080/usuario', {
+    api.post('/usuario', {
       nome,
       email,
       senha,

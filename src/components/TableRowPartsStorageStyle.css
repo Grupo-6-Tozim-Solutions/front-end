@@ -32,12 +32,10 @@
   
   .col-quantity.critical,
   .col-status.critical {
-    background-color: #ffd6d6;
     border-radius: 6px;
     padding: 0.3rem 0.6rem;
     color: #c40000;
-    display: inline-block;
-    justify-self: center;   
+    justify-self: center; 
   }
   
   .col-quantity.warning,

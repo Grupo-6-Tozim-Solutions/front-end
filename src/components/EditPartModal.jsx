@@ -23,8 +23,8 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
   const [currentName, setCurrentName] = useState(partData.nome);
 
   useEffect(() => {
-    if (partData && partData.quantidade !== undefined) {
-      setInitialQuantity(partData.quantidade);
+    if (partData && partData.quantidadeEstoque !== undefined) {
+      setInitialQuantity(partData.quantidadeEstoque);
       setAddedQuantity(0);
       setRemovedQuantity(0);
     }
@@ -48,10 +48,9 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
       setRemoveInputValue("");
     }
   };
-
   const handleSave = () => {
     const finalQuantity = initialQuantity + addedQuantity - removedQuantity;
-    onSave({ ...partData, quantidade: finalQuantity, nome:currentName });
+    onSave({ ...partData, quantidadeEstoque: finalQuantity, nome: currentName });
     onClose();
   };
 
@@ -68,7 +67,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Box 
+      <Box
         sx={{
           position: "absolute",
           top: "50%",
@@ -123,9 +122,9 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                     },
                   }}
                 />
-                <IconButton 
-                 onClick={() => setIsEditingName(false)} // Fecha o modo de edição sem salva
-                size="small" sx={{ color: "white" }}>
+                <IconButton
+                  onClick={() => setIsEditingName(false)} // Fecha o modo de edição sem salva
+                  size="small" sx={{ color: "white" }}>
                   <EditIcon />
                 </IconButton>
               </Box>
@@ -179,10 +178,10 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
             </Typography>
             <Divider />
             <Box>
-              <Typography variant="body2" sx={{mt: 2}}>
+              <Typography variant="body2" sx={{ mt: 2 }}>
                 Digite a quantidade de peças que deseja adicionar:
               </Typography>
-              <Box sx={{ display: "flex", gap: 4, mt: 2}}>
+              <Box sx={{ display: "flex", gap: 4, mt: 2 }}>
                 <TextField
                   type="number"
                   placeholder="Digite a quantidade"
@@ -209,7 +208,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
               </Box>
             </Box>
             <Box>
-              <Typography variant="body2" sx={{mt: 2}}>
+              <Typography variant="body2" sx={{ mt: 2 }}>
                 Digite a quantidade de peças que deseja retirar:
               </Typography>
               <Box sx={{ display: "flex", gap: 4, mt: 2 }}>
@@ -238,7 +237,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
                 </Button>
               </Box>
             </Box>
-            <Divider  sx={{mt: 4}}/>
+            <Divider sx={{ mt: 4 }} />
             <Box sx={{ display: "flex", gap: 2, mt: 1.5 }}>
               <Button
                 variant="contained"
@@ -289,31 +288,31 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
               Resumo
             </Typography>
             <Divider />
-            <Box sx={{mt: 2}}>
+            <Box sx={{ mt: 2 }}>
               <Typography variant="body3">
                 <strong>Peça:</strong> {partData.nome}
               </Typography>
             </Box>
-            <Box sx={{  gap: 1, display: "flex", flexDirection: "column", mt: 2 }}>
+            <Box sx={{ gap: 1, display: "flex", flexDirection: "column", mt: 2 }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                   Qtd Anterior:
                 </Typography>
-                <Box sx={{ flexGrow: 1, borderBottom: "2.2px dotted black", mt:1.4 }} />
+                <Box sx={{ flexGrow: 1, borderBottom: "2.2px dotted black", mt: 1.4 }} />
                 <Typography variant="body2">{initialQuantity}</Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
                 <Typography variant="body3" sx={{ fontWeight: "bold" }}>
                   Entrada:
                 </Typography>
-                <Box sx={{ flexGrow: 1, borderBottom: "2.2px dotted black", mt:1.4 }} />
+                <Box sx={{ flexGrow: 1, borderBottom: "2.2px dotted black", mt: 1.4 }} />
                 <Typography variant="body2">{addedQuantity}</Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
                 <Typography variant="body3" sx={{ fontWeight: "bold" }}>
                   Saída:
                 </Typography>
-                <Box sx={{ flexGrow: 1, borderBottom: "2.2px dotted black", mt:1.4 }} />
+                <Box sx={{ flexGrow: 1, borderBottom: "2.2px dotted black", mt: 1.4 }} />
                 <Typography variant="body3">{removedQuantity}</Typography>
               </Box>
             </Box>
@@ -331,7 +330,7 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
               </Typography>
             </Typography>
             <Divider />
-            <Typography variant="h5" fontWeight="medium"  fontFamily="inter" sx={{mt:2}}>
+            <Typography variant="h5" fontWeight="medium" fontFamily="inter" sx={{ mt: 2 }}>
               Total: {totalQuantity}
             </Typography>
           </Box>

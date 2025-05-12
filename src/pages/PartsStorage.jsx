@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importa o hook useNavigate
 import HeaderStorage from "../components/HeaderStorage";
 import TableStructurePartsStorage from "../components/TableStructurePartsStorage";
-import SideBar from "../components/SideBar";
+import { api } from "../provider/apiProvider";
 import TableRowPartsStorage from "../components/TableRowPartsStorage";
 import AddPartModal from "../components/AddPartModal";
 import FilterModal from "../components/FilterModal";
@@ -12,6 +12,7 @@ import "../styles/PartsStorageStyle.css";
 import initialPecas from "../data/DataMock"; // Importa os dados iniciais
 import SideBarCounch from "../components/SideBarCounch";
 import { Box, Table, TableContainer, TableBody, Paper } from '@mui/material';
+import { useEffect } from "react";
 
 export function PartsStorage() {
   const [pecas, setPecas] = useState(initialPecas); // Estado para armazenar as peças
@@ -33,12 +34,33 @@ export function PartsStorage() {
     setEditModalOpen(true); // Abre o modal de edição
   };
 
-  const handleSaveEdit = (updatedPart) => {
-    // Atualiza a peça editada na lista
-    setPecas((prevPecas) =>
-      prevPecas.map((peca) => (peca.id === updatedPart.id ? updatedPart : peca))
-    );
-    setEditModalOpen(false); // Fecha o modal de edição
+  const handleSaveEdit = async (updatedPart) => {
+    try {
+      const existingPart = pecas.find(p => p.id === updatedPart.id);
+
+      if (updatedPart.nome !== existingPart.nome) {
+        await api.put(`/peca/${updatedPart.id}`, {
+          nome: updatedPart.nome,
+          quantidadeMinima: existingPart.quantidadeMinima,
+        });
+      }
+
+      const diff = updatedPart.quantidadeEstoque - existingPart.quantidadeEstoque;
+
+      if (diff > 0) {
+        await api.put(`/peca/adicionarQuantidade/${updatedPart.id}/${diff}`);
+      } else if (diff < 0) {
+        await api.put(`/peca/removerQuantidade/${updatedPart.id}/${Math.abs(diff)}`);
+      }
+
+      const response = await api.get("/peca/listarTodas");
+
+      setPecas(response.data);
+      setEditModalOpen(false);
+    } catch (error) {
+      console.error("Erro ao editar peça:", error);
+      alert("Erro ao editar peça.");
+    }
   };
 
   const handleDelete = (peca) => {
@@ -46,9 +68,6 @@ export function PartsStorage() {
     setConfirmationModalOpen(true);
   };
 
-  const handleLogout = () => {
-    setLogoutModalOpen(true);
-  };
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
@@ -60,12 +79,20 @@ export function PartsStorage() {
     setFilterModalOpen(false); // Fecha o modal de filtro
   };
 
-  const handleConfirmDelete = () => {
-    // Remove a peça selecionada
-    setPecas((prevPecas) =>
-      prevPecas.filter((peca) => peca.id !== selectedPart.id)
-    );
-    setConfirmationModalOpen(false); // Fecha o modal de confirmação
+  const handleConfirmDelete = async () => {
+    try {
+      await api.delete(`/peca/${selectedPart.id}`);
+
+      // Remove do estado local
+      setPecas((prevPecas) =>
+        prevPecas.filter((peca) => peca.id !== selectedPart.id)
+      );
+
+      setConfirmationModalOpen(false); // Fecha o modal
+    } catch (error) {
+      console.error("Erro ao excluir a peça:", error);
+      alert("Erro ao excluir a peça. Tente novamente.");
+    }
   };
 
   // Ordena e filtra os itens dinamicamente
@@ -74,9 +101,9 @@ export function PartsStorage() {
 
     // Ordenar por maior ou menor número de peças
     if (filterCriteria.order === "largest") {
-      sortedParts.sort((a, b) => b.quantidade - a.quantidade);
+      sortedParts.sort((a, b) => b.quantidadeEstoque - a.quantidadeEstoque);
     } else if (filterCriteria.order === "smallest") {
-      sortedParts.sort((a, b) => a.quantidade - b.quantidade);
+      sortedParts.sort((a, b) => a.quantidadeEstoque - b.quantidadeEstoque);
     }
 
     // Filtrar por nome (não oculta itens, mas prioriza os correspondentes)
@@ -97,10 +124,24 @@ export function PartsStorage() {
 
   const filteredParts = getFilteredAndSortedParts();
 
+  useEffect(() => {
+    const fetchPecas = async () => {
+      try {
+        const response = await api.get("/peca/listarTodas");
+        setPecas(response.data); // Dados do backend
+      } catch (error) {
+        console.error("Erro ao buscar peças:", error);
+      }
+    };
+
+    fetchPecas();
+  }, []);
+
+
   return (
     <div className="parts-storage">
-          <SideBarCounch />
-        <Box sx={{ width: "100%"}}>
+      <SideBarCounch />
+      <Box sx={{ width: "100%" }}>
         <HeaderStorage
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
@@ -108,7 +149,7 @@ export function PartsStorage() {
           addText="Adicionar"
           historyText="Ver histórico"
           logoutText="Sair"
-            onFilter={() => setFilterModalOpen(true)}
+          onFilter={() => setFilterModalOpen(true)}
           onAdd={() => setAddModalOpen(true)}
           onLogout={() => setLogoutModalOpen(true)} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", marginTop: "40px" }}>
@@ -120,18 +161,11 @@ export function PartsStorage() {
               <TableBody>
                 {filteredParts.map((peca, index) => {
                   const name = peca.nome;
-                  const quantity = peca.quantidade;
-
-                  // Define o nível de alerta como "critical" se a quantidade for menor que o limite de estoque baixo
-                  const warningLevel =
-                    quantity < peca.lowStockThreshold ? "critical" : null;
-
-                  // Define o status como "Estoque Baixo" se o nível de alerta for "critical"
-                  const status =
-                    warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
-
+                  const quantity = peca.quantidadeEstoque;
+                  const warningLevel = quantity < peca.quantidadeMinima ? "critical" : null;
+                  const status = warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
                   const formattedId = String(peca.id).padStart(3, "0");
-                  const formattedQty = String(quantity).padStart(2, "0");
+                  const formattedQty = String(quantity ?? 0).padStart(2, "0");
 
                   return (
                     <TableRowPartsStorage
@@ -140,34 +174,44 @@ export function PartsStorage() {
                       name={name}
                       quantity={formattedQty}
                       status={status}
-                      warningLevel={warningLevel} // Passa o nível de alerta para estilização
+                      warningLevel={warningLevel}
                       index={index}
                       onEdit={() => handleEdit(peca)}
                       onDelete={() => handleDelete(peca)}
                     />
+
                   );
                 })}
               </TableBody>
             </Table>
           </TableContainer>
         </Box>
-        </Box>
-   
+      </Box>
+
       {/* Modais */}
       <AddPartModal
         isOpen={isAddModalOpen}
         onClose={() => setAddModalOpen(false)}
-        onSave={(newPart) => {
-          // Calcula o próximo ID com base no maior ID existente
-          const nextId = Math.max(...pecas.map((peca) => peca.id), 0) + 1;
+        onSave={async (newPart) => {
+          try {
+            const response = await api.post("/peca", {
+              nome: newPart.nome,
+              quantidadeEstoque: newPart.quantidadeEstoque,
+              quantidadeMinima: newPart.quantidadeMinima,
+            });
 
-          // Adiciona o ID ao objeto da nova peça
-          const partWithId = { id: nextId, ...newPart };
+            const savedPart = response.data;
+            console.log("Nova peça:", newPart);
 
-          // Atualiza o estado com a nova peça
-          setPecas((prevPecas) => [...prevPecas, partWithId]);
+            // Adiciona a peça retornada do back (com id e campos corretos)
+            setPecas((prev) => [...prev, savedPart]);
+          } catch (error) {
+            console.error("Erro ao salvar a peça:", error);
+            alert("Erro ao salvar a peça. Verifique os dados.");
+          }
         }}
       />
+
 
       <FilterModal
         isOpen={isFilterModalOpen}

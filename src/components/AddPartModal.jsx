@@ -20,11 +20,11 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
       return;
     }
 
-    const newPart = {
-      nome: name,
-      quantidade: parseInt(quantity, 10),
-      lowStockThreshold: parseInt(lowStockThreshold, 10),
-    };
+  const newPart = {
+  nome: name,
+  quantidadeEstoque: parseInt(quantity, 10),
+  quantidadeMinima: parseInt(lowStockThreshold, 10),
+};
 
     onSave(newPart);
     onClose();
@@ -184,6 +184,9 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
                   padding: "8px 16px",
                   fontSize: "14px",
                   fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#B0D8FF",
+                  },
                 }}
                 imageStyle={{
                   width: "20px",
