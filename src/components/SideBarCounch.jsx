@@ -20,7 +20,7 @@ const SideBarCounch = () => {
     { icon: <WeekendIcon />, title: "Sofás", onClick: () => navigate('/counch') },
     { icon: <BuildIcon />, title: "Peças", onClick: () => navigate('/parts-storage') },
     { icon: <BarChartIcon />, title: "Dashboard", onClick: () => navigate('/dashboard') },
-    { icon: <AutoAwesomeIcon />, title: "Inteligência Artificial" },
+    { icon: <AutoAwesomeIcon />, title: "Inteligência Artificial", onClick: () => navigate('/gemini-reports') },
     { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/history') },
     
   ];

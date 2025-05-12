@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
 import Dashboard from './pages/Dashboard';
 import { useEffect } from 'react';
+import GeminiReports from './pages/GeminiReports';
 
 function App() {
   useEffect(() => {
@@ -47,6 +48,9 @@ function App() {
 
         {/* Rota para CounchPage */}
         <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Rota para a GeminiReports */ }
+        <Route path="/gemini-reports" element={<GeminiReports/>} />
       </Routes>
     </Router>
   );
