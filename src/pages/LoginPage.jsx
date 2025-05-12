@@ -6,6 +6,7 @@ import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
 import LinkCadastro from '../components/LinkCadastro';
 import axios from 'axios'; // Importa o axios para requisições HTTP
+import { api } from "../provider/apiProvider"
 
 const LoginPage = () => {
   const [loginStatus, setLoginStatus] = useState({ type: null, message: '' });
@@ -20,7 +21,7 @@ const LoginPage = () => {
   
     setIsLoading(true); // Ativa o estado de carregamento
   
-    axios.get('http://localhost:8080/usuario/login', {
+    api.get('/usuario/login', {
       params: {
         email: credentials.credencial,
         senha: credentials.senha,
