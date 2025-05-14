@@ -143,7 +143,7 @@ export function PartsStorage() {
       <SideBarCounch />
       <Box sx={{ width: "100%" }}>
         <HeaderStorage
-          title="Gerenciamento de Sofás"
+          title="Gerenciamento de Peças"
           subtitle="Tozine Solutions"
           filterText={ "Filtros"}
           addText="Adicionar"

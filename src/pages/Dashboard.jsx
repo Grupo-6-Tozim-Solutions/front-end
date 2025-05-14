@@ -13,7 +13,7 @@ const Dashboard = () => {
       <SideBarCounch />
       <Box sx={{ width: "100%" }}>
         <HeaderStorage
-          title="Gerenciamento de Sofás"
+          title="Dashboard"
           subtitle="Tozine Solutions"
           filterText="Adicionar Sofá"
           addText="Produzir"
