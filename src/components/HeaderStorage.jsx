@@ -6,12 +6,8 @@ const HeaderStorage = ({
   subtitle, 
   filterText, 
   addText, 
-  historyText, 
-  logoutText, 
   onFilter, 
   onAdd, 
-  onHistory, 
-  onLogout 
 }) => {
   return (
     <AppBar position="static" color="default" sx={{ padding: "10px" }}>
@@ -26,18 +22,12 @@ const HeaderStorage = ({
         </Box>
           
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Divider orientation="vertical" flexItem />
           <Button variant="contained" color="primary" onClick={onFilter}>
             {filterText}
           </Button>
           <Button variant="contained" color="secondary" onClick={onAdd}>
             {addText}
-          </Button>
-          <Divider orientation="vertical" flexItem />
-          <Button variant="outlined" color="primary" onClick={onHistory}>
-            {historyText}
-          </Button>
-          <Button variant="outlined" color="error" onClick={onLogout}>
-            {logoutText}
           </Button>
         </Box>
       </Toolbar>

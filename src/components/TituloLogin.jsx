@@ -1,8 +1,9 @@
+import { Typography } from '@mui/material';
 import React from 'react';
 
 const TituloLogin = (props) => {
-  return (   
-    <h1><b>{props.titulo}</b></h1>
+  return (
+    <Typography variant="h3">{props.titulo}</Typography>
   );
 };
 
