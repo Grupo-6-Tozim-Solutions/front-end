@@ -8,6 +8,7 @@ import CadastroPage from './pages/CadastroPage';
 import Dashboard from './pages/Dashboard';
 import { useEffect } from 'react';
 import GeminiReports from './pages/GeminiReports';
+import LogsPage from './pages/LogsPage';
 
 function App() {
   useEffect(() => {
@@ -51,6 +52,8 @@ function App() {
 
         {/* Rota para a GeminiReports */ }
         <Route path="/gemini-reports" element={<GeminiReports/>} />
+        {/* Rota para a LogsPage */}
+        <Route path="/logs" element={<LogsPage />} />
       </Routes>
     </Router>
   );

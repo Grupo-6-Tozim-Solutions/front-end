@@ -28,7 +28,7 @@ const SideBarCounch = () => {
     { icon: <BuildIcon />, title: "Peças", onClick: () => navigate('/parts-storage') },
     { icon: <BarChartIcon />, title: "Dashboard", onClick: () => navigate('/dashboard') },
     { icon: <AutoAwesomeIcon />, title: "Chat IA", onClick: () => navigate('/gemini-reports') },
-    { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/history') },
+    { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/logs') },
 
   ];
 
@@ -47,7 +47,7 @@ const SideBarCounch = () => {
         </ul>
        <Box sx={{ display: 'flex', height: '90%', flexDirection: 'column',width: '100%', justifyContent: 'flex-end', alignItems: 'center', marginBottom:'20%' }}>
            <li className="menu-item" onClick={() => setLogoutModalOpen(true) }>
-            <Box sx={{ fontSize: '2rem' }}><LogoutIcon fontSize="inherit" /></Box>
+            <Box><LogoutIcon /></Box>
             {isExpanded && <span>Sair</span>}
           </li>
        </Box>
