@@ -1,17 +1,21 @@
 import SideBarCounch from '../components/SideBarCounch';
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
-import { askGemini } from '../services/geminiService'; // Importa o serviço da API
+import { askGemini } from '../services/geminiService'; // Chamada à API Gemini
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import '../styles/GeminiReports.css';
 
 const GeminiReports = () => {
     const [messages, setMessages] = useState([
-        { sender: 'ia', text: "Olá! Sou sua assistente IA. Como posso ajudar?" }
+        {
+            sender: 'ia',
+            text: "Olá! Sou sua assistente IA. Em que posso ajudar?"
+        }
     ]);
     const [input, setInput] = useState('');
     const [error, setError] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -20,7 +24,7 @@ const GeminiReports = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, isTyping]);
 
     const sendMessage = async () => {
         const trimmed = input.trim();
@@ -32,6 +36,7 @@ const GeminiReports = () => {
         ]);
         setInput('');
         setError('');
+        setIsTyping(true);
         scrollToBottom();
 
         try {
@@ -43,6 +48,7 @@ const GeminiReports = () => {
         } catch (err) {
             setError(err.message || 'Erro desconhecido ao se comunicar com a IA.');
         } finally {
+            setIsTyping(false);
             scrollToBottom();
         }
     };
@@ -77,7 +83,19 @@ const GeminiReports = () => {
                                 </div>
                             </div>
                         ))}
+
+                        {isTyping && (
+                            <div className="message-row ia-row">
+                                <div className="message-bubble ia">
+                                    <span className="typing-dots">
+                                        Assistente está digitando<span className="dot">.</span><span className="dot">.</span><span className="dot">.</span>
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
                         <div ref={messagesEndRef} />
+
                         {error && (
                             <div className="error-message">
                                 {error}
