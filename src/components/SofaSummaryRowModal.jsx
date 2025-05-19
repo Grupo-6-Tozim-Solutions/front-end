@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, IconButton, Button } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import EditIcon from "@mui/icons-material/Edit";
@@ -7,30 +7,32 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const SofaSummaryRowModal = ({
   text,
-  quantidade: initialQuantidade,
+  quantidade,
   isEditMode,
-  onEdit,
   onDelete,
-  onIncrease,
-  onDecrease,
+  onQuantityChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [quantidade, setQuantidade] = useState(Number(initialQuantidade) || 0);
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
   };
 
   const handleIncrease = () => {
-    setQuantidade((prev) => prev + 1);
-    if (onIncrease) onIncrease();
+    const newQty = quantidade + 1; // Modifique para usar a quantidade atual
+    onQuantityChange(newQty);
   };
 
   const handleDecrease = () => {
     if (quantidade > 0) {
-      setQuantidade((prev) => prev - 1);
-      if (onDecrease) onDecrease();
+      const newQty = quantidade - 1; // Modifique para usar a quantidade atual
+      onQuantityChange(newQty);
     }
+  };
+
+  const handleInputChange = (value) => {
+    const newValue = Math.max(Number(value), 0);
+    onQuantityChange(newValue);
   };
 
   return (
@@ -66,21 +68,22 @@ const SofaSummaryRowModal = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          marginRight: "12%"
         }}
       >
         {isEditing ? (
-          <Box sx={{ display: "flex", alignItems: "center", }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               onClick={handleDecrease}
               color="error"
+              sx={{ padding: "6px" }}
             >
-              <RemoveIcon/>
+              <RemoveIcon sx={{ fontSize: "20px" }} />
             </IconButton>
             <input
               type="number"
               value={quantidade}
-              onChange={(e) => setQuantidade(Number(e.target.value) || 0)}
-              className="quantity-input"
+              onChange={(e) => handleInputChange(e.target.value)}
               style={{
                 width: "40px",
                 height: "30px",
@@ -90,29 +93,14 @@ const SofaSummaryRowModal = ({
                 border: "none",
                 padding: 0,
                 outline: "none",
-                appearance: "none",
-                MozAppearance: "textfield",
-                WebkitAppearance: "none",
               }}
             />
-            {/* Remove spinner arrows */}
-            <style>
-              {`
-                input[type="number"]::-webkit-inner-spin-button,
-                input[type="number"]::-webkit-outer-spin-button {
-                  -webkit-appearance: none;
-                  margin: 0;
-                }
-                input[type="number"] {
-                  -moz-appearance: textfield;
-                }
-              `}
-            </style>
             <IconButton
               onClick={handleIncrease}
               color="primary"
+              sx={{ padding: "6px" }}
             >
-              <AddIcon/>
+              <AddIcon sx={{ fontSize: "20px" }} />
             </IconButton>
           </Box>
         ) : (
@@ -122,7 +110,7 @@ const SofaSummaryRowModal = ({
               fontWeight: "bold",
             }}
           >
-            x{String(quantidade || 0)}
+            x{String(quantidade || 0).padStart(2, "0")}
           </Typography>
         )}
       </Box>
@@ -148,14 +136,12 @@ const SofaSummaryRowModal = ({
             }}
           >
             <EditIcon
-            color="primary"
-              sx={{
-                fontSize: "25px",
-                
-              }}
-             />
+              color="primary"
+              sx={{ fontSize: "25px" }}
+            />
           </IconButton>
         )}
+        
         <IconButton
           onClick={onDelete}
           sx={{
@@ -168,11 +154,8 @@ const SofaSummaryRowModal = ({
         >
           <DeleteIcon
             color="error"
-            sx={{
-              fontSize: "25px",
-              
-            }}
-           />
+            sx={{ fontSize: "25px" }}
+          />
         </IconButton>
       </Box>
     </Box>

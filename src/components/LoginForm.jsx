@@ -3,13 +3,13 @@ import { Box, TextField, Button, Typography, Checkbox, FormControlLabel, Alert }
 import PasswordInput from './PasswordInput';
 
 const LoginForm = ({ onLogin, loginStatus }) => {
-  const [credencial, setCredencial] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ credencial, senha, rememberMe });
+    onLogin({ email, senha, rememberMe });
   };
 
   return (
@@ -40,8 +40,8 @@ const LoginForm = ({ onLogin, loginStatus }) => {
         </Typography>
         <TextField
           id="input-credencial"
-          value={credencial}
-          onChange={(e) => setCredencial(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Digite seu email ou seu nome aqui."
           fullWidth
           required

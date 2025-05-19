@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importa o hook useNavigate
 import HeaderStorage from "../components/HeaderStorage";
 import TableStructurePartsStorage from "../components/TableStructurePartsStorage";
-import { api } from "../provider/apiProvider";
+import { api } from '../Provider/apiProvider'
 import TableRowPartsStorage from "../components/TableRowPartsStorage";
 import AddPartModal from "../components/AddPartModal";
 import FilterModal from "../components/FilterModal";

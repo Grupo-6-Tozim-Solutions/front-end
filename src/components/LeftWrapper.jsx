@@ -12,7 +12,7 @@ const LeftWrapper = ({ children }) => {
 };
 
 const leftWrapperStyle = {
-    width: '60%',
+    width: '50%',
     border: '3px solid var(--silver-color)',
     height: '100%',
     borderRadius: '15px',

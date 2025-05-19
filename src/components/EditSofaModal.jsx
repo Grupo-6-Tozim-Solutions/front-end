@@ -63,6 +63,17 @@ const EditSofaModal = ({ isOpen, onClose, onSave, title }) => {
         >
           {/* Lista esquerda */}
           <LeftWrapper>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                padding: "10px",
+                borderRadius: "10px 16px 0 0",
+              }}
+            >
+              Peças do estoque
+            </Typography>
             {leftItems.map((item, index) => (
               <SofaRowModal
                 key={item.id}
@@ -103,7 +114,7 @@ const EditSofaModal = ({ isOpen, onClose, onSave, title }) => {
                 borderRadius: "10px 16px 0 0",
               }}
             >
-              Resumo
+              Peças e quantidades utilizadas no Sofá
             </Typography>
             <Divider />
             <Box

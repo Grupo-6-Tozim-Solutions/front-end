@@ -6,7 +6,7 @@ import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
 import CadastroForm from '../components/CadastroForm';
 import LinkCadastro from '../components/LinkCadastro';
-import { api } from "../provider/apiProvider";
+import { api } from '../Provider/apiProvider'
 
 const CadastroPage = () => {
   const [loginStatus, setLoginStatus] = useState({ type: null, message: '' });

@@ -1,23 +1,54 @@
-import React, { useState, useRef } from "react";
-import { Box, Modal, Typography, Button, Divider } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import { Box, Modal, Typography, Divider } from "@mui/material";
 import SofaRowModal from "./SofaRowModal";
 import SofaSummaryRowModal from "./SofaSummaryRowModal";
 import TitleModal from "./TittleModal";
 import CustomButton from "./CustomButton";
 import LeftWrapper from "./LeftWrapper";
 import RightContainer from "./RightContainer";
-import pecas from "../data/DataMock"; // Importa o JSON do DataMock
+import { api } from '../Provider/apiProvider';
 
 const AddSofaModal = ({ isOpen, onClose, onSave }) => {
-  const [leftItems, setLeftItems] = useState(pecas);
+  const [leftItems, setLeftItems] = useState([]);
   const [rightItems, setRightItems] = useState([]);
-  const [isImageSelected, setIsImageSelected] = useState(false);
   const [sofaName, setSofaName] = useState("Novo Sofá");
-
+  const [isImageSelected, setIsImageSelected] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleAddPhotoClick = () => {
-    fileInputRef.current.click();
+  useEffect(() => {
+    const fetchPecas = async () => {
+      try {
+        const response = await api.get("/peca/listarTodas");
+        setLeftItems(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar peças:", error);
+        alert("Erro ao carregar peças do estoque");
+      }
+    };
+
+    if (isOpen) fetchPecas();
+  }, [isOpen]);
+
+  const handleFastForward = (peca) => {
+  setRightItems(prev => {
+    const exists = prev.some(item => item.peca.id === peca.id);
+    if (!exists) {
+      return [...prev, { peca, quantidade: 1 }]; // Quantidade inicial
+    }
+    return prev;
+  });
+};
+
+  const handleUpdateQuantity = (pecaId, newQuantity) => {
+    setRightItems(prev => 
+      prev.map(item => 
+        item.peca.id === pecaId ? { ...item, quantidade: newQuantity } : item
+      )
+    );
+  };
+
+  const handleDelete = (pecaId) => {
+    setRightItems(prev => prev.filter(item => item.peca.id !== pecaId));
   };
 
   const handleFileChange = (event) => {
@@ -28,18 +59,31 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     }
   };
 
-  const handleFastForward = (item) => {
-    setRightItems((prev) => {
-      if (prev.some((i) => i.id === item.id)) return prev;
-      return [...prev, item];
-    });
-  };
+  const handleSave = async () => {
+    try {
+      // Cria o sofá
+      const sofaResponse = await api.post('/sofa', {
+        modelo: sofaName,
+        descricao: "Descrição do novo sofá"
+      });
+      
+      // Adiciona as peças com quantidades
+      if (rightItems.length > 0) {
+        const pecasPayload = rightItems.map(item => ({
+          idPeca: item.peca.id,
+          quantidade: item.quantidade
+        }));
+        
+        await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasPayload);
+      }
 
-  const handleDelete = (id) => {
-    setRightItems((prev) => prev.filter((item) => item.id !== id));
+      onSave(sofaResponse.data);
+      onClose();
+    } catch (error) {
+      console.error("Erro ao salvar sofá:", error.response?.data || error.message);
+      alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
+    }
   };
-
-  if (!isOpen) return null;
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -59,7 +103,6 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
           overflow: "hidden",
         }}
       >
-        {/* Título */}
         <TitleModal
           modalName={sofaName}
           isEditable={true}
@@ -67,7 +110,6 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
           onNameChange={(newName) => setSofaName(newName)}
         />
 
-        {/* Conteúdo */}
         <Box
           sx={{
             display: "flex",
@@ -78,38 +120,28 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
             padding: "20px",
           }}
         >
-          {/* Lista esquerda */}
           <LeftWrapper>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textAlign: "center",
+                padding: "10px",
+                borderRadius: "10px 16px 0 0",
+              }}
+            >
+              Peças Do Estoque
+            </Typography>
             {leftItems.map((item, index) => (
               <SofaRowModal
                 key={item.id}
                 text={item.nome}
-                quantity={item.quantidade || 0}
-                onDecrease={() =>
-                  setLeftItems((prev) =>
-                    prev.map((i) =>
-                      i.id === item.id
-                        ? { ...i, quantidade: Math.max(Number(i.quantidade) - 1, 0) }
-                        : i
-                    )
-                  )
-                }
-                onIncrease={() =>
-                  setLeftItems((prev) =>
-                    prev.map((i) =>
-                      i.id === item.id
-                        ? { ...i, quantidade: Number(i.quantidade) + 1 }
-                        : i
-                    )
-                  )
-                }
                 onFastForward={() => handleFastForward(item)}
                 isEven={index % 2 === 0}
               />
             ))}
           </LeftWrapper>
 
-          {/* Resumo à direita */}
           <RightContainer>
             <Typography
               variant="h6"
@@ -120,9 +152,9 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                 borderRadius: "10px 16px 0 0",
               }}
             >
-              Resumo
+              Peças e quantidades utilizadas no Sofá
             </Typography>
-            <Divider sx={{}}/>
+            <Divider />
             <Box
               sx={{
                 width: "100%",
@@ -134,11 +166,14 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
             >
               {rightItems.map((item) => (
                 <SofaSummaryRowModal
-                  key={item.id}
-                  text={item.nome}
-                  quantidade={Number(item.quantidade)}
-                  isEditMode={false}
-                  onDelete={() => handleDelete(item.id)}
+                  key={item.peca.id}
+                  text={item.peca.nome}
+                  quantidade={item.quantidade}
+                  isEditMode={true}
+                  onDelete={() => handleDelete(item.peca.id)}
+                  onQuantityChange={(newQty) => 
+                    handleUpdateQuantity(item.peca.id, newQty)
+                  }
                 />
               ))}
             </Box>
@@ -152,7 +187,6 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                 justifyContent: "center",
               }}
             >
-              {/* Botão de adicionar foto */}
               <CustomButton
                 imageSrc={isImageSelected ? "./assets/folderSave.png" : "./assets/folder.png"}
                 text="Adicionar foto"
@@ -162,18 +196,15 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                   background: "#E0E0E0",
                   height: "35px",
                   borderRadius: "5px",
-                  alignItems: "center",
                   textAlign: "center",
                   cursor: "pointer",
                   color: "black",
                   width: "52%",
                   fontWeight: isImageSelected ? "600" : "normal",
-                  "&:hover": {
-                    backgroundColor: "#D6D6D6", // Proper hover color
-                  },
+                  "&:hover": { backgroundColor: "#D6D6D6" },
                 }}
                 imageStyle={{ width: "25px", height: "25px" }}
-                onClick={handleAddPhotoClick}
+                onClick={handleFileChange}
               />
               <input
                 type="file"
@@ -198,19 +229,10 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                   width: "38%",
                   justifyContent: "center",
                   height: "100%",
-                  outline: "none",
-                  "&:hover": {
-                    backgroundColor: "#A8FF88", // Proper hover color
-                  },
+                  "&:hover": { backgroundColor: "#A8FF88" },
                 }}
                 imageStyle={{ width: "25px", height: "25px" }}
-                onClick={() => {
-                  const newSofa = {
-                    name: sofaName,
-                    image: "../../public/assets/sofa-novo.png",
-                  };
-                  onSave(newSofa);
-                }}
+                onClick={handleSave}
                 enableHover={true}
               />
             </Box>

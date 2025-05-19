@@ -1,9 +1,6 @@
-import React, { useState } from "react";
-import { Box, Typography, IconButton, TextField, Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import React from "react";
+import { Box, Typography, Button } from "@mui/material";
 import FastForwardIcon from "@mui/icons-material/FastForward";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const SofaRowModal = ({
   text,
@@ -13,33 +10,7 @@ const SofaRowModal = ({
   onFastForward,
   isEven,
 }) => {
-  const [quantity, setQuantity] = useState(initialQuantity);
-  const [isEditing, setIsEditing] = useState(false);
-
   const backgroundColor = isEven ? "#EBEBEB" : "#F8F8F8";
-
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
-    if (onIncrease) onIncrease();
-  };
-
-  const handleDecrease = () => {
-    if (quantity > 0) {
-      setQuantity((prev) => prev - 1);
-      if (onDecrease) onDecrease();
-    }
-  };
-
-  const handleQuantityChange = (e) => {
-    const value = Number(e.target.value);
-    if (value >= 0) {
-      setQuantity(value);
-    }
-  };
-
-  const toggleEditMode = () => {
-    setIsEditing(!isEditing);
-  };
 
   return (
     <Box
@@ -61,68 +32,12 @@ const SofaRowModal = ({
           fontSize: "16px",
           fontWeight: 400,
           textAlign: "left",
-          width: "25%", // Adjust width as needed
+          width: "50%",
         }}
       >
         {text}
       </Box>
-
-      {/* Quantity Controls */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center", // Center horizontally
-          alignItems: "center", // Center vertically
-           // Adjust width as needed
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <IconButton
-            onClick={handleDecrease}
-            color="error"
-            sx={{
-                          }}
-          >
-            <RemoveIcon />
-          </IconButton>
-          {isEditing ? (
-            <TextField
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              onBlur={toggleEditMode}
-              size="small"
-              sx={{
-                width: "60px",
-                "& input": { textAlign: "center", fontWeight: "bold" },
-              }}
-            />
-          ) : (
-            <Typography
-              onClick={toggleEditMode}
-              sx={{
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: "bold",
-              }}
-            >
-              {quantity}
-            </Typography>
-          )}
-          <IconButton
-            onClick={handleIncrease}
-            color="primary"
-                      >
-            <AddIcon />
-          </IconButton>
-        </Box>
-      </Box>
+   
 
       {/* Fast Forward Button */}
       <Button
@@ -130,15 +45,16 @@ const SofaRowModal = ({
         variant="contained"
         sx={{
           backgroundColor: "#B8FFAA",
-          "&:hover": { backgroundColor: "#52B788" },
+          "&:hover": { backgroundColor: "#A8FF88" },
           color: "white",
           fontWeight: "bold",
           padding: "6px 16px",
-          flexShrink:0,
+          flexShrink: 0,
           textTransform: "none",
+          minWidth: "120px",
         }}
       >
-        <FastForwardIcon />
+        <FastForwardIcon sx={{ mr: 1 }} />
       </Button>
     </Box>
   );

@@ -5,7 +5,7 @@ import LoginForm from '../components/LoginForm';
 import LoginLeft from '../components/LoginLeft';
 import TituloLogin from '../components/TituloLogin';
 import LinkCadastro from '../components/LinkCadastro';
-import { api } from "../provider/apiProvider";
+import { api } from '../Provider/apiProvider'
 
 const LoginPage = () => {
   const [loginStatus, setLoginStatus] = useState({ type: null, message: '' });
@@ -15,14 +15,13 @@ const LoginPage = () => {
   const handleLogin = (credentials) => {
     setIsLoading(true);
 
-    api.get('/usuario/login', {
-      params: {
-        email: credentials.credencial,
-        senha: credentials.senha,
-      },
+    api.post('/usuario/login', {
+      email: credentials.email, // o campo que o back espera
+      senha: credentials.senha,
     })
       .then((response) => {
         if (response.status === 200) {
+          localStorage.setItem('token', response.data.token); // se vier como { token: "..." }
           setLoginStatus({ type: 'sucesso', message: 'Login realizado com sucesso!' });
           setTimeout(() => {
             navigate('/counch');
@@ -30,13 +29,13 @@ const LoginPage = () => {
         }
       })
       .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message || 'Erro ao realizar login.';
+        const errorMessage = error.response?.data?.message || 'Erro ao realizar login.';
         setLoginStatus({ type: 'erro', message: errorMessage });
       })
       .finally(() => {
         setIsLoading(false);
       });
+
   };
 
   return (

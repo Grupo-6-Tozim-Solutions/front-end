@@ -5,7 +5,7 @@ const RightContainer = ({ children }) => {
   return (
     <Box
       sx={{
-        width: "40%",
+        width: "50%",
         height: "100%",
         display: "flex",
         flexDirection: "column",
