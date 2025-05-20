@@ -8,7 +8,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [quantity, setQuantity] = useState(0);
-  const [isChecked, setIsChecked] = useState(false);
+  // const [isChecked, setIsChecked] = useState(false);
 
   const toggleState = (e) => {
     if (e.target.type !== "checkbox") {
@@ -16,10 +16,10 @@ const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
     }
   };
 
-  const handleCheckboxChange = (e) => {
-    e.stopPropagation(); // Prevents the card's state from toggling
-    setIsChecked(e.target.checked);
-  };
+  // const handleCheckboxChange = (e) => {
+  //   e.stopPropagation(); // Prevents the card's state from toggling
+  //   setIsChecked(e.target.checked);
+  // };
 
   return (
     <Card
@@ -49,20 +49,7 @@ const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
           position: "relative", // Ensure proper positioning for the checkbox
         }}
       >
-        <Checkbox
-          checked={isChecked}
-          onChange={handleCheckboxChange}
-          sx={{
-            position: "absolute",
-            top: "10px",
-            left: "10px",
-            zIndex: 2,
-            borderRadius: "50%",
-            visibility: isSelected ? "hidden" : "visible",
-            color: "white",
-             // Fixing the typo here
-          }}
-        />
+  
         {!isSelected ? (
           <Box
             component="img"

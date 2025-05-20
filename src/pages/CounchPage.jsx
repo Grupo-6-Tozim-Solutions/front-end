@@ -10,6 +10,7 @@ import '../styles/counchPageStyle.css';
 import MaterialSofaCard from '../components/MaterialSofaCard';
 import Card from '../components/card'; // Importa o componente Card
 import { Box } from '@mui/material';
+import AddSofaCard from "../components/AddSofaCard";
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
@@ -82,6 +83,7 @@ const CounchPage = () => {
           onLogout={() => setLogoutModalOpen(true)}
         />
         <Box sx={{ display: "grid", gridTemplateColumns: " repeat(4,1fr)", gap: 2 , rowGap: "6%", padding: 2 }}>
+          
           {sofas.map((sofa) => (
             <MaterialSofaCard
               key={sofa.id}
@@ -92,6 +94,7 @@ const CounchPage = () => {
               onDelete={() => openDeleteModal(sofa)} // Passa a função para abrir o modal de exclusão
             />
           ))}
+          <AddSofaCard onClick={() => setAddSofaModalOpen(true)} />
         </Box>
       </Box>
 

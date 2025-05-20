@@ -27,8 +27,9 @@ const SideBarCounch = () => {
     { icon: <WeekendIcon />, title: "Sofás", onClick: () => navigate('/counch') },
     { icon: <BuildIcon />, title: "Peças", onClick: () => navigate('/parts-storage') },
     { icon: <BarChartIcon />, title: "Dashboard", onClick: () => navigate('/dashboard') },
+     { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/logs') },
     { icon: <AutoAwesomeIcon />, title: "Chat IA", onClick: () => navigate('/gemini-reports') },
-    { icon: <HistoryIcon />, title: "Histórico", onClick: () => navigate('/logs') },
+   
 
   ];
 
@@ -37,7 +38,7 @@ const SideBarCounch = () => {
       <div className={`SideBar-Counch ${isExpanded ? 'expanded' : ''}`}>
         <MenuIcon onClick={handleExpand} className="expand-icon" /> {/* Replace box image with MenuIcon */}
         <ul className="navigation-list">
-          {menuItems.map((item, index) => (
+          {menuItems.map((item, index) => ( 
             <li key={index} className="menu-item" onClick={item.onClick}>
               <div className="menu-icon">{item.icon}</div>
               {isExpanded && <span>{item.title}</span>}
