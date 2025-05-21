@@ -45,13 +45,14 @@ const SofaRowModal = ({
         variant="contained"
         sx={{
           backgroundColor: "#B8FFAA",
-          "&:hover": { backgroundColor: "#A8FF88" },
-          color: "white",
+          "&:hover": { backgroundColor: "#A8FF88", transform:0, boxShadow:'none' },
+          color: "#16BC00",
           fontWeight: "bold",
           padding: "6px 16px",
           flexShrink: 0,
           textTransform: "none",
           minWidth: "120px",
+          boxShadow:'none'
         }}
       >
         <FastForwardIcon sx={{ mr: 1 }} />
