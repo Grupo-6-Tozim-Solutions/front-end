@@ -6,6 +6,7 @@ import HeaderStorage from "../components/HeaderStorage";
 import TableStructureLogs from "../components/TableStructureLogs";
 import TableRowLogs from "../components/TableRowLogs";
 import { Table, TableContainer, TableBody, Paper } from "@mui/material";
+import HeaderSimple from "../components/HeaderSimple";
 
 const LogsPage = () => {
   const [logs, setLogs] = useState([
@@ -75,11 +76,9 @@ const LogsPage = () => {
           flexDirection: "column",
         }}
       >
-        <HeaderStorage
+        <HeaderSimple
           subtitle="Tozine Solutions"
           title="Histórico de ações na plataforma dos últimos 60 dias"
-          filterText={"Filtros"}
-          historyText="Ver histórico"
         />
         <Box
           sx={{

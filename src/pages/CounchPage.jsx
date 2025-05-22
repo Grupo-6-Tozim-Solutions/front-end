@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HeaderStorage from "../components/HeaderStorage";
+import HeaderSimple from "../components/HeaderSimple";
 import SideBarCouch from "../components/SideBarCounch";
 import SofaCard from "../components/SofaCard";
 import AddSofaModal from "../components/AddSofaModal";
@@ -19,7 +19,7 @@ const CounchPage = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false); // Estado para o modal de exclusão
   const [sofaToEdit, setSofaToEdit] = useState(null);
   const [sofaToDelete, setSofaToDelete] = useState(null); // Estado para o sofá a ser excluído
-  const [ sofas, setSofas] = useState([
+  const [sofas, setSofas] = useState([
     { id: 1, name: "Sofá Tipo 1", image: "../../public/assets/sofa-novo.png", pecas: [] },
     { id: 2, name: "Sofá Tipo 2", image: "../../public/assets/sofa-novo.png", pecas: [] },
     { id: 3, name: "Sofá Tipo 3", image: "../../public/assets/sofa-novo.png", pecas: [] },
@@ -70,17 +70,9 @@ const CounchPage = () => {
     <div className="Counch-Page">
       <SideBarCouch />
       <Box sx={{ width: "100%"}}> 
-        <HeaderStorage
+        <HeaderSimple
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
-          filterText="Adicionar Sofá"
-          addText="Produzir"
-          historyText="Ver histórico"
-          logoutText="Sair"
-          onFilter={() => setAddSofaModalOpen(true)}
-          onAdd={() => alert("Produzir Sofá")}
-          onHistory={() => alert("Histórico de Sofás")}
-          onLogout={() => setLogoutModalOpen(true)}
         />
         <Box sx={{ display: "grid", gridTemplateColumns: " repeat(4,1fr)", gap: 2 , rowGap: "6%", padding: 2 }}>
           

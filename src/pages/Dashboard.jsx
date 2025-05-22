@@ -6,20 +6,18 @@ import BarChartCard from '../components/BarChartCard';
 import PieChartCard from '../components/PieChartCard';
 import { barChartData, sofasMaisSaida, pecasMaisSaida } from '../data/DataMockDash';
 import './DashboardStyle.css';
+import HeaderSimple from '../components/HeaderSimple';
+
+
 
 const Dashboard = () => {
   return (
     <Box display="flex" className="dashboard-container">
       <SideBarCounch />
       <Box sx={{ width: "100%" }}>
-        <HeaderStorage
-          title="Dashboard"
-          subtitle="Tozine Solutions"
-          filterText="Adicionar Sofá"
-          addText="Produzir"
-          historyText="Ver histórico"
-          logoutText="Sair"
-        />
+        <HeaderSimple
+           title="Dashboard"
+          subtitle="Tozine Solutions"/>
       <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent:"center", alignItems: "center" }}>
         <Box sx={{ width: "95%", height: "100%", display: "flex", gap: "40px", flexDirection: "row", justifyContent:"space evenly", padding: "20px" }}>
 

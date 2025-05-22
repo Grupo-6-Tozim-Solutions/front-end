@@ -52,7 +52,7 @@ export function PartsStorage() {
       } else if (diff < 0) {
         await api.put(`/peca/removerQuantidade/${updatedPart.id}/${Math.abs(diff)}`);
       }
-
+      
       const response = await api.get("/peca/listarTodas");
 
       setPecas(response.data);

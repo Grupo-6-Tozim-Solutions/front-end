@@ -21,6 +21,7 @@ const CadastroPage = () => {
     api.post('/usuario', { nome, email, senha })
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
+      
           setLoginStatus({ type: 'sucesso', message: 'Cadastro realizado com sucesso!' });
           navigate('/login');
         }
