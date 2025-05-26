@@ -13,6 +13,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
   const [rightItems, setRightItems] = useState([]);
   const [sofaName, setSofaName] = useState("Novo Sofá");
   const [isImageSelected, setIsImageSelected] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -26,22 +27,38 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
       }
     };
 
-    if (isOpen) fetchPecas();
+    if (isOpen) {
+      fetchPecas();
+      setRightItems([]); // Limpa peças selecionadas ao abrir
+      setSofaName("Novo Sofá");
+      setIsImageSelected(false);
+      setSelectedImage(null);
+    }
   }, [isOpen]);
 
+  // Filtra peças duplicadas por id para evitar erro de chave duplicada no React
+  // Substitua o filtro por este Map para garantir unicidade real:
+  const uniqueLeftItems = Array.from(
+    new Map(leftItems.map(item => [item.id, item])).values()
+  );
+
+  const uniqueRightItems = Array.from(
+    new Map(rightItems.map(item => [item.peca.id, item])).values()
+  );
+
   const handleFastForward = (peca) => {
-  setRightItems(prev => {
-    const exists = prev.some(item => item.peca.id === peca.id);
-    if (!exists) {
-      return [...prev, { peca, quantidade: 1 }]; // Quantidade inicial
-    }
-    return prev;
-  });
-};
+    setRightItems(prev => {
+      const exists = prev.some(item => item.peca.id === peca.id);
+      if (!exists) {
+        return [...prev, { peca, quantidade: 1 }];
+      }
+      return prev;
+    });
+  };
 
   const handleUpdateQuantity = (pecaId, newQuantity) => {
-    setRightItems(prev => 
-      prev.map(item => 
+    setRightItems(prev =>
+      prev.map(item =>
         item.peca.id === pecaId ? { ...item, quantidade: newQuantity } : item
       )
     );
@@ -51,40 +68,78 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     setRightItems(prev => prev.filter(item => item.peca.id !== pecaId));
   };
 
+  const handleAddPhotoClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log("Arquivo selecionado:", file.name);
+      setSelectedImage(file);
       setIsImageSelected(true);
     }
   };
 
   const handleSave = async () => {
     try {
-      // Cria o sofá
-      const sofaResponse = await api.post('/sofa', {
+      // Monta o objeto do sofá
+      const sofaData = {
         modelo: sofaName,
-        descricao: "Descrição do novo sofá"
+      };
+
+      // Cria o formData para multipart
+      const formData = new FormData();
+      formData.append("sofa", JSON.stringify(sofaData));
+      if (selectedImage) {
+        formData.append("imagem", selectedImage);
+      } else {
+        alert("Selecione uma imagem para o sofá.");
+        return;
+      }
+
+      // POST para cadastrar sofá com imagem
+      const sofaResponse = await api.post('/sofa/upload', formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       });
-      
-      // Adiciona as peças com quantidades
-      if (rightItems.length > 0) {
-        const pecasPayload = rightItems.map(item => ({
+
+      // Busca peças já associadas ao sofá
+      const pecasJaAssociadasResp = await api.get(`/sofa/listarPecas/${sofaResponse.data.id}`);
+      const pecasIdsJaAssociadas = pecasJaAssociadasResp.data
+        .map(p => p.id) // <-- use 'id' e não 'idPeca'
+        .filter(Boolean);
+
+      const pecasParaAdicionar = rightItems
+        .filter(item => !pecasIdsJaAssociadas.includes(item.peca.id))
+        .filter((item, idx, arr) =>
+          arr.findIndex(i => i.peca.id === item.peca.id) === idx
+        );
+
+      if (pecasParaAdicionar.length > 0) {
+        const pecasPayload = pecasParaAdicionar.map(item => ({
           idPeca: item.peca.id,
           quantidade: item.quantidade
         }));
-        
+
         await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasPayload);
       }
 
       onSave(sofaResponse.data);
       onClose();
+      console.log(
+        "LEFT KEYS:",
+        uniqueLeftItems.map(item => `estoque-${item.id}`)
+      );
+      console.log(
+        "RIGHT KEYS:",
+        uniqueRightItems.map(item => `sofa-${item.peca.id}`)
+      );
     } catch (error) {
       console.error("Erro ao salvar sofá:", error.response?.data || error.message);
       alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
     }
   };
-
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -132,9 +187,9 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
             >
               Peças Do Estoque
             </Typography>
-            {leftItems.map((item, index) => (
+            {uniqueLeftItems.map((item, index) => (
               <SofaRowModal
-                key={item.id}
+                key={`estoque-${item.id}`}
                 text={item.nome}
                 onFastForward={() => handleFastForward(item)}
                 isEven={index % 2 === 0}
@@ -164,14 +219,14 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                 overflowY: "auto",
               }}
             >
-              {rightItems.map((item) => (
+              {uniqueRightItems.map((item) => (
                 <SofaSummaryRowModal
-                  key={item.peca.id}
+                  key={`sofa-${item.peca.id}`}
                   text={item.peca.nome}
                   quantidade={item.quantidade}
                   isEditMode={true}
                   onDelete={() => handleDelete(item.peca.id)}
-                  onQuantityChange={(newQty) => 
+                  onQuantityChange={(newQty) =>
                     handleUpdateQuantity(item.peca.id, newQty)
                   }
                 />
@@ -204,7 +259,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
                   "&:hover": { backgroundColor: "#D6D6D6" },
                 }}
                 imageStyle={{ width: "25px", height: "25px" }}
-                onClick={handleFileChange}
+                onClick={handleAddPhotoClick}
               />
               <input
                 type="file"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeaderSimple from "../components/HeaderSimple";
 import SideBarCouch from "../components/SideBarCounch";
@@ -11,6 +11,7 @@ import MaterialSofaCard from '../components/MaterialSofaCard';
 import Card from '../components/card'; // Importa o componente Card
 import { Box } from '@mui/material';
 import AddSofaCard from "../components/AddSofaCard";
+import axios from 'axios';
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
@@ -19,16 +20,18 @@ const CounchPage = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false); // Estado para o modal de exclusão
   const [sofaToEdit, setSofaToEdit] = useState(null);
   const [sofaToDelete, setSofaToDelete] = useState(null); // Estado para o sofá a ser excluído
-  const [sofas, setSofas] = useState([
-    { id: 1, name: "Sofá Tipo 1", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 2, name: "Sofá Tipo 2", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 3, name: "Sofá Tipo 3", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 4, name: "Sofá Tipo 4", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 5, name: "Sofá Tipo 5", image: "../../public/assets/sofa-novo.png", pecas: [] },
-    { id: 6, name: "Sofá Tipo 6", image: "../../public/assets/sofa-novo.png", pecas: [] },
-   
-  
-  ]);
+  const [sofas, setSofas] = useState([]);
+
+  useEffect(() => {
+    axios.get('/sofa')
+      .then(response => {
+        setSofas(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar sofás:', error);
+        setSofas([]);
+      });
+  }, []);
 
   const navigate = useNavigate();
 
@@ -69,21 +72,21 @@ const CounchPage = () => {
   return (
     <div className="Counch-Page">
       <SideBarCouch />
-      <Box sx={{ width: "100%"}}> 
+      <Box sx={{ width: "100%" }}>
         <HeaderSimple
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
         />
-        <Box sx={{ display: "grid", gridTemplateColumns: " repeat(4,1fr)", gap: 2 , rowGap: "6%", padding: 2 }}>
-          
+        <Box sx={{ display: "grid", gridTemplateColumns: " repeat(4,1fr)", gap: 2, rowGap: "6%", padding: 2 }}>
+
           {sofas.map((sofa) => (
             <MaterialSofaCard
               key={sofa.id}
-              name={sofa.name}
-              image={sofa.image}
+              name={sofa.modelo}
+              image={`http://localhost:8080${sofa.caminhoImagem}`} // ajuste a URL conforme seu backend
               pecas={sofa.pecas}
               onEdit={() => handleEditSofa(sofa)}
-              onDelete={() => openDeleteModal(sofa)} // Passa a função para abrir o modal de exclusão
+              onDelete={() => openDeleteModal(sofa)}
             />
           ))}
           <AddSofaCard onClick={() => setAddSofaModalOpen(true)} />
@@ -124,7 +127,7 @@ const CounchPage = () => {
         imagem="public/assets/logoutImage.png"
         onConfirm={handleLogoutConfirm}
       />
-      
+
     </div>
   );
 };
