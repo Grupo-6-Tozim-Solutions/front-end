@@ -82,64 +82,44 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     }
   };
 
-  const handleSave = async () => {
+const handleSave = async () => {
     try {
-      // Monta o objeto do sofá
-      const sofaData = {
-        modelo: sofaName,
-      };
+        const sofaData = {
+            modelo: sofaName,
+        };
 
-      // Cria o formData para multipart
-      const formData = new FormData();
-      formData.append("sofa", JSON.stringify(sofaData));
-      if (selectedImage) {
-        formData.append("imagem", selectedImage);
-      } else {
-        alert("Selecione uma imagem para o sofá.");
-        return;
-      }
+        const formData = new FormData();
+        formData.append("sofa", JSON.stringify(sofaData));
+        if (selectedImage) {
+            formData.append("imagem", selectedImage);
+        } else {
+            alert("Selecione uma imagem para o sofá.");
+            return;
+        }
 
-      // POST para cadastrar sofá com imagem
-      const sofaResponse = await api.post('/sofa/upload', formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+        // POST para cadastrar sofá com imagem
+        const sofaResponse = await api.post('/sofa/upload', formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
 
-      // Busca peças já associadas ao sofá
-      const pecasJaAssociadasResp = await api.get(`/sofa/listarPecas/${sofaResponse.data.id}`);
-      const pecasIdsJaAssociadas = pecasJaAssociadasResp.data
-        .map(p => p.id) // <-- use 'id' e não 'idPeca'
-        .filter(Boolean);
-
-      const pecasParaAdicionar = rightItems
-        .filter(item => !pecasIdsJaAssociadas.includes(item.peca.id))
-        .filter((item, idx, arr) =>
-          arr.findIndex(i => i.peca.id === item.peca.id) === idx
-        );
-
-      if (pecasParaAdicionar.length > 0) {
-        const pecasPayload = pecasParaAdicionar.map(item => ({
-          idPeca: item.peca.id,
-          quantidade: item.quantidade
+        // Aqui, não precisamos buscar as peças já associadas, pois queremos adicionar novas
+        const pecasParaAdicionar = rightItems.map(item => ({
+            idPeca: item.peca.id,
+            quantidade: item.quantidade
         }));
 
-        await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasPayload);
-      }
+        // Envia as peças associadas sem remover do estoque
+        if (pecasParaAdicionar.length > 0) {
+            await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasParaAdicionar);
+        }
 
-      onSave(sofaResponse.data);
-      onClose();
-      console.log(
-        "LEFT KEYS:",
-        uniqueLeftItems.map(item => `estoque-${item.id}`)
-      );
-      console.log(
-        "RIGHT KEYS:",
-        uniqueRightItems.map(item => `sofa-${item.peca.id}`)
-      );
+        onSave(sofaResponse.data);
+        onClose();
     } catch (error) {
-      console.error("Erro ao salvar sofá:", error.response?.data || error.message);
-      alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
+        console.error("Erro ao salvar sofá:", error.response?.data || error.message);
+        alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
     }
-  };
+};
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box

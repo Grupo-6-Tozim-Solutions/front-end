@@ -2,43 +2,62 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeaderSimple from "../components/HeaderSimple";
 import SideBarCouch from "../components/SideBarCounch";
-import SofaCard from "../components/SofaCard";
+import MaterialSofaCard from '../components/MaterialSofaCard';
 import AddSofaModal from "../components/AddSofaModal";
 import EditSofaModal from "../components/EditSofaModal";
 import ConfirmationModal from "../components/ConfirmationModals";
 import '../styles/counchPageStyle.css';
-import MaterialSofaCard from '../components/MaterialSofaCard';
-import Card from '../components/card'; // Importa o componente Card
-import { Box } from '@mui/material';
 import AddSofaCard from "../components/AddSofaCard";
-import axios from 'axios';
+import { Box, Typography, Button } from '@mui/material';
+import { api } from '../Provider/apiProvider';
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
   const [isEditSofaModalOpen, setEditSofaModalOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false); // Estado para o modal de exclusão
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [sofaToEdit, setSofaToEdit] = useState(null);
-  const [sofaToDelete, setSofaToDelete] = useState(null); // Estado para o sofá a ser excluído
+  const [sofaToDelete, setSofaToDelete] = useState(null);
   const [sofas, setSofas] = useState([]);
-
-  useEffect(() => {
-    axios.get('/sofa')
-      .then(response => {
-        setSofas(Array.isArray(response.data) ? response.data : []);
-      })
-      .catch(error => {
-        console.error('Erro ao buscar sofás:', error);
-        setSofas([]);
-      });
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
+  // Função simplificada para carregar apenas os sofás
+  const fetchSofas = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await api.get('/sofa');
+      const sofasData = Array.isArray(response.data) ? response.data : [];
+      
+      // Mapeia os sofás sem buscar peças associadas
+      setSofas(sofasData.map(sofa => ({
+        ...sofa,
+        pecas: [] // Array vazio para manter a estrutura
+      })));
+      
+    } catch (error) {
+      console.error('Erro ao buscar sofás:', error);
+      setError('Erro ao carregar sofás. Tente recarregar a página.');
+      setSofas([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Carrega os sofás quando o componente monta
+  useEffect(() => {
+    fetchSofas();
+  }, []);
+
   const handleSaveSofa = (newSofa) => {
-    const nextId = Math.max(...sofas.map((sofa) => sofa.id), 0) + 1;
-    const sofaWithId = { id: nextId, ...newSofa };
-    setSofas((prevSofas) => [...prevSofas, sofaWithId]);
+    // Adiciona o novo sofá localmente sem recarregar
+    setSofas(prevSofas => [...prevSofas, {
+      ...newSofa,
+      pecas: [] // Inicializa sem peças
+    }]);
     setAddSofaModalOpen(false);
   };
 
@@ -48,26 +67,71 @@ const CounchPage = () => {
   };
 
   const handleSaveEditedSofa = (editedSofa) => {
-    setSofas((prevSofas) =>
-      prevSofas.map((sofa) => (sofa.id === editedSofa.id ? editedSofa : sofa))
+    // Atualiza o sofá localmente
+    setSofas(prevSofas => 
+      prevSofas.map(sofa => 
+        sofa.id === editedSofa.id ? editedSofa : sofa
+      )
     );
     setEditSofaModalOpen(false);
   };
 
-  const handleDeleteSofa = (sofaId) => {
-    setSofas((prevSofas) => prevSofas.filter((sofa) => sofa.id !== sofaId)); // Remove o sofá
-    setDeleteModalOpen(false); // Fecha o modal
+  const handleDeleteSofa = async (sofaId) => {
+    try {
+      await api.delete(`/sofa/${sofaId}`);
+      // Remove o sofá localmente
+      setSofas(prevSofas => prevSofas.filter(sofa => sofa.id !== sofaId));
+    } catch (error) {
+      console.error('Erro ao excluir sofá:', error);
+      alert('Erro ao excluir sofá. Tente novamente.');
+    } finally {
+      setDeleteModalOpen(false);
+    }
   };
 
   const openDeleteModal = (sofa) => {
-    setSofaToDelete(sofa); // Define o sofá a ser excluído
-    setDeleteModalOpen(true); // Abre o modal de exclusão
+    setSofaToDelete(sofa);
+    setDeleteModalOpen(true);
   };
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
     navigate('/login');
   };
+
+  if (isLoading) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        <Typography variant="h6">Carregando sofás...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        flexDirection: 'column',
+        gap: 2
+      }}>
+        <Typography variant="h6" color="error">{error}</Typography>
+        <Button 
+          variant="contained" 
+          onClick={fetchSofas}
+        >
+          Tentar novamente
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <div className="Counch-Page">
@@ -77,19 +141,29 @@ const CounchPage = () => {
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
         />
-        <Box sx={{ display: "grid", gridTemplateColumns: " repeat(4,1fr)", gap: 2, rowGap: "6%", padding: 2 }}>
-
+        
+        <Box sx={{ 
+          display: "grid", 
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", 
+          gap: 2, 
+          rowGap: "6%", 
+          padding: 2 
+        }}>
           {sofas.map((sofa) => (
             <MaterialSofaCard
               key={sofa.id}
               name={sofa.modelo}
-              image={`http://localhost:8080${sofa.caminhoImagem}`} // ajuste a URL conforme seu backend
+              image={`http://localhost:8080${sofa.caminhoImagem}`}
               pecas={sofa.pecas}
               onEdit={() => handleEditSofa(sofa)}
               onDelete={() => openDeleteModal(sofa)}
             />
           ))}
-          <AddSofaCard onClick={() => setAddSofaModalOpen(true)} />
+          
+          <AddSofaCard 
+            onClick={() => setAddSofaModalOpen(true)} 
+            sx={{ height: '100%' }}
+          />
         </Box>
       </Box>
 
@@ -104,17 +178,17 @@ const CounchPage = () => {
         onClose={() => setEditSofaModalOpen(false)}
         onSave={handleSaveEditedSofa}
         sofa={sofaToEdit}
-        title={sofaToEdit?.name || ""} // Passa o nome do sofá como título
+        title={sofaToEdit?.modelo || ""}
       />
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)} // Fecha o modal ao clicar fora
+        onClose={() => setDeleteModalOpen(false)}
         title="Excluir Sofá"
-        message={`Tem certeza que deseja excluir o sofá "${sofaToDelete?.name}"?`}
+        message={`Tem certeza que deseja excluir o sofá "${sofaToDelete?.modelo}"?`}
         textButtonDelete="Excluir"
         imagem="../../public/assets/trashCanPartsStorage.png"
-        onConfirm={() => handleDeleteSofa(sofaToDelete?.id)} // Exclui o sofá ao confirmar
+        onConfirm={() => handleDeleteSofa(sofaToDelete?.id)}
       />
 
       <ConfirmationModal
@@ -127,7 +201,6 @@ const CounchPage = () => {
         imagem="public/assets/logoutImage.png"
         onConfirm={handleLogoutConfirm}
       />
-
     </div>
   );
 };
