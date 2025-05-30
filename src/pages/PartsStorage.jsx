@@ -232,6 +232,7 @@ export function PartsStorage() {
         isOpen={isConfirmationModalOpen}
         onClose={() => setConfirmationModalOpen(false)}
         modalName="Excluir peça"
+         tituloModal="Excluir"
         title="Tem certeza que deseja excluir essa peça?"
         message="Ela será retirada de todos os sofás na qual está associada."
         textButtonDelete="Excluir"

@@ -44,19 +44,18 @@ const SideBarCounch = () => {
               {isExpanded && <span>{item.title}</span>}
             </li>
           ))}
-          
         </ul>
-       <Box sx={{ display: 'flex', height: '90%', flexDirection: 'column',width: '100%', justifyContent: 'flex-end', alignItems: 'center', marginBottom:'20%' }}>
-           <li className="menu-item" onClick={() => setLogoutModalOpen(true) }>
-            <Box><LogoutIcon /></Box>
+        <div className="logout-container">
+          <li className="menu-item" onClick={() => setLogoutModalOpen(true)}>
+            <Box sx={{ display: 'flex', alignItems: 'center'}}><LogoutIcon /></Box>
             {isExpanded && <span>Sair</span>}
           </li>
-       </Box>
+        </div>
       </div>
              <ConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
-        modalName="Sair"
+         tituloModal="Sair"
         title="Tem certeza que deseja sair?"
         message="Você precisará fazer login novamente."
         textButtonDelete="Sair"

@@ -11,7 +11,7 @@ const BarChartCard = ({ data }) => {
           <XAxis dataKey="month" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="sofas" fill="#8884d8" />
+          <Bar dataKey="sofas" fill="#426EFF" />
         </BarChart>
       </ResponsiveContainer>
     </div>

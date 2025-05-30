@@ -63,7 +63,7 @@ const LoginPage = () => {
         )}
         <Box className="div-link-cadastro" sx={{ marginTop: "2%" }}>
           <Typography>
-            Problemas no Login?{' '}
+            Não possui conta?{' '}
             <LinkCadastro
               textoBase=""
               textoLink="Clique aqui."

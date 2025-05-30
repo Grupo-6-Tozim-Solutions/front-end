@@ -7,13 +7,14 @@
   align-items: center;
   transition: width 0.3s ease; 
   z-index: 5; 
+  position: relative;
   img{
     cursor: pointer;
   }
 }
 
 .SideBar-Counch.expanded {
-  width: 13vw; 
+  width: 11.5vw; 
 }
 
 .expand-icon {
@@ -78,4 +79,24 @@
 
 .icon-list img:hover {
   transform: scale(1.1);
+}
+
+.SideBar-Counch .logout-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 90%;
+  margin-bottom: 20%;
+}
+
+.SideBar-Counch .logout-container .menu-item {
+  justify-content: center;
+  width: 100%;
+}
+
+.SideBar-Counch.expanded .logout-container .menu-item {
+  justify-content: center;
+  width: 100%;
 }

@@ -3,7 +3,7 @@ import { Box, Modal, Typography, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import TittleModal from './TittleModal';
 
-const ConfirmationModals = ({ isOpen, title, message, onConfirm, imagem, textButtonDelete, onClose }) => {
+const ConfirmationModals = ({ isOpen, title, message, onConfirm, imagem, textButtonDelete, onClose, tituloModal }) => {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -22,7 +22,7 @@ const ConfirmationModals = ({ isOpen, title, message, onConfirm, imagem, textBut
           overflow: 'auto', // Adds scroll if content overflows
         }}
       >
-        <TittleModal modalName="Sair" isEditable={false} onClose={onClose} />
+        <TittleModal modalName={tituloModal} isEditable={false} onClose={onClose} />
         <Box textAlign="center" mt={2.5} px={2}> {/* Added padding for better spacing */}
           <Typography variant="h5" fontWeight="600">
             {title}
@@ -32,7 +32,7 @@ const ConfirmationModals = ({ isOpen, title, message, onConfirm, imagem, textBut
           </Typography>
           <Button
             onClick={onConfirm}
-            variant="contained"
+            variant="outlined"
             color="error"
             startIcon={<img src={imagem} alt="" style={{ width: '18px', height: '18px' }} />}
             sx={{ mt: 3 }}
