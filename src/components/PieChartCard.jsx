@@ -1,5 +1,7 @@
 import './PieChartCardStyle.css';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 
 const COLORS = ['#FFBB28', '#00C49F', '#FF8042', '#8884d8'];
 
@@ -16,7 +18,6 @@ const PieChartCard = ({ title, data }) => {
               nameKey="name"
               outerRadius={80}
               innerRadius={40}
-              label
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -25,18 +26,18 @@ const PieChartCard = ({ title, data }) => {
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
-        <div className="pie-chart-legend">
+        <Box className="pie-chart-legend" >
           <h3>Legenda</h3>
           {data.map((entry, index) => (
-            <div key={index} className="legend-item">
-              <span
+            <Box key={index} className="legend-item" sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Typography
                 className="legend-color"
                 style={{ backgroundColor: COLORS[index % COLORS.length] }}
-              ></span>
-              <span className="legend-text">{entry.name}</span>
-            </div>
+              ></Typography>
+              <Typography className="legend-text">{entry.name}</Typography>
+            </Box>
           ))}
-        </div>
+        </Box>
       </div>
     </div>
   );

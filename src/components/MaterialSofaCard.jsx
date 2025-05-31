@@ -25,7 +25,7 @@ const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
     <Card
       onClick={toggleState}
       sx={{
-        width: "100%",
+        width: "96%",
         borderRadius: "8px",
         boxShadow: isSelected ? "0 0 10px rgba(0, 0, 0, 0.3)" : "0 2px 4px rgba(0, 0, 0, 0.1)",
         cursor: "pointer",
@@ -62,6 +62,7 @@ const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
               objectFit: "cover",
               transition: "filter 0.3s ease",
               filter: "brightness(80%)",
+              size: "cover",
             }}
           />
         ) : (

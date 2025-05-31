@@ -12,14 +12,14 @@ const TableRowPartsStorage = ({ id, name, quantity, status, warningLevel, index,
 
   return (
     <TableRow className={`${rowClass} ${statusClass}`}>
-      <TableCell align="center" className={`col-id ${statusClass}`}>{id}</TableCell>
-      <TableCell align="center" className={`col-name ${statusClass}`}>{name}</TableCell>
-      <TableCell align="center" className={`col-quantity ${statusClass}`}>{quantity}</TableCell>
-      <TableCell align="center" className={`col-status ${statusClass}`}>{status}</TableCell>
-      <TableCell align="center" className="col-actions">
+      <TableCell sx={{ fontSize: "110%" }} align="center" className={`col-id ${statusClass}`}>{id}</TableCell>
+      <TableCell sx={{ fontSize: "110%" }} align="center" className={`col-name ${statusClass}`}>{name}</TableCell>
+      <TableCell sx={{ fontSize: "110%" }} align="center" className={`col-quantity ${statusClass}`}>{quantity}</TableCell>
+      <TableCell sx={{ fontSize: "110%" }}align="center" className={`col-status ${statusClass}`}>{status}</TableCell>
+      <TableCell sx={{ fontSize: "110%" }} align="center" className="col-actions">
         <IconButton onClick={onDelete} color="error" className="action-icon trashcan">
           <DeleteIcon />
-        </IconButton>
+        </IconButton> 
         <IconButton onClick={onEdit} color="primary" className="action-icon pencil">
           <EditIcon />
         </IconButton>

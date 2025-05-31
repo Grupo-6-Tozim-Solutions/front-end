@@ -31,13 +31,13 @@ const CounchPage = () => {
     try {
       const response = await api.get('/sofa');
       const sofasData = Array.isArray(response.data) ? response.data : [];
-
+      
       // Mapeia os sofás sem buscar peças associadas
       setSofas(sofasData.map(sofa => ({
         ...sofa,
         pecas: [] // Array vazio para manter a estrutura
       })));
-
+      
     } catch (error) {
       console.error('Erro ao buscar sofás:', error);
       setError('Erro ao carregar sofás. Tente recarregar a página.');
@@ -68,8 +68,8 @@ const CounchPage = () => {
 
   const handleSaveEditedSofa = (editedSofa) => {
     // Atualiza o sofá localmente
-    setSofas(prevSofas =>
-      prevSofas.map(sofa =>
+    setSofas(prevSofas => 
+      prevSofas.map(sofa => 
         sofa.id === editedSofa.id ? editedSofa : sofa
       )
     );
@@ -136,18 +136,19 @@ const CounchPage = () => {
   return (
     <div className="Counch-Page">
       <SideBarCouch />
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%", height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         <HeaderSimple
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
         />
-
-        <Box sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: 2,
-          rowGap: "6%",
-          padding: 2
+        <Box sx={{ 
+          flex: 1,
+          display: "grid", 
+          gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+          gap:  1, 
+          rowGap: "4%", 
+          padding: 1.4,
+          overflowY: 'auto',
         }}>
           {sofas
             .filter(sofa => sofa && sofa.id)
@@ -186,6 +187,7 @@ const CounchPage = () => {
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
+        tituloModal="Excluir"
         title="Excluir Sofá"
         message={`Tem certeza que deseja excluir o sofá "${sofaToDelete?.modelo}"?`}
         textButtonDelete="Excluir"
@@ -196,7 +198,7 @@ const CounchPage = () => {
       <ConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
-        modalName="Sair"
+        tituloModal="Sair"
         title="Tem certeza que deseja sair?"
         message="Você precisará fazer login novamente."
         textButtonDelete="Sair"

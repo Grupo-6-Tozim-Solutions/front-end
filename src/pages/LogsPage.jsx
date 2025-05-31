@@ -1,36 +1,49 @@
-import React, { useState } from "react";
-import { Height, Opacity } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { Box, Table, TableContainer, TableBody, Paper } from "@mui/material";
 import SideBarCounch from "../components/SideBarCounch";
-import { Box } from "@mui/material";
-import HeaderStorage from "../components/HeaderStorage";
+import HeaderSimple from "../components/HeaderSimple";
 import TableStructureLogs from "../components/TableStructureLogs";
 import TableRowLogs from "../components/TableRowLogs";
-import { Table, TableContainer, TableBody, Paper } from "@mui/material";
-import HeaderSimple from "../components/HeaderSimple";
 
 const LogsPage = () => {
-  const [logs, setLogs] = useState([
-    {
-      id: "001",
-      date: "2025-02-14",
-      time: "10:00",
-      action: "Criar",
-      type: "Sofá",
-      item: "Sofá de 3 lugares",
-    },
-    {
-        id: "002",
-        date: "2025-05-14",
-        time: "10:30",
-        action: "Atualizar",
-        type: "Mesa",
-        item: "Mesa de jantar",
-    },
-    // Adicione mais objetos de log conforme necessário
-  ]);
-
+  const [logs, setLogs] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filters, setFilters] = useState({});
+
+useEffect(() => {
+  const fetchLogs = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/movimentacaoEstoque", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`, // ou outra forma de obter o token
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Resposta da API:", data);
+
+      const transformedLogs = data.map((log) => ({
+        id: log.id,
+        date: log.data.split("T")[0],
+        time: log.data.split("T")[1].split(".")[0],
+        action: log.quantidadeEntrada > 0 ? "Entrada" : "Saída",
+        type: "Peça",
+        item: log.peca.nome,
+      }));
+
+      setLogs(transformedLogs);
+    } catch (error) {
+      console.error("Erro ao buscar logs:", error);
+    }
+  };
+
+  fetchLogs();
+}, []);
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -59,23 +72,9 @@ const LogsPage = () => {
   });
 
   return (
-    <Box
-      sx={{
-        Height: "100%",
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-      }}
-    >
+    <Box sx={{ Height: "100%", width: "100%", display: "flex", flexDirection: "row" }}>
       <SideBarCounch />
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
         <HeaderSimple
           subtitle="Tozine Solutions"
           title="Histórico de ações na plataforma dos últimos 60 dias"

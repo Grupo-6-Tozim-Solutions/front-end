@@ -56,7 +56,7 @@ const CadastroPage = () => {
             <LinkCadastro
               textoBase=""
               textoLink="Clique aqui."
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/login')}         
             />
           </Typography>
         </Box>
