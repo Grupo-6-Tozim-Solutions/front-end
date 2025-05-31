@@ -15,18 +15,11 @@ const TableStructureLogs = ({ onSort, sortConfig = { key: null, direction: "asc"
             Data
           </TableSortLabel>
         </TableCell>
-        <TableCell sx={{ color: "white" }} align="center">
-          Horário
-        </TableCell>
-        <TableCell sx={{ color: "white" }} align="center">
-          Ação
-        </TableCell>
-        <TableCell sx={{ color: "white" }} align="center">
-          Tipo
-        </TableCell>
-        <TableCell sx={{ color: "white" }} align="center">
-          Item
-        </TableCell>
+        <TableCell sx={{ color: "white" }} align="center">Horário</TableCell>
+        <TableCell sx={{ color: "white" }} align="center">Ação</TableCell>
+        <TableCell sx={{ color: "white" }} align="center">Tipo</TableCell>
+        <TableCell sx={{ color: "white" }} align="center">Item</TableCell>
+        <TableCell sx={{ color: "white" }} align="center">Quantidade</TableCell> {/* NOVO */}
       </TableRow>
     </TableHead>
   );

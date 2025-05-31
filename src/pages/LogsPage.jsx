@@ -1,3 +1,4 @@
+// src/pages/LogsPage.jsx
 import React, { useEffect, useState } from "react";
 import { Box, Table, TableContainer, TableBody, Paper } from "@mui/material";
 import SideBarCounch from "../components/SideBarCounch";
@@ -10,40 +11,61 @@ const LogsPage = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filters, setFilters] = useState({});
 
-useEffect(() => {
-  const fetchLogs = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/movimentacaoEstoque", {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`, // ou outra forma de obter o token
-        },
-      });
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/movimentacaoEstoque", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-      if (!response.ok) {
-        throw new Error(`Erro HTTP: ${response.status}`);
+        // Se algum status 401/400, lança erro para cair no catch
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+          throw new Error("Resposta da API não é um array de movimentações.");
+        }
+
+        // Mapear cada registro para o formato do front
+        const transformedLogs = data.map((entry) => {
+          const dateObj = new Date(entry.data);
+          const date = dateObj.toISOString().split("T")[0]; // “2025-05-30”
+          const time = dateObj.toTimeString().split(":").slice(0, 2).join(":"); // “17:49”
+
+          // Determinar ação e quantidade:
+          // Se houver quantidadeEntrada > 0, então “Entrada” e quantity = quantidadeEntrada.
+          // Caso contrário, “Saída” e quantity = quantidadeSaida.
+          let action = "Saída";
+          let quantity = entry.quantidadeSaida;
+          if (entry.quantidadeEntrada && entry.quantidadeEntrada > 0) {
+            action = "Entrada";
+            quantity = entry.quantidadeEntrada;
+          }
+
+          return {
+            id: entry.id.toString().padStart(3, "0"),
+            date,
+            time,
+            action,
+            quantity,
+            type: "Peça",
+            item: entry.peca?.nome || "Desconhecido",
+          };
+        });
+
+        setLogs(transformedLogs);
+      } catch (error) {
+        console.error("Erro ao buscar logs:", error);
       }
+    };
 
-      const data = await response.json();
-      console.log("Resposta da API:", data);
-
-      const transformedLogs = data.map((log) => ({
-        id: log.id,
-        date: log.data.split("T")[0],
-        time: log.data.split("T")[1].split(".")[0],
-        action: log.quantidadeEntrada > 0 ? "Entrada" : "Saída",
-        type: "Peça",
-        item: log.peca.nome,
-      }));
-
-      setLogs(transformedLogs);
-    } catch (error) {
-      console.error("Erro ao buscar logs:", error);
-    }
-  };
-
-  fetchLogs();
-}, []);
+    fetchLogs();
+  }, []);
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -52,6 +74,7 @@ useEffect(() => {
     }
     setSortConfig({ key, direction });
 
+    // Ordena o array localmente
     const sortedLogs = [...logs].sort((a, b) => {
       if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
       if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
@@ -67,14 +90,31 @@ useEffect(() => {
   const filteredLogs = logs.filter((log) => {
     return Object.keys(filters).every((key) => {
       if (!filters[key]) return true;
-      return log[key].toString().toLowerCase().includes(filters[key].toLowerCase());
+      return log[key]
+        .toString()
+        .toLowerCase()
+        .includes(filters[key].toLowerCase());
     });
   });
 
   return (
-    <Box sx={{ Height: "100%", width: "100%", display: "flex", flexDirection: "row" }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
       <SideBarCounch />
-      <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <HeaderSimple
           subtitle="Tozine Solutions"
           title="Histórico de ações na plataforma dos últimos 60 dias"
@@ -90,15 +130,32 @@ useEffect(() => {
           }}
         >
           <TableContainer
+            component={Paper}
             sx={{
               width: "94%",
               maxHeight: "600px",
               borderRadius: "16px",
             }}
-            component={Paper}
           >
             <Table sx={{ borderRadius: "30%" }}>
-              <TableStructureLogs onSort={handleSort} onFilter={handleFilter} />
+              {/* 
+                Supondo que TableStructureLogs receba:
+                onSort → função de ordenação
+                onFilter → função de filtro
+                columns → lista de colunas, incluindo “quantity” 
+              */}
+              <TableStructureLogs
+                onSort={handleSort}
+                onFilter={handleFilter}
+                columns={[
+                  { key: "date", label: "Data" },
+                  { key: "time", label: "Hora" },
+                  { key: "action", label: "Ação" },
+                  { key: "quantity", label: "Quantidade" },
+                  { key: "type", label: "Tipo" },
+                  { key: "item", label: "Item" },
+                ]}
+              />
               <TableBody>
                 {filteredLogs.map((log, index) => (
                   <TableRowLogs
@@ -106,6 +163,7 @@ useEffect(() => {
                     date={log.date}
                     time={log.time}
                     action={log.action}
+                    quantity={log.quantity}
                     type={log.type}
                     item={log.item}
                     index={index}
