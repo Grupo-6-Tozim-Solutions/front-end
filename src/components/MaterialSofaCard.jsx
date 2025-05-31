@@ -1,20 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, Typography, Button, IconButton, Box, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { api } from '../Provider/apiProvider'; // Ajuste o caminho conforme necessário
 
-const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
+const MaterialSofaCard = ({sofaId, name, image, onEdit, onDelete, isEditModalOpen }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [quantity, setQuantity] = useState(0);
   // const [isChecked, setIsChecked] = useState(false);
+
+useEffect(() => {
+    if (!isEditModalOpen) {
+      setIsSelected(false); // Reseta o card ao fechar o modal
+    }
+  }, [isEditModalOpen]);
+
 
   const toggleState = (e) => {
     if (e.target.type !== "checkbox") {
       setIsSelected(!isSelected);
     }
   };
+
+
+  const handleProduzir = async () => {
+  try {
+    await api.post(`/sofa/produzir/${sofaId}?quantidade=${quantity}`);
+    alert("Produção realizada com sucesso!");
+    // Opcional: recarregue o estoque ou sofás
+  } catch (error) {
+    alert("Erro ao produzir sofá: " + (error.response?.data?.message || error.message));
+  }
+};
 
   // const handleCheckboxChange = (e) => {
   //   e.stopPropagation(); // Prevents the card's state from toggling
@@ -49,7 +68,7 @@ const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
           position: "relative", // Ensure proper positioning for the checkbox
         }}
       >
-  
+
         {!isSelected ? (
           <Box
             component="img"
@@ -72,7 +91,7 @@ const MaterialSofaCard = ({ name, image, onEdit, onDelete }) => {
               color="primary"
               onClick={(e) => {
                 e.stopPropagation();
-                alert(`Produzir ${quantity} unidades de ${name}`);
+                handleProduzir();
               }}
               sx={{ width: "170%" }}
             >

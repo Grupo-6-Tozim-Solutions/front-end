@@ -31,13 +31,13 @@ const CounchPage = () => {
     try {
       const response = await api.get('/sofa');
       const sofasData = Array.isArray(response.data) ? response.data : [];
-      
+
       // Mapeia os sofás sem buscar peças associadas
       setSofas(sofasData.map(sofa => ({
         ...sofa,
         pecas: [] // Array vazio para manter a estrutura
       })));
-      
+
     } catch (error) {
       console.error('Erro ao buscar sofás:', error);
       setError('Erro ao carregar sofás. Tente recarregar a página.');
@@ -66,13 +66,8 @@ const CounchPage = () => {
     setEditSofaModalOpen(true);
   };
 
-  const handleSaveEditedSofa = (editedSofa) => {
-    // Atualiza o sofá localmente
-    setSofas(prevSofas => 
-      prevSofas.map(sofa => 
-        sofa.id === editedSofa.id ? editedSofa : sofa
-      )
-    );
+  const handleSaveEditedSofa = () => {
+    fetchSofas(); // Atualiza a lista com dados do backend
     setEditSofaModalOpen(false);
   };
 
@@ -141,12 +136,12 @@ const CounchPage = () => {
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
         />
-        <Box sx={{ 
+        <Box sx={{
           flex: 1,
-          display: "grid", 
+          display: "grid",
           gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-          gap:  1, 
-          rowGap: "4%", 
+          gap: 1,
+          rowGap: "4%",
           padding: 1.4,
           overflowY: 'auto',
         }}>
@@ -155,11 +150,13 @@ const CounchPage = () => {
             .map(sofa => (
               <MaterialSofaCard
                 key={sofa.id}
+                sofaId={sofa.id}
                 name={sofa.modelo}
                 image={`http://localhost:8080${sofa.caminhoImagem}`}
                 pecas={sofa.pecas}
                 onEdit={() => handleEditSofa(sofa)}
                 onDelete={() => openDeleteModal(sofa)}
+                isEditModalOpen={isEditSofaModalOpen}
               />
             ))}
 
@@ -204,6 +201,7 @@ const CounchPage = () => {
         textButtonDelete="Sair"
         imagem="public/assets/logoutImage.png"
         onConfirm={handleLogoutConfirm}
+        onAfterSave={fetchSofas}
       />
     </div>
   );

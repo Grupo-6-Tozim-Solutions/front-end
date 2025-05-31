@@ -158,15 +158,7 @@ const handleSave = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
 
-    // Monte o sofá atualizado para passar para o onSave
-    const updatedSofa = {
-      ...sofa,
-      modelo: sofaName,
-      caminhoImagem: selectedImage ? `/imagens/${selectedImage.name}` : sofa.caminhoImagem,
-      // Adicione outros campos se necessário
-    };
-
-    onSave(updatedSofa); // Passe o sofá atualizado!
+    onSave();
     onClose();
   } catch (error) {
     alert('Erro ao salvar alterações.');
