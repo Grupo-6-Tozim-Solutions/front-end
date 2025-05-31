@@ -31,13 +31,13 @@ const CounchPage = () => {
     try {
       const response = await api.get('/sofa');
       const sofasData = Array.isArray(response.data) ? response.data : [];
-      
+
       // Mapeia os sofás sem buscar peças associadas
       setSofas(sofasData.map(sofa => ({
         ...sofa,
         pecas: [] // Array vazio para manter a estrutura
       })));
-      
+
     } catch (error) {
       console.error('Erro ao buscar sofás:', error);
       setError('Erro ao carregar sofás. Tente recarregar a página.');
@@ -68,8 +68,8 @@ const CounchPage = () => {
 
   const handleSaveEditedSofa = (editedSofa) => {
     // Atualiza o sofá localmente
-    setSofas(prevSofas => 
-      prevSofas.map(sofa => 
+    setSofas(prevSofas =>
+      prevSofas.map(sofa =>
         sofa.id === editedSofa.id ? editedSofa : sofa
       )
     );
@@ -101,11 +101,11 @@ const CounchPage = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
       }}>
         <Typography variant="h6">Carregando sofás...</Typography>
       </Box>
@@ -114,17 +114,17 @@ const CounchPage = () => {
 
   if (error) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
         flexDirection: 'column',
         gap: 2
       }}>
         <Typography variant="h6" color="error">{error}</Typography>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={fetchSofas}
         >
           Tentar novamente
@@ -141,27 +141,29 @@ const CounchPage = () => {
           title="Gerenciamento de Sofás"
           subtitle="Tozine Solutions"
         />
-        
-        <Box sx={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", 
-          gap: 2, 
-          rowGap: "6%", 
-          padding: 2 
+
+        <Box sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: 2,
+          rowGap: "6%",
+          padding: 2
         }}>
-          {sofas.map((sofa) => (
-            <MaterialSofaCard
-              key={sofa.id}
-              name={sofa.modelo}
-              image={`http://localhost:8080${sofa.caminhoImagem}`}
-              pecas={sofa.pecas}
-              onEdit={() => handleEditSofa(sofa)}
-              onDelete={() => openDeleteModal(sofa)}
-            />
-          ))}
-          
-          <AddSofaCard 
-            onClick={() => setAddSofaModalOpen(true)} 
+          {sofas
+            .filter(sofa => sofa && sofa.id)
+            .map(sofa => (
+              <MaterialSofaCard
+                key={sofa.id}
+                name={sofa.modelo}
+                image={`http://localhost:8080${sofa.caminhoImagem}`}
+                pecas={sofa.pecas}
+                onEdit={() => handleEditSofa(sofa)}
+                onDelete={() => openDeleteModal(sofa)}
+              />
+            ))}
+
+          <AddSofaCard
+            onClick={() => setAddSofaModalOpen(true)}
             sx={{ height: '100%' }}
           />
         </Box>

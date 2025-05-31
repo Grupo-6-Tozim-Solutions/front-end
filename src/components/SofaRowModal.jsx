@@ -9,6 +9,7 @@ const SofaRowModal = ({
   onIncrease,
   onFastForward,
   isEven,
+  isFastForwardDisabled
 }) => {
   const backgroundColor = isEven ? "#EBEBEB" : "#F8F8F8";
 
@@ -37,22 +38,23 @@ const SofaRowModal = ({
       >
         {text}
       </Box>
-   
+
 
       {/* Fast Forward Button */}
       <Button
         onClick={onFastForward}
         variant="contained"
+        disabled={isFastForwardDisabled}
         sx={{
           backgroundColor: "#B8FFAA",
-          "&:hover": { backgroundColor: "#A8FF88", transform:0, boxShadow:'none' },
+          "&:hover": { backgroundColor: "#A8FF88", transform: 0, boxShadow: 'none' },
           color: "#16BC00",
           fontWeight: "bold",
           padding: "6px 16px",
           flexShrink: 0,
           textTransform: "none",
           minWidth: "120px",
-          boxShadow:'none'
+          boxShadow: 'none'
         }}
       >
         <FastForwardIcon sx={{ mr: 1 }} />

@@ -42,6 +42,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     new Map(leftItems.map(item => [item.id, item])).values()
   );
 
+
   const uniqueRightItems = Array.from(
     new Map(rightItems.map(item => [item.peca.id, item])).values()
   );
@@ -50,7 +51,13 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     setRightItems(prev => {
       const exists = prev.some(item => item.peca.id === peca.id);
       if (!exists) {
-        return [...prev, { peca, quantidade: 1 }];
+        return [...prev, {
+          peca: {
+            id: peca.id,        // Garantimos que o ID está presente
+            nome: peca.nome     // Mantemos todos os campos necessários
+          },
+          quantidade: 1
+        }];
       }
       return prev;
     });
@@ -82,44 +89,44 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
     }
   };
 
-const handleSave = async () => {
+  const handleSave = async () => {
     try {
-        const sofaData = {
-            modelo: sofaName,
-        };
+      const sofaData = {
+        modelo: sofaName,
+      };
 
-        const formData = new FormData();
-        formData.append("sofa", JSON.stringify(sofaData));
-        if (selectedImage) {
-            formData.append("imagem", selectedImage);
-        } else {
-            alert("Selecione uma imagem para o sofá.");
-            return;
-        }
+      const formData = new FormData();
+      formData.append("sofa", JSON.stringify(sofaData));
+      if (selectedImage) {
+        formData.append("imagem", selectedImage);
+      } else {
+        alert("Selecione uma imagem para o sofá.");
+        return;
+      }
 
-        // POST para cadastrar sofá com imagem
-        const sofaResponse = await api.post('/sofa/upload', formData, {
-            headers: { "Content-Type": "multipart/form-data" }
-        });
+      // POST para cadastrar sofá com imagem
+      const sofaResponse = await api.post('/sofa/upload', formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
 
-        // Aqui, não precisamos buscar as peças já associadas, pois queremos adicionar novas
-        const pecasParaAdicionar = rightItems.map(item => ({
-            idPeca: item.peca.id,
-            quantidade: item.quantidade
-        }));
+      // Aqui, não precisamos buscar as peças já associadas, pois queremos adicionar novas
+      const pecasParaAdicionar = rightItems.map(item => ({
+        idPeca: item.peca.id,
+        quantidade: item.quantidade
+      }));
 
-        // Envia as peças associadas sem remover do estoque
-        if (pecasParaAdicionar.length > 0) {
-            await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasParaAdicionar);
-        }
+      // Envia as peças associadas sem remover do estoque
+      if (pecasParaAdicionar.length > 0) {
+        await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasParaAdicionar);
+      }
 
-        onSave(sofaResponse.data);
-        onClose();
+      onSave(sofaResponse.data);
+      onClose();
     } catch (error) {
-        console.error("Erro ao salvar sofá:", error.response?.data || error.message);
-        alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
+      console.error("Erro ao salvar sofá:", error.response?.data || error.message);
+      alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
     }
-};
+  };
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -173,6 +180,7 @@ const handleSave = async () => {
                 text={item.nome}
                 onFastForward={() => handleFastForward(item)}
                 isEven={index % 2 === 0}
+                isFastForwardDisabled={rightItems.some(ri => ri.peca.id === item.id)}
               />
             ))}
           </LeftWrapper>
@@ -204,11 +212,10 @@ const handleSave = async () => {
                   key={`sofa-${item.peca.id}`}
                   text={item.peca.nome}
                   quantidade={item.quantidade}
+                  pecaId={item.peca.id} // ← Esta é a linha crucial que estava faltando
                   isEditMode={true}
                   onDelete={() => handleDelete(item.peca.id)}
-                  onQuantityChange={(newQty) =>
-                    handleUpdateQuantity(item.peca.id, newQty)
-                  }
+                  onQuantityChange={(newQty) => handleUpdateQuantity(item.peca.id, newQty)}
                 />
               ))}
             </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -8,31 +8,70 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const SofaSummaryRowModal = ({
   text,
   quantidade,
+  pecaId, // Certifique-se que esta prop está sendo recebida
   isEditMode,
   onDelete,
   onQuantityChange,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [localQuantity, setLocalQuantity] = useState(quantidade);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Sincroniza o estado local quando a prop quantidade muda
+
+    useEffect(() => {
+    console.log('SofaSummaryRowModal recebeu:', { pecaId, quantidade });
+  }, [pecaId, quantidade]);
+  
+  useEffect(() => {
+    setLocalQuantity(quantidade);
+  }, [quantidade]);
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
   };
 
   const handleIncrease = () => {
-    const newQty = quantidade + 1; // Modifique para usar a quantidade atual
-    onQuantityChange(newQty);
+    const newQty = localQuantity + 1;
+    updateQuantity(newQty);
   };
 
   const handleDecrease = () => {
-    if (quantidade > 0) {
-      const newQty = quantidade - 1; // Modifique para usar a quantidade atual
-      onQuantityChange(newQty);
+    if (localQuantity > 1) { // Mínimo de 1 peça
+      const newQty = localQuantity - 1;
+      updateQuantity(newQty);
     }
   };
 
-  const handleInputChange = (value) => {
-    const newValue = Math.max(Number(value), 0);
-    onQuantityChange(newValue);
+  const updateQuantity = (newQuantity) => {
+    setLocalQuantity(newQuantity);
+    if (onQuantityChange) {
+      onQuantityChange(newQuantity);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = Math.max(Number(e.target.value), 1); // Mínimo de 1 peça
+    setLocalQuantity(value);
+  };
+
+  const handleBlur = () => {
+    if (onQuantityChange) {
+      onQuantityChange(localQuantity);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    if (!onDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      await onDelete();
+    } catch (error) {
+      console.error("Erro ao deletar:", error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -44,9 +83,13 @@ const SofaSummaryRowModal = ({
         borderBottom: "1px solid #ccc",
         backgroundColor: "#F5F5F5",
         width: "100%",
+        transition: "background-color 0.3s",
+        '&:hover': {
+          backgroundColor: "#EBEBEB"
+        }
       }}
     >
-      {/* Text Section */}
+      {/* Nome da Peça */}
       <Typography
         sx={{
           flex: 2,
@@ -61,7 +104,7 @@ const SofaSummaryRowModal = ({
         {text}
       </Typography>
 
-      {/* Quantity Section */}
+      {/* Controle de Quantidade */}
       <Box
         sx={{
           flex: 3,
@@ -72,29 +115,45 @@ const SofaSummaryRowModal = ({
         }}
       >
         {isEditing ? (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ 
+            display: "flex", 
+            alignItems: "center",
+            gap: "4px"
+          }}>
             <IconButton
               onClick={handleDecrease}
               color="error"
-              sx={{ padding: "6px" }}
+              sx={{ 
+                padding: "6px",
+                '&:disabled': {
+                  opacity: 0.5
+                }
+              }}
+              disabled={localQuantity <= 1}
             >
               <RemoveIcon sx={{ fontSize: "20px" }} />
             </IconButton>
+            
             <input
               type="number"
-              value={quantidade}
-              onChange={(e) => handleInputChange(e.target.value)}
+              value={localQuantity}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              min="1"
               style={{
-                width: "40px",
-                height: "30px",
+                width: "50px",
+                height: "32px",
                 textAlign: "center",
                 fontSize: "16px",
                 fontWeight: "bold",
-                border: "none",
-                padding: 0,
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                padding: "0 5px",
                 outline: "none",
+                backgroundColor: "white",
               }}
             />
+            
             <IconButton
               onClick={handleIncrease}
               color="primary"
@@ -108,14 +167,16 @@ const SofaSummaryRowModal = ({
             sx={{
               fontSize: "16px",
               fontWeight: "bold",
+              minWidth: "40px",
+              textAlign: "center"
             }}
           >
-            x{String(quantidade || 0).padStart(2, "0")}
+            x{String(localQuantity).padStart(2, "0")}
           </Typography>
         )}
       </Box>
 
-      {/* Actions Section */}
+      {/* Botões de Ação */}
       <Box
         sx={{
           flex: 1,
@@ -128,33 +189,37 @@ const SofaSummaryRowModal = ({
           <IconButton
             onClick={handleEditClick}
             sx={{
-              backgroundColor: "#A5D7FF",
+              backgroundColor: isEditing ? "#1976d2" : "#A5D7FF",
+              color: isEditing ? "white" : "inherit",
               borderRadius: "4px",
-              "&:hover": { backgroundColor: "#80C6FF" },
-              width: "30px",
+              "&:hover": { 
+                backgroundColor: isEditing ? "#1565c0" : "#80C6FF" 
+              },
+              width: "32px",
               height: "32px",
+              transition: "all 0.3s"
             }}
+            disabled={isDeleting}
           >
-            <EditIcon
-              color="primary"
-              sx={{ fontSize: "25px" }}
-            />
+            <EditIcon sx={{ fontSize: "20px" }} />
           </IconButton>
         )}
         
         <IconButton
-          onClick={onDelete}
+          onClick={handleDeleteClick}
           sx={{
             backgroundColor: "#FFC9C9",
             "&:hover": { backgroundColor: "#FFAAAA" },
-            width: "30px",
+            width: "32px",
             height: "32px",
             borderRadius: "4px",
+            transition: "all 0.3s"
           }}
+          disabled={isDeleting}
         >
-          <DeleteIcon
-            color="error"
-            sx={{ fontSize: "25px" }}
+          <DeleteIcon 
+            color="error" 
+            sx={{ fontSize: "20px" }} 
           />
         </IconButton>
       </Box>

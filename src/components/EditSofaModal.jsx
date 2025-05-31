@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box, Modal, Typography, Divider } from "@mui/material";
 import SofaRowModal from "./SofaRowModal";
 import SofaSummaryRowModal from "./SofaSummaryRowModal";
@@ -9,110 +9,179 @@ import RightContainer from "./RightContainer";
 import { api } from '../Provider/apiProvider';
 
 const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title }) => {
-  const [leftItems, setLeftItems] = useState([]); // Todas as peças do estoque
-  const [rightItems, setRightItems] = useState([]); // Peças associadas ao sofá
+  const [leftItems, setLeftItems] = useState([]);
+  const [rightItems, setRightItems] = useState([]);
+  const [isImageSelected, setIsImageSelected] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [sofaName, setSofaName] = useState(sofa?.modelo || '');
 
-useEffect(() => {
+  useEffect(() => {
+    if (sofa?.modelo) {
+      setSofaName(sofa.modelo);
+    } else {
+      setSofaName('');
+    }
+  }, [sofa]);
+
+  useEffect(() => {
     if (!isOpen || !sofa?.id) return;
 
     const loadPecas = async () => {
-        setIsLoading(true);
-        setError(null);
+      setIsLoading(true);
+      setError(null);
 
-        try {
-            const [estoqueResponse, sofaPecasResponse] = await Promise.all([
-                api.get('/peca/listarTodas'),
-                api.get(`/sofa/listarPecas/${sofa.id}`) // Certifique-se de que este endpoint está correto
-            ]);
+      try {
+        const [estoqueResponse, sofaPecasResponse] = await Promise.all([
+          api.get('/peca/listarTodas'),
+          api.get(`/sofa/listarPecas/${sofa.id}`)
+        ]);
+        console.log("sofaPecasResponse.data", sofaPecasResponse.data);
 
-            const todasPecas = Array.isArray(estoqueResponse.data) ? estoqueResponse.data : [];
-            const pecasSofa = Array.isArray(sofaPecasResponse.data) ? sofaPecasResponse.data : [];
+        // Peças do sofá (right)
+        // Peças do sofá (right)
+        const pecasSofa = (sofaPecasResponse.data || [])
+          .filter(item => item && item.id)
+          .map(item => ({
+            peca: {
+              id: item.id,
+              nome: item.nome
+            },
+            quantidade: item.quantidade || 1
+          }));
 
-            // Verifique o que está sendo retornado na resposta da API
-            console.log('Todas as peças do estoque:', todasPecas);
-            console.log('Peças do sofá:', pecasSofa);
+        setRightItems(pecasSofa);
 
-            // Mapeia as peças associadas ao sofá
-            setRightItems(pecasSofa.map(peca => ({
-                id: peca.Peca, // ID da peça associada
-                nome: peca.nome,  // Nome da peça
-                quantidade: peca.quantidade || 0 // A quantidade associada ao sofá
-            })));
+        // Peças do estoque (left) - mostra todas!
+        const todasPecas = (estoqueResponse.data || [])
+          .filter(item => item && item.id)
+          .map(item => ({
+            peca: {
+              id: item.id,
+              nome: item.nome
+            },
+            quantidadeEstoque: item.quantidadeEstoque || 0
+          }));
 
-            // Filtra as peças disponíveis no estoque que não estão associadas ao sofá
-            setLeftItems(todasPecas.filter(peca =>
-                !pecasSofa.some(item => item.idPeca === peca.id) // Verifica se a peça já está associada
-            ));
+        setRightItems(pecasSofa);
+        setLeftItems(todasPecas);
 
-        } catch (error) {
-            console.error('Erro ao carregar peças:', error);
-            setError('Erro ao carregar peças. Tente novamente.');
-        } finally {
-            setIsLoading(false);
-        }
+      } catch (error) {
+        setError('Erro ao carregar peças. Tente novamente.');
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadPecas();
-}, [isOpen, sofa?.id]);
+  }, [isOpen, sofa?.id]);
+  // Função para padronizar a estrutura das peças
+  const normalizePeca = (peca) => ({
+    peca: {
+      id: peca.peca?.id || peca.id || peca.idPeca,
+      nome: peca.peca?.nome || peca.nome
+    },
+    quantidade: peca.quantidade || 1
+  });
+
+  const handleAddPhotoClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setIsImageSelected(true);
+    }
+  };
 
   const handleFastForward = (peca) => {
+    const normalized = normalizePeca(peca);
+    if (!normalized.peca.id) {
+      console.error('Peça sem ID:', peca);
+      return;
+    }
     setRightItems(prev => {
-      // Verifica se a peça já está na lista
-      const exists = prev.some(item => item.id === peca.id);
-      if (!exists) {
-        return [...prev, {
-          ...peca,
-          quantidade: 1, // quantidade inicial ao adicionar
-          quantidadePeca: 1 // compatibilidade com o backend
-        }];
-      }
-      return prev; // Se já existir, não adiciona
+      const exists = prev.some(item => String(item.peca.id) === String(normalized.peca.id));
+      return exists ? prev : [...prev, normalized];
     });
   };
 
-  const handleUpdateQuantity = (pecaId, newQuantity) => {
-    setRightItems(prev =>
-      prev.map(item =>
-        item.id === pecaId ? {
-          ...item,
-          quantidade: newQuantity,
-          quantidadePeca: newQuantity
-        } : item
-      ) 
-    );
-  };
-
-  const handleDelete = (pecaId) => {
-    setRightItems(prev => prev.filter(item => item.id !== pecaId));
-  };
-
-  const handleSave = async () => {
-    if (!sofa?.id) return;
-
+  const handleUpdateQuantity = async (pecaId, newQuantity) => {
+    if (!sofa?.id || !pecaId) return;
     try {
-      // Prepara os dados para enviar ao backend
-      const pecasParaAtualizar = rightItems.map(item => ({
-        idPeca: item.id,
-        quantidade: item.quantidade
-      }));
-
-      // Atualiza as peças do sofá no backend
-      await api.put(`/sofa/adicionarPeca/${sofa.id}`, pecasParaAtualizar);
-
-      // Chama a função onSave com os dados atualizados
-      onSave({
-        ...sofa,
-        pecas: rightItems
-      });
-
-      onClose();
+      const payload = [{
+        idPeca: pecaId,
+        quantidade: newQuantity
+      }];
+      await api.put(`/sofa/adicionarPeca/${sofa.id}`, payload);
+      setRightItems(prev =>
+        prev.map(item =>
+          String(item.peca.id) === String(pecaId) ? { ...item, quantidade: newQuantity } : item
+        )
+      );
     } catch (error) {
-      console.error('Erro ao salvar alterações:', error);
-      alert('Erro ao salvar alterações. Tente novamente.');
+      alert("Erro ao atualizar quantidade.");
     }
   };
+
+  const handleDelete = async (pecaId) => {
+    if (!sofa?.id || !pecaId) return;
+    try {
+      const response = await api.delete(`/sofa/removerPeca/${sofa.id}/${pecaId}`);
+      if (response.status === 200) {
+        setRightItems(prev => prev.filter(item => String(item.peca.id) !== String(pecaId)));
+      } else {
+        alert("Erro ao remover peça. Status: " + response.status);
+      }
+    } catch (error) {
+      alert(`Erro ao remover peça: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+const handleSave = async () => {
+  if (!sofa?.id) return;
+  setIsLoading(true);
+  try {
+    const formData = new FormData();
+    const dadosSofa = { modelo: sofaName };
+    formData.append("sofa", JSON.stringify(dadosSofa));
+    if (selectedImage) {
+      formData.append("imagem", selectedImage);
+    }
+    await api.put(`/sofa/atualizar/${sofa.id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    // Monte o sofá atualizado para passar para o onSave
+    const updatedSofa = {
+      ...sofa,
+      modelo: sofaName,
+      caminhoImagem: selectedImage ? `/imagens/${selectedImage.name}` : sofa.caminhoImagem,
+      // Adicione outros campos se necessário
+    };
+
+    onSave(updatedSofa); // Passe o sofá atualizado!
+    onClose();
+  } catch (error) {
+    alert('Erro ao salvar alterações.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  // Filtra peças duplicadas e inválidas
+  const uniqueLeftItems = Array.from(
+    new Map(leftItems.filter(item => item && item.peca && item.peca.id).map(item => [String(item.peca.id), item])).values()
+  );
+  const uniqueRightItems = Array.from(
+    new Map(rightItems.filter(item => item && item.peca && item.peca.id).map(item => [String(item.peca.id), item])).values()
+  );
 
   if (!isOpen) return null;
 
@@ -135,9 +204,10 @@ useEffect(() => {
         }}
       >
         <TitleModal
-          modalName={title}
-          isEditable={false}
+          modalName={sofaName}
+          isEditable={true}
           onClose={onClose}
+          onNameChange={setSofaName}
         />
 
         {isLoading ? (
@@ -175,7 +245,6 @@ useEffect(() => {
               padding: "20px",
             }}
           >
-            {/* Lista esquerda - Todas as peças do estoque */}
             <LeftWrapper>
               <Typography
                 variant="h6"
@@ -188,20 +257,19 @@ useEffect(() => {
               >
                 Peças do estoque
               </Typography>
-              {leftItems
-                .filter(peca => !rightItems.some(item => item.id === peca.id)) // Filtra peças já adicionadas
-                .map((peca, index) => (
-                  <SofaRowModal
-                    key={`estoque-${peca.id}`}
-                    text={peca.nome}
-                    quantity={peca.quantidadeEstoque || 0}
-                    onFastForward={() => handleFastForward(peca)}
-                    isEven={index % 2 === 0}
-                  />
-                ))}
+              {uniqueLeftItems.map((item, index) => (
+                <SofaRowModal
+                  key={`estoque-${item.peca.id}`}
+                  text={item.peca.nome}
+                  quantity={item.quantidadeEstoque || 0}
+                  onFastForward={() => handleFastForward(item)}
+                  isEven={index % 2 === 0}
+                  // Desabilita se já está no sofá
+                  isFastForwardDisabled={uniqueRightItems.some(ri => ri && ri.peca && String(ri.peca.id) === String(item.peca.id))}
+                />
+              ))}
             </LeftWrapper>
 
-            {/* Lista direita - Peças do sofá */}
             <RightContainer>
               <Typography
                 variant="h6"
@@ -224,14 +292,15 @@ useEffect(() => {
                   overflowY: "auto",
                 }}
               >
-                {rightItems.map((peca) => (
+                {uniqueRightItems.map((item) => (
                   <SofaSummaryRowModal
-                    key={`sofa-${peca.id}`}
-                    text={peca.nome}
-                    quantidade={peca.quantidade} // A quantidade agora deve ser corretamente atribuída
+                    key={`sofa-${item.peca.id}`}
+                    text={item.peca.nome}
+                    quantidade={item.quantidade}
+                    pecaId={item.peca.id}
                     isEditMode={true}
-                    onDelete={() => handleDelete(peca.id)}
-                    onQuantityChange={(newQty) => handleUpdateQuantity(peca.id, newQty)}
+                    onDelete={() => handleDelete(item.peca.id)}
+                    onQuantityChange={(newQty) => handleUpdateQuantity(item.peca.id, newQty)}
                   />
                 ))}
               </Box>
@@ -246,28 +315,54 @@ useEffect(() => {
                 }}
               >
                 <CustomButton
+                  imageSrc={isImageSelected ? "./assets/folderSave.png" : "./assets/folder.png"}
+                  text="Editar foto"
+                  buttonStyle={{
+                    display: "flex",
+                    alignItems: "center",
+                    background: "#E0E0E0",
+                    height: "35px",
+                    borderRadius: "5px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    color: "black",
+                    width: "52%",
+                    fontWeight: isImageSelected ? "600" : "normal",
+                    "&:hover": { backgroundColor: "#D6D6D6" },
+                  }}
+                  imageStyle={{ width: "25px", height: "25px" }}
+                  onClick={handleAddPhotoClick}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+                <CustomButton
                   imageSrc="./assets/check.png"
-                  text="Salvar"
+                  text={isLoading ? "Salvando..." : "Salvar"}
                   buttonStyle={{
                     display: "flex",
                     alignItems: "center",
                     background: "#B8FFAA",
                     border: "none",
-                    borderRadius: "10px",
-                    padding: "8px 16px",
+                    borderRadius: "5px",
+                    padding: "0px 16px",
                     cursor: "pointer",
                     color: "#16BC00",
                     fontWeight: "bold",
-                    width: "100%",
+                    width: "38%",
                     justifyContent: "center",
                     height: "100%",
-                    "&:hover": {
-                      backgroundColor: "#A8FF88",
-                    },
+                    "&:hover": { backgroundColor: "#A8FF88" },
+                    opacity: isLoading ? 0.7 : 1,
                   }}
                   imageStyle={{ width: "25px", height: "25px" }}
                   onClick={handleSave}
-                  enableHover={true}
+                  enableHover={!isLoading}
+                  disabled={isLoading}
                 />
               </Box>
             </RightContainer>
