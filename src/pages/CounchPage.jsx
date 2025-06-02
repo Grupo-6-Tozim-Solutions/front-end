@@ -162,7 +162,6 @@ const CounchPage = () => {
 
           <AddSofaCard
             onClick={() => setAddSofaModalOpen(true)}
-            sx={{ height: '100%' }}
           />
         </Box>
       </Box>
