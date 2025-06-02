@@ -7,12 +7,9 @@ const AddSofaCard = ({ onClick, sx }) => {
       className="add-sofa-card"
       onClick={onClick}
       style={{
-        minHeight: 220,
-        minWidth: 300,
-        maxWidth: 340,
-        maxHeight: 260,
-        height: 220,
-        width: 300,
+      
+        height: 244.3,
+        width: 329,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
