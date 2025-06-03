@@ -21,6 +21,7 @@ const SideBarCounch = () => {
 
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
+    localStorage.removeItem("token");
     navigate('/login');
   };
   const menuItems = [
@@ -52,7 +53,7 @@ const SideBarCounch = () => {
           </li>
         </div>
       </div>
-             <ConfirmationModal
+            <ConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
          tituloModal="Sair"

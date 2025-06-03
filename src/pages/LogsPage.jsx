@@ -5,6 +5,7 @@ import SideBarCounch from "../components/SideBarCounch";
 import HeaderSimple from "../components/HeaderSimple";
 import TableStructureLogs from "../components/TableStructureLogs";
 import TableRowLogs from "../components/TableRowLogs";
+import { useNavigate } from "react-router-dom";
 
 const LogsPage = () => {
   const [logs, setLogs] = useState([]);
@@ -96,6 +97,21 @@ const LogsPage = () => {
         .includes(filters[key].toLowerCase());
     });
   });
+
+  
+  useEffect(() => {
+    checarToken();
+  }, []);
+
+
+  function checarToken() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate('/login');
+    }
+  }
+
+  const navigate = useNavigate();
 
   return (
     <Box

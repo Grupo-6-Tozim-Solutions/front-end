@@ -6,6 +6,7 @@ import BarChartCard from '../components/BarChartCard';
 import PieChartCard from '../components/PieChartCard';
 import './DashboardStyle.css';
 import { api } from '../Provider/apiProvider';
+import { useNavigate } from 'react-router-dom';
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -26,6 +27,22 @@ const Dashboard = () => {
     api.get('/dashboard/sofas-mais-saida-mes').then(res => setSofasMaisSaida(res.data));
     api.get('/dashboard/pecas-mais-saida-mes').then(res => setPecasMaisSaida(res.data));
   }, []);
+
+
+
+  useEffect(() => {
+    checarToken();
+  }, []);
+
+
+  function checarToken() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate('/login');
+    }
+  }
+
+  const navigate = useNavigate();
 
   return (
     <Box display="flex" className="dashboard-container">

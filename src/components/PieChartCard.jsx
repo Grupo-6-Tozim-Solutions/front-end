@@ -33,8 +33,9 @@ const PieChartCard = ({ title, data }) => {
               <Typography
                 className="legend-color"
                 style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                title={entry.name}
               ></Typography>
-              <Typography className="legend-text">{entry.name}</Typography>
+              <Typography className="legend-text" title={entry.name}>{entry.name}</Typography>
             </Box>
           ))}
         </Box>

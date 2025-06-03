@@ -138,6 +138,20 @@ export function PartsStorage() {
   }, []);
 
 
+  
+    useEffect(() => {
+      checarToken();
+    }, []);
+  
+  
+    function checarToken() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate('/login');
+      }
+    }
+  
+ 
   return (
     <div className="parts-storage">
       <SideBarCounch />

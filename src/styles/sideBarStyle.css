@@ -32,6 +32,9 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  display: flex;
+
+  width: 100%;
 }
 
 .menu-item {
@@ -41,12 +44,28 @@
   color: white;
   font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.2s;
+  padding: 8px 0;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.menu-item:hover, .menu-item.active {
+  background: rgba(0,0,0,0.32);
+  color: #fff;
 }
 
 .menu-icon {
   font-size: 24px;
   color: white;
+  transition: color 0.2s;
+}
+
+.menu-item:hover .menu-icon, .menu-item.active .menu-icon {
+  color: #fff;
 }
 
 .SideBar-Counch.expanded .menu-item {

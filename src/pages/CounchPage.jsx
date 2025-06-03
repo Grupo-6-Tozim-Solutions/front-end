@@ -22,8 +22,20 @@ const CounchPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const navigate = useNavigate();
+  // Verifica o token ao carregar a página
+  useEffect(() => {
+    checarToken();
+  }, []);
 
+
+  function checarToken() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate('/login');
+    }
+  }
+
+  const navigate = useNavigate();
   // Função simplificada para carregar apenas os sofás
   const fetchSofas = async () => {
     setIsLoading(true);
@@ -96,7 +108,9 @@ const CounchPage = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{
+      <Box
+       
+      sx={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

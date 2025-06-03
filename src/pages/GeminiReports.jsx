@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "../styles/GeminiReports.css";
 import { api } from "../Provider/apiProvider"; // instância Axios com baseURL, headers, token etc.
+import { useNavigate } from "react-router-dom"; // para redirecionar ao login se não houver token
 
 const GeminiReports = () => {
   const [messages, setMessages] = useState([
@@ -92,6 +93,22 @@ Pergunta do usuário: ${trimmed}
   const handleKeyDown = (e) => {
     if (e.key === "Enter") sendMessage();
   };
+
+
+  
+  useEffect(() => {
+    checarToken();
+  }, []);
+
+
+  function checarToken() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate('/login');
+    }
+  }
+
+  const navigate = useNavigate();
 
   return (
     <div className="gemini-container">
