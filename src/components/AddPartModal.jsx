@@ -166,6 +166,7 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
                     borderRadius: "4px",
                     fontSize: "14px",
                     fontWeight: "600",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   Estoque baixo
