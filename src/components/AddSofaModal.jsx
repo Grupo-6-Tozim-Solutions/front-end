@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Modal, Typography, Divider } from "@mui/material";
+import { Box, Modal, Typography, Divider, alertTitleClasses } from "@mui/material";
 import SofaRowModal from "./SofaRowModal";
 import SofaSummaryRowModal from "./SofaSummaryRowModal";
 import TitleModal from "./TittleModal";
@@ -8,7 +8,7 @@ import LeftWrapper from "./LeftWrapper";
 import RightContainer from "./RightContainer";
 import { api } from '../Provider/apiProvider';
 
-const AddSofaModal = ({ isOpen, onClose, onSave }) => {
+const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
   const [leftItems, setLeftItems] = useState([]);
   const [rightItems, setRightItems] = useState([]);
   const [sofaName, setSofaName] = useState("Novo Sofá");
@@ -91,6 +91,14 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
 
   const handleSave = async () => {
     try {
+      if(!sofaName) {
+        alert("O nome do sofá não pode estar em branco");
+        return;
+      }
+      if(sofaName.length > 30) {
+        alert("O nome do sofá não pode conter mais de 30 caracteres");
+        return;
+      }
       const sofaData = {
         modelo: sofaName,
       };
@@ -100,7 +108,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
       if (selectedImage) {
         formData.append("imagem", selectedImage);
       } else {
-        alert("Selecione uma imagem para o sofá.");
+        alert("Selecione uma imagem para o sofá");
         return;
       }
 
@@ -114,6 +122,11 @@ const AddSofaModal = ({ isOpen, onClose, onSave }) => {
         idPeca: item.peca.id,
         quantidade: item.quantidade
       }));
+
+      if(pecasParaAdicionar == null) {
+        onError?.("Selecione ao menos uma peça para o sofá");
+        return;
+      }
 
       // Envia as peças associadas sem remover do estoque
       if (pecasParaAdicionar.length > 0) {

@@ -11,7 +11,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 
-const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
+const EditPartModal = ({ isOpen, onClose, partData, onSave, onError }) => {
   if (!isOpen || !partData) return null;
 
   const [initialQuantity, setInitialQuantity] = useState(0);
@@ -43,6 +43,12 @@ const EditPartModal = ({ isOpen, onClose, partData, onSave }) => {
 
   const handleRemove = () => {
     const valueToRemove = parseInt(removeInputValue || 0, 10);
+
+    if((partData.quantidadeEstoque - valueToRemove) < 0) {
+      onError?.("O valor de retirada não pode ser maior que o valor em estoque");
+      return;
+    }
+
     if (valueToRemove > 0) {
       setRemovedQuantity((prev) => prev + valueToRemove);
       setRemoveInputValue("");

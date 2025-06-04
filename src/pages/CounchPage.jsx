@@ -10,6 +10,7 @@ import '../styles/counchPageStyle.css';
 import AddSofaCard from "../components/AddSofaCard";
 import { Box, Typography, Button } from '@mui/material';
 import { api } from '../Provider/apiProvider';
+import { ErrorAlert } from "../components/ErrorAlert";
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
@@ -21,6 +22,7 @@ const CounchPage = () => {
   const [sofas, setSofas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Verifica o token ao carregar a página
   useEffect(() => {
@@ -109,13 +111,13 @@ const CounchPage = () => {
   if (isLoading) {
     return (
       <Box
-       
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh'
-      }}>
+
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh'
+        }}>
         <Typography variant="h6">Carregando sofás...</Typography>
       </Box>
     );
@@ -123,6 +125,7 @@ const CounchPage = () => {
 
   if (error) {
     return (
+
       <Box sx={{
         display: 'flex',
         justifyContent: 'center',
@@ -131,6 +134,10 @@ const CounchPage = () => {
         flexDirection: 'column',
         gap: 2
       }}>
+        <ErrorAlert
+          errorMessage={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
         <Typography variant="h6" color="error">{error}</Typography>
         <Button
           variant="contained"
@@ -184,6 +191,7 @@ const CounchPage = () => {
         isOpen={isAddSofaModalOpen}
         onClose={() => setAddSofaModalOpen(false)}
         onSave={handleSaveSofa}
+        onError={(msg) => setErrorMessage(msg)}
       />
 
       <EditSofaModal

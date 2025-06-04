@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Modal,
@@ -9,39 +9,64 @@ import {
 import CustomButton from "./CustomButton";
 import TitleModal from "./TittleModal";
 
-const AddPartModal = ({ isOpen, onClose, onSave }) => {
+const AddPartModal = ({ isOpen, onClose, onSave, onError }) => {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [lowStockThreshold, setLowStockThreshold] = useState("");
 
   const handleSave = () => {
-    if (!name || !quantity || !lowStockThreshold) {
-      alert("Por favor, preencha todos os campos.");
+    if (!name) {
+      onError?.("O nome da peça não pode estar vazio");
       return;
     }
 
-  const newPart = {
-  nome: name,
-  quantidadeEstoque: parseInt(quantity, 10),
-  quantidadeMinima: parseInt(lowStockThreshold, 10),
-};
+    if (name.length > 40) {
+      onError?.("O nome da peça não pode ter mais de 40 caracteres");
+      return;
+    }
+
+    if(name.length < 3) {
+      onError?.("O nome da peça não pode ter menos de 3 caracteres");
+      return;
+    }
+
+    if (!quantity) {
+      onError?.("A quantidade inicial de estoque não pode estar vazia");
+      return;
+    }
+    if (!lowStockThreshold) {
+      onError?.("A quantidade de alerta não pode estar vazia");
+      return;
+    }
+
+    const newPart = {
+      nome: name,
+      quantidadeEstoque: parseInt(quantity, 10),
+      quantidadeMinima: parseInt(lowStockThreshold, 10),
+    };
 
     onSave(newPart);
+    
+  };
+
+  const handleClose = () => {
+    setName("");
+    setQuantity("");
+    setLowStockThreshold("");
     onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={isOpen} onClose={handleClose}>
       <Box
         sx={{
           position: "fixed",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: "60%", md: "45%" }, // Responsivo
-          height: { xs: "auto", sm: "auto", md: "50vh" }, // Responsivo
+          width: { xs: "90%", sm: "60%", md: "45%" },
           bgcolor: "#F0F0F0",
           borderRadius: "10px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -51,19 +76,17 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
           alignItems: "center",
         }}
       >
-        <TitleModal modalName="Adicionar nova peça" onClose={onClose} />
+        <TitleModal modalName="Adicionar nova peça" onClose={handleClose} />
 
-        {/* Box Container */}
         <Box
           sx={{
-            height: "100%",
             display: "flex",
             flexDirection: "column",
             border: "2px solid #ccc",
             borderRadius: "12px",
-            margin: { xs: "10px", sm: "20px" }, // Responsivo
+            margin: { xs: "10px", sm: "20px" },
             backgroundColor: "#FFFFFF",
-            width: { xs: "95%", sm: "80%" }, // Responsivo
+            width: { xs: "95%", sm: "80%" },
           }}
         >
           <Box
@@ -72,11 +95,11 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
               flexDirection: "column",
               gap: "22px",
               width: "100%",
-              ml: { xs: "0", sm: "10px" }, // Responsivo
-              height: "100%",
-              padding: { xs: "10px", sm: "20px" }, // Responsivo
+              ml: { xs: "0", sm: "10px" },
+              padding: { xs: "10px", sm: "20px" },
             }}
           >
+            {/* Inputs */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
               <Typography sx={{ fontSize: "17px", fontWeight: "400" }}>
                 Adicionar nome:
@@ -88,7 +111,7 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
                 size="small"
                 fullWidth
                 sx={{
-                  width: { xs: "100%", sm: "69%" }, // Responsivo
+                  width: { xs: "100%", sm: "69%" },
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "8px",
                     "& fieldset": {
@@ -119,7 +142,7 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
                     },
                   },
                   "& input": {
-                    appearance: "textfield", // Remove as setas
+                    appearance: "textfield",
                     textAlign: "center",
                   },
                 }}
@@ -150,7 +173,7 @@ const AddPartModal = ({ isOpen, onClose, onSave }) => {
                       },
                     },
                     "& input": {
-                      appearance: "textfield", // Remove as setas
+                      appearance: "textfield",
                       textAlign: "center",
                     },
                   }}
