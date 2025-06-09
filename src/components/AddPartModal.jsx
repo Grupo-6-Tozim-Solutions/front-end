@@ -5,6 +5,10 @@ import {
   Typography,
   TextField,
   Divider,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import CustomButton from "./CustomButton";
 import TitleModal from "./TittleModal";
@@ -13,6 +17,7 @@ const AddPartModal = ({ isOpen, onClose, onSave, onError }) => {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [lowStockThreshold, setLowStockThreshold] = useState("");
+  const [tipo, setTipo] = useState("PECA");
 
   const handleSave = () => {
     if (!name) {
@@ -25,7 +30,7 @@ const AddPartModal = ({ isOpen, onClose, onSave, onError }) => {
       return;
     }
 
-    if(name.length < 3) {
+    if (name.length < 3) {
       onError?.("O nome da peça não pode ter menos de 3 caracteres");
       return;
     }
@@ -41,12 +46,13 @@ const AddPartModal = ({ isOpen, onClose, onSave, onError }) => {
 
     const newPart = {
       nome: name,
-      quantidadeEstoque: parseInt(quantity, 10),
-      quantidadeMinima: parseInt(lowStockThreshold, 10),
+      quantidadeEstoque: parseFloat(quantity),
+      quantidadeMinima: parseFloat(lowStockThreshold),
+      tipo: tipo,
     };
-
+     console.log("Enviando peça:", newPart);
     onSave(newPart);
-    
+
   };
 
   const handleClose = () => {
@@ -122,18 +128,53 @@ const AddPartModal = ({ isOpen, onClose, onSave, onError }) => {
               />
             </Box>
 
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: "15px" }}>
+              <Typography sx={{ fontSize: "17px", fontWeight: "400" }}>
+                Tipo de peça:
+              </Typography>
+              <FormControl
+                size="small"
+                variant="outlined"
+                sx={{
+                  minWidth: 223,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    "& fieldset": {
+                      borderColor: "black",
+                    },
+                  },
+                }}
+              >
+                <Select
+                  value={tipo}
+                  onChange={(e) => setTipo(e.target.value)}
+                  variant="outlined"
+                  displayEmpty
+                  sx={{
+                    background: "#fff",
+                  }}
+                >
+                  <MenuItem value="PECA">Peça (unidade)</MenuItem>
+                  <MenuItem value="ESPUMA">Espuma (metro)</MenuItem>
+                  <MenuItem value="TECIDO">Tecido (kg)</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
             <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <Typography sx={{ fontSize: "17px", fontWeight: "400" }}>
                 Adicionar quantidade inicial:
               </Typography>
               <TextField
                 type="number"
+                step="any"
                 placeholder="00"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 size="small"
                 sx={{
-                  width: "61px",
+                  width: "115px",
                   "& .MuiOutlinedInput-root": {
                     height: "35px",
                     borderRadius: "8px",

@@ -54,7 +54,7 @@ export function PartsStorage() {
       } else if (diff < 0) {
         await api.put(`/peca/removerQuantidade/${updatedPart.id}/${Math.abs(diff)}`);
       }
-      
+
       const response = await api.get("/peca/listarTodas");
 
       setPecas(response.data);
@@ -78,7 +78,7 @@ export function PartsStorage() {
 
   const handleApplyFilter = (filteredCriteria) => {
     setFilterCriteria(filteredCriteria);
-    setFilterModalOpen(false); 
+    setFilterModalOpen(false);
   };
 
   const handleConfirmDelete = async () => {
@@ -136,20 +136,20 @@ export function PartsStorage() {
   }, []);
 
 
-  
-    useEffect(() => {
-      checarToken();
-    }, []);
-  
-  
-    function checarToken() {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate('/login');
-      }
+
+  useEffect(() => {
+    checarToken();
+  }, []);
+
+
+  function checarToken() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate('/login');
     }
-  
- 
+  }
+
+
   return (
     <div className="parts-storage">
       <ErrorAlert
@@ -161,7 +161,7 @@ export function PartsStorage() {
         <HeaderStorage
           title="Gerenciamento de Peças"
           subtitle="Tozine Solutions"
-          filterText={ "Filtros"}
+          filterText={"Filtros"}
           addText="Adicionar"
           historyText="Ver histórico"
           logoutText="Sair"
@@ -175,13 +175,26 @@ export function PartsStorage() {
               <TableStructurePartsStorage />
 
               <TableBody>
+
                 {filteredParts.map((peca, index) => {
+                  console.log("peca exibida:", peca);
                   const name = peca.nome;
                   const quantity = peca.quantidadeEstoque;
                   const warningLevel = quantity < peca.quantidadeMinima ? "critical" : null;
                   const status = warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
                   const formattedId = String(peca.id).padStart(3, "0");
-                  const formattedQty = String(quantity ?? 0).padStart(2, "0");
+
+                  // Formatação conforme o tipo
+                  let formattedQty;
+                  if (peca.tipo === "PEÇA") {
+                    formattedQty = String(Math.round(quantity ?? 0)).padStart(2, "0");
+                  } else if (peca.tipo === "ESPUMA") {
+                    formattedQty = `${(quantity ?? 0).toFixed(2)} m`;
+                  } else if (peca.tipo === "TECIDO") {
+                    formattedQty = `${(quantity ?? 0).toFixed(2)} kg`;
+                  } else {
+                    formattedQty = String(quantity ?? 0);
+                  }
 
                   return (
                     <TableRowPartsStorage
@@ -195,7 +208,6 @@ export function PartsStorage() {
                       onEdit={() => handleEdit(peca)}
                       onDelete={() => handleDelete(peca)}
                     />
-
                   );
                 })}
               </TableBody>
@@ -214,15 +226,13 @@ export function PartsStorage() {
               nome: newPart.nome,
               quantidadeEstoque: newPart.quantidadeEstoque,
               quantidadeMinima: newPart.quantidadeMinima,
+              tipo: newPart.tipo, // <-- Adicione esta linha!
             });
 
             const savedPart = response.data;
-            console.log("Nova peça:", newPart);
-
             setPecas((prev) => [...prev, savedPart]);
           } catch (error) {
-            console.error("Erro ao salvar a peça:", error);
-            // alert("Já existe uma peça com esse nome");
+              console.error("Erro ao salvar a peça:", error.response?.data || error.message);
           }
         }}
         onError={(msg) => setErrorMessage(msg)}
@@ -249,7 +259,7 @@ export function PartsStorage() {
         isOpen={isConfirmationModalOpen}
         onClose={() => setConfirmationModalOpen(false)}
         modalName="Excluir peça"
-         tituloModal="Excluir"
+        tituloModal="Excluir"
         title="Tem certeza que deseja excluir essa peça?"
         message="Ela será retirada de todos os sofás na qual está associada."
         textButtonDelete="Excluir"
