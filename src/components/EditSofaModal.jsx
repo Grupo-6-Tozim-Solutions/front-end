@@ -40,27 +40,26 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title }) => {
         ]);
         console.log("sofaPecasResponse.data", sofaPecasResponse.data);
 
-        // Peças do sofá (right)
-        // Peças do sofá (right)
         const pecasSofa = (sofaPecasResponse.data || [])
           .filter(item => item && item.id)
           .map(item => ({
             peca: {
               id: item.id,
-              nome: item.nome
+              nome: item.nome,
+              tipo: item.tipo
             },
-            quantidade: item.quantidade || 1
+            quantidade: item.quantidade || 0
           }));
 
         setRightItems(pecasSofa);
 
-        // Peças do estoque (left) - mostra todas!
         const todasPecas = (estoqueResponse.data || [])
           .filter(item => item && item.id)
           .map(item => ({
             peca: {
               id: item.id,
-              nome: item.nome
+              nome: item.nome,
+              tipo: item.tipo
             },
             quantidadeEstoque: item.quantidadeEstoque || 0
           }));
@@ -77,11 +76,12 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title }) => {
 
     loadPecas();
   }, [isOpen, sofa?.id]);
-  // Função para padronizar a estrutura das peças
+
   const normalizePeca = (peca) => ({
     peca: {
       id: peca.peca?.id || peca.id || peca.idPeca,
-      nome: peca.peca?.nome || peca.nome
+      nome: peca.peca?.nome || peca.nome,
+      tipo: peca.peca?.tipo || peca.tipo
     },
     quantidade: peca.quantidade || 1
   });
@@ -158,6 +158,12 @@ const handleSave = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
 
+    const payload = rightItems.map(item => ({
+      idPeca: item.peca.id,
+      quantidade: item.quantidade
+    }));
+    await api.put(`/sofa/adicionarPeca/${sofa.id}`, payload);
+
     onSave();
     onClose();
   } catch (error) {
@@ -167,7 +173,6 @@ const handleSave = async () => {
   }
 };
 
-  // Filtra peças duplicadas e inválidas
   const uniqueLeftItems = Array.from(
     new Map(leftItems.filter(item => item && item.peca && item.peca.id).map(item => [String(item.peca.id), item])).values()
   );
@@ -256,7 +261,6 @@ const handleSave = async () => {
                   quantity={item.quantidadeEstoque || 0}
                   onFastForward={() => handleFastForward(item)}
                   isEven={index % 2 === 0}
-                  // Desabilita se já está no sofá
                   isFastForwardDisabled={uniqueRightItems.some(ri => ri && ri.peca && String(ri.peca.id) === String(item.peca.id))}
                 />
               ))}
@@ -289,6 +293,7 @@ const handleSave = async () => {
                     key={`sofa-${item.peca.id}`}
                     text={item.peca.nome}
                     quantidade={item.quantidade}
+                    tipo={item.peca.tipo}
                     pecaId={item.peca.id}
                     isEditMode={true}
                     onDelete={() => handleDelete(item.peca.id)}

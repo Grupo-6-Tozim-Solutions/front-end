@@ -8,7 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const SofaSummaryRowModal = ({
   text,
   quantidade,
-  pecaId, // Certifique-se que esta prop está sendo recebida
+  tipo,
+  pecaId,
   isEditMode,
   onDelete,
   onQuantityChange,
@@ -17,12 +18,15 @@ const SofaSummaryRowModal = ({
   const [localQuantity, setLocalQuantity] = useState(quantidade);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  let unidade = "";
+  if (tipo === "ESPUMA") unidade = "m";
+  else if (tipo === "TECIDO") unidade = "kg";
   // Sincroniza o estado local quando a prop quantidade muda
 
-    useEffect(() => {
+  useEffect(() => {
     console.log('SofaSummaryRowModal recebeu:', { pecaId, quantidade });
   }, [pecaId, quantidade]);
-  
+
   useEffect(() => {
     setLocalQuantity(quantidade);
   }, [quantidade]);
@@ -63,7 +67,7 @@ const SofaSummaryRowModal = ({
 
   const handleDeleteClick = async () => {
     if (!onDelete) return;
-    
+
     setIsDeleting(true);
     try {
       await onDelete();
@@ -115,33 +119,19 @@ const SofaSummaryRowModal = ({
         }}
       >
         {isEditing ? (
-          <Box sx={{ 
-            display: "flex", 
-            alignItems: "center",
-            gap: "4px"
-          }}>
-            <IconButton
-              onClick={handleDecrease}
-              color="error"
-              sx={{ 
-                padding: "6px",
-                '&:disabled': {
-                  opacity: 0.5
-                }
-              }}
-              disabled={localQuantity <= 1}
-            >
+          <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <IconButton onClick={handleDecrease} color="error" sx={{ padding: "6px", '&:disabled': { opacity: 0.5 } }} disabled={localQuantity <= 1}>
               <RemoveIcon sx={{ fontSize: "20px" }} />
             </IconButton>
-            
             <input
               type="number"
               value={localQuantity}
               onChange={handleInputChange}
               onBlur={handleBlur}
               min="1"
+              step={tipo === "PECA" ? "1" : "0.01"}
               style={{
-                width: "50px",
+                width: "60px",
                 height: "32px",
                 textAlign: "center",
                 fontSize: "16px",
@@ -153,12 +143,8 @@ const SofaSummaryRowModal = ({
                 backgroundColor: "white",
               }}
             />
-            
-            <IconButton
-              onClick={handleIncrease}
-              color="primary"
-              sx={{ padding: "6px" }}
-            >
+            <span style={{ marginLeft: 4 }}>{unidade}</span>
+            <IconButton onClick={handleIncrease} color="primary" sx={{ padding: "6px" }}>
               <AddIcon sx={{ fontSize: "20px" }} />
             </IconButton>
           </Box>
@@ -171,7 +157,9 @@ const SofaSummaryRowModal = ({
               textAlign: "center"
             }}
           >
-            x{String(localQuantity).padStart(2, "0")}
+            {tipo === "PECA"
+              ? `x${String(Math.round(localQuantity)).padStart(2, "0")}`
+              : `${Number(localQuantity).toFixed(2)} ${unidade}`}
           </Typography>
         )}
       </Box>
@@ -192,8 +180,8 @@ const SofaSummaryRowModal = ({
               backgroundColor: isEditing ? "#1976d2" : "#A5D7FF",
               color: isEditing ? "white" : "inherit",
               borderRadius: "4px",
-              "&:hover": { 
-                backgroundColor: isEditing ? "#1565c0" : "#80C6FF" 
+              "&:hover": {
+                backgroundColor: isEditing ? "#1565c0" : "#80C6FF"
               },
               width: "32px",
               height: "32px",
@@ -204,7 +192,7 @@ const SofaSummaryRowModal = ({
             <EditIcon sx={{ fontSize: "20px" }} />
           </IconButton>
         )}
-        
+
         <IconButton
           onClick={handleDeleteClick}
           sx={{
@@ -217,9 +205,9 @@ const SofaSummaryRowModal = ({
           }}
           disabled={isDeleting}
         >
-          <DeleteIcon 
-            color="error" 
-            sx={{ fontSize: "20px" }} 
+          <DeleteIcon
+            color="error"
+            sx={{ fontSize: "20px" }}
           />
         </IconButton>
       </Box>

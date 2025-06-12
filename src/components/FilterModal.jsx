@@ -17,6 +17,7 @@ import CustomButton from "./CustomButton";
 const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
   const [filterName, setFilterName] = useState("");
   const [order, setOrder] = useState("");
+  const [isFilterNameFocused, setIsFilterNameFocused] = useState(false);
 
   const handleApplyFilter = () => {
     const criteria = {
@@ -42,19 +43,17 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
           transform: "translate(-50%, -50%)",
           background: "#F0F0F0",
           borderRadius: "10px",
-          width: { xs: "90%", sm: "700px" }, // Responsive width
+          width: { xs: "90%", sm: "700px" }, 
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
           overflow: "hidden",
-          height: { xs: "auto", sm: "50%" }, // Adjust height for smaller screens
+          height: { xs: "auto", sm: "50%" },
         }}
       >
-        {/* Header */}
         <TittleModal modalName="Filtros" isEditable={false} onClose={onClose} />
 
-        {/* Content */}
         <Box
           sx={{
-            padding: { xs: "16px", sm: "25px" }, // Responsive padding
+            padding: { xs: "16px", sm: "25px" },
             height: "100%",
             backgroundColor: "#F0F0F0",
           }}
@@ -62,21 +61,20 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
           <Box
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", sm: "row" }, // Stack vertically on small screens
+              flexDirection: { xs: "column", sm: "row" },
               gap: "16px",
               border: "1px solid #ccc",
               borderRadius: "8px",
               height: "85%",
               padding: "18px",
-                backgroundColor: "#F8F8F8",
+              backgroundColor: "#F8F8F8",
             }}
           >
-            {/* Left Section */}
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                width: { xs: "100%", sm: "50%" }, // Full width on small screens
+                width: { xs: "100%", sm: "50%" },
                 gap: "16px",
                 marginLeft: "10px",
               }}
@@ -102,6 +100,8 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
                   InputProps={{
                     startAdornment: <SearchIcon sx={{ color: "black", marginRight: "15px" }} />,
                   }}
+                  onFocus={() => setIsFilterNameFocused(true)}
+                  onBlur={() => setIsFilterNameFocused(false)}
                   placeholder="Filtrar por nome"
                   value={filterName}
                   onChange={(e) => setFilterName(e.target.value)}
@@ -112,10 +112,10 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
                     mt: "16px",
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "6px",
-                        "& fieldset": {
-                            borderColor: "#0740DA",
+                      "& fieldset": {
+                        borderColor: "#0740DA",
 
-                        },
+                      },
 
                     },
                   }}
@@ -131,10 +131,10 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
                   padding: "8px 16px",
                   fontSize: "12px",
                   fontWeight: "bold",
-                  width: { xs: "100%", sm: "auto" }, // Full width on small screens, auto on larger screens
-                  maxWidth: "200px", // Limit the button's width
+                  width: { xs: "100%", sm: "auto" },
+                  maxWidth: "200px",
                   marginTop: { xs: "16px", sm: "auto" },
-                  marginLeft: "auto", // Align the button to the right
+                  marginLeft: "auto",
                   cursor: isCheckboxFilled ? "not-allowed" : "pointer",
                   "&:hover": {
                     backgroundColor: isCheckboxFilled ? "#E0E0E0" : "#B0D8FF",
@@ -154,12 +154,11 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
               sx={{ borderColor: "#ccc", height: "100%" }}
             />
 
-            {/* Right Section */}
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                width: { xs: "100%", sm: "50%" }, // Full width on small screens
+                width: { xs: "100%", sm: "50%" },
               }}
             >
               <Box
@@ -183,17 +182,36 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
                   <RadioGroup
                     row
                     value={order}
-                    onChange={(e) => setOrder(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setOrder(prev => (prev === value ? "" : value));
+                    }}
                     sx={{ display: "flex", marginTop: "10px" }}
                   >
                     <FormControlLabel
                       value="smallest"
-                      control={<Radio sx={{ color: "#0740DA" }} />}
+                      control={
+                        <Radio
+                          sx={{ color: "#0740DA" }}
+                          checked={order === "smallest"}
+                          onClick={() => {
+                            if (order === "smallest") setOrder("");
+                          }}
+                        />
+                      }
                       label="Menor Número de peças"
                     />
                     <FormControlLabel
                       value="largest"
-                      control={<Radio sx={{ color: "#0740DA" }} />}
+                      control={
+                        <Radio
+                          sx={{ color: "#0740DA" }}
+                          checked={order === "largest"}
+                          onClick={() => {
+                            if (order === "largest") setOrder("");
+                          }}
+                        />
+                      }
                       label="Maior Número de peças"
                     />
                   </RadioGroup>
@@ -203,26 +221,27 @@ const FilterModal = ({ isOpen, onClose, onApply, onFilter }) => {
                 imageSrc="./assets/imagePlus.png"
                 text="Aplicar"
                 buttonStyle={{
-                  backgroundColor: isInputFilled ? "#E0E0E0" : "#C9E7FF",
-                  color: isInputFilled ? "#A0A0A0" : "#0740DA",
+                  backgroundColor: isFilterNameFocused || isInputFilled ? "#E0E0E0" : "#C9E7FF",
+                  color: isFilterNameFocused || isInputFilled ? "#A0A0A0" : "#0740DA",
                   borderRadius: "4px",
                   padding: "8px 16px",
                   fontSize: "12px",
                   fontWeight: "bold",
-                  width: { xs: "100%", sm: "auto" }, // Full width on small screens, auto on larger screens
-                  maxWidth: "200px", // Limit the button's width
+                  width: { xs: "100%", sm: "auto" },
+                  maxWidth: "200px",
                   marginTop: { xs: "16px", sm: "auto" },
-                  marginLeft: "auto", // Align the button to the right
-                  cursor: isInputFilled ? "not-allowed" : "pointer",
+                  marginLeft: "auto",
+                  cursor: isFilterNameFocused || isInputFilled ? "not-allowed" : "pointer",
                   "&:hover": {
-                    backgroundColor: isInputFilled ? "#E0E0E0" : "#B0D8FF",
+                    backgroundColor: isFilterNameFocused || isInputFilled ? "#E0E0E0" : "#B0D8FF",
                   },
                 }}
                 imageStyle={{
                   width: "16px",
                   height: "16px",
                 }}
-                onClick={isInputFilled ? null : handleApplyFilter}
+                onClick={isFilterNameFocused || isInputFilled ? null : handleApplyFilter}
+                disabled={isFilterNameFocused}
               />
             </Box>
           </Box>

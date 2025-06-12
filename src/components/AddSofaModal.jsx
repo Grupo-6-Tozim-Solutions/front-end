@@ -54,7 +54,8 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
         return [...prev, {
           peca: {
             id: peca.id,        // Garantimos que o ID está presente
-            nome: peca.nome     // Mantemos todos os campos necessários
+            nome: peca.nome,
+            tipo: peca.tipo    // Mantemos todos os campos necessários
           },
           quantidade: 1
         }];
@@ -91,11 +92,11 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
 
   const handleSave = async () => {
     try {
-      if(!sofaName) {
+      if (!sofaName) {
         alert("O nome do sofá não pode estar em branco");
         return;
       }
-      if(sofaName.length > 30) {
+      if (sofaName.length > 30) {
         alert("O nome do sofá não pode conter mais de 30 caracteres");
         return;
       }
@@ -123,7 +124,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
         quantidade: item.quantidade
       }));
 
-      if(pecasParaAdicionar == null) {
+      if (pecasParaAdicionar == null) {
         onError?.("Selecione ao menos uma peça para o sofá");
         return;
       }
@@ -142,6 +143,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
   };
   return (
     <Modal open={isOpen} onClose={onClose}>
+      
       <Box
         sx={{
           position: "fixed",
@@ -225,7 +227,8 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
                   key={`sofa-${item.peca.id}`}
                   text={item.peca.nome}
                   quantidade={item.quantidade}
-                  pecaId={item.peca.id} // ← Esta é a linha crucial que estava faltando
+                  tipo={item.peca.tipo} // <-- Adicione esta linha!
+                  pecaId={item.peca.id}
                   isEditMode={true}
                   onDelete={() => handleDelete(item.peca.id)}
                   onQuantityChange={(newQty) => handleUpdateQuantity(item.peca.id, newQty)}
