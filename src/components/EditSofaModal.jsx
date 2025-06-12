@@ -8,7 +8,7 @@ import LeftWrapper from "./LeftWrapper";
 import RightContainer from "./RightContainer";
 import { api } from '../Provider/apiProvider';
 
-const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title }) => {
+const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title, onError }) => {
   const [leftItems, setLeftItems] = useState([]);
   const [rightItems, setRightItems] = useState([]);
   const [isImageSelected, setIsImageSelected] = useState(false);
@@ -126,7 +126,7 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title }) => {
         )
       );
     } catch (error) {
-      alert("Erro ao atualizar quantidade.");
+      onError?.("Erro ao atualizar quantidade.");
     }
   };
 
@@ -137,10 +137,10 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title }) => {
       if (response.status === 200) {
         setRightItems(prev => prev.filter(item => String(item.peca.id) !== String(pecaId)));
       } else {
-        alert("Erro ao remover peça. Status: " + response.status);
+        onError?.("Erro ao remover peça. Status: " + response.status);
       }
     } catch (error) {
-      alert(`Erro ao remover peça: ${error.response?.data?.message || error.message}`);
+      onError?.(`Erro ao remover peça: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -167,7 +167,7 @@ const handleSave = async () => {
     onSave();
     onClose();
   } catch (error) {
-    alert('Erro ao salvar alterações.');
+    onError?.('Erro ao salvar alterações.');
   } finally {
     setIsLoading(false);
   }

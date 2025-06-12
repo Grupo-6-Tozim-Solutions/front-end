@@ -23,7 +23,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
         setLeftItems(response.data);
       } catch (error) {
         console.error("Erro ao buscar peças:", error);
-        alert("Erro ao carregar peças do estoque");
+        onError?.("Erro ao carregar peças do estoque");
       }
     };
 
@@ -93,11 +93,11 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
   const handleSave = async () => {
     try {
       if (!sofaName) {
-        alert("O nome do sofá não pode estar em branco");
+        onError?.("O nome do sofá não pode estar em branco");
         return;
       }
       if (sofaName.length > 30) {
-        alert("O nome do sofá não pode conter mais de 30 caracteres");
+        onError?.("O nome do sofá não pode conter mais de 30 caracteres");
         return;
       }
       const sofaData = {
@@ -109,7 +109,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
       if (selectedImage) {
         formData.append("imagem", selectedImage);
       } else {
-        alert("Selecione uma imagem para o sofá");
+        onError?.("Selecione uma imagem para o sofá");
         return;
       }
 
@@ -124,7 +124,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
         quantidade: item.quantidade
       }));
 
-      if (pecasParaAdicionar == null) {
+      if (pecasParaAdicionar.length === 0) {
         onError?.("Selecione ao menos uma peça para o sofá");
         return;
       }
@@ -138,7 +138,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
       onClose();
     } catch (error) {
       console.error("Erro ao salvar sofá:", error.response?.data || error.message);
-      alert("Erro ao salvar sofá. Verifique os dados e tente novamente.");
+      onError?.("Erro ao salvar sofá. Verifique os dados e tente novamente.");
     }
   };
   return (

@@ -6,6 +6,7 @@ import { api } from '../Provider/apiProvider'
 import TableRowPartsStorage from "../components/TableRowPartsStorage";
 import AddPartModal from "../components/AddPartModal";
 import { ErrorAlert } from "../components/ErrorAlert";
+import { SuccessAlert } from "../components/SuccessAlert";
 import FilterModal from "../components/FilterModal";
 import EditPartModal from "../components/EditPartModal";
 import ConfirmationModal from "../components/ConfirmationModals";
@@ -24,6 +25,7 @@ export function PartsStorage() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [selectedPart, setSelectedPart] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // Novo estado para mensagens de sucesso
   const [filterCriteria, setFilterCriteria] = useState({
     name: "",
     order: null,
@@ -59,9 +61,10 @@ export function PartsStorage() {
 
       setPecas(response.data);
       setEditModalOpen(false);
+      setSuccessMessage("Peça editada com sucesso!");
     } catch (error) {
       console.error("Erro ao editar peça:", error);
-      alert("Erro ao editar peça.");
+      setErrorMessage("Erro ao editar peça.");
     }
   };
 
@@ -90,9 +93,10 @@ export function PartsStorage() {
       );
 
       setConfirmationModalOpen(false);
+      setSuccessMessage("Peça excluída com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir a peça:", error);
-      alert("Erro ao excluir a peça. Tente novamente.");
+      setErrorMessage("Erro ao excluir a peça. Tente novamente.");
     }
   };
 
@@ -155,6 +159,10 @@ export function PartsStorage() {
       <ErrorAlert
         errorMessage={errorMessage}
         onClose={() => setErrorMessage("")}
+      />
+      <SuccessAlert
+        successMessage={successMessage}
+        onClose={() => setSuccessMessage("")}
       />
       <SideBarCounch />
       <Box sx={{ width: "100%" }}>
@@ -231,8 +239,10 @@ export function PartsStorage() {
 
             const savedPart = response.data;
             setPecas((prev) => [...prev, savedPart]);
+            setSuccessMessage("Peça adicionada com sucesso!");
           } catch (error) {
-              console.error("Erro ao salvar a peça:", error.response?.data || error.message);
+            console.error("Erro ao salvar a peça:", error.response?.data || error.message);
+            setErrorMessage("Erro ao salvar a peça.");
           }
         }}
         onError={(msg) => setErrorMessage(msg)}

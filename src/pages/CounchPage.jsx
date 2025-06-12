@@ -11,6 +11,7 @@ import AddSofaCard from "../components/AddSofaCard";
 import { Box, Typography, Button } from '@mui/material';
 import { api } from '../Provider/apiProvider';
 import { ErrorAlert } from "../components/ErrorAlert";
+import { SuccessAlert } from "../components/SuccessAlert"; // Import SuccessAlert
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
@@ -23,6 +24,7 @@ const CounchPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // Novo estado para mensagens de sucesso
 
   // Verifica o token ao carregar a página
   useEffect(() => {
@@ -90,9 +92,10 @@ const CounchPage = () => {
       await api.delete(`/sofa/${sofaId}`);
       // Remove o sofá localmente
       setSofas(prevSofas => prevSofas.filter(sofa => sofa.id !== sofaId));
+      setSuccessMessage("Sofá excluído com sucesso!");
     } catch (error) {
       console.error('Erro ao excluir sofá:', error);
-      alert('Erro ao excluir sofá. Tente novamente.');
+      setError('Erro ao excluir sofá. Tente novamente.');
     } finally {
       setDeleteModalOpen(false);
     }
@@ -111,7 +114,6 @@ const CounchPage = () => {
   if (isLoading) {
     return (
       <Box
-
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -125,7 +127,6 @@ const CounchPage = () => {
 
   if (error) {
     return (
-
       <Box sx={{
         display: 'flex',
         justifyContent: 'center',
@@ -134,10 +135,7 @@ const CounchPage = () => {
         flexDirection: 'column',
         gap: 2
       }}>
-        <ErrorAlert
-          errorMessage={errorMessage}
-          onClose={() => setErrorMessage("")}
-        />
+        {/* Remover ErrorAlert daqui */}
         <Typography variant="h6" color="error">{error}</Typography>
         <Button
           variant="contained"
@@ -151,6 +149,16 @@ const CounchPage = () => {
 
   return (
     <div className="Counch-Page">
+      {/* Exibir ErrorAlert sempre que houver errorMessage */}
+      <ErrorAlert
+        errorMessage={errorMessage}
+        onClose={() => setErrorMessage("")}
+      />
+      {/* Exibir SuccessAlert sempre que houver successMessage */}
+      <SuccessAlert
+        successMessage={successMessage}
+        onClose={() => setSuccessMessage("")}
+      />
       <SideBarCouch />
       <Box sx={{ width: "100%", height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         <HeaderSimple
@@ -178,6 +186,8 @@ const CounchPage = () => {
                 onEdit={() => handleEditSofa(sofa)}
                 onDelete={() => openDeleteModal(sofa)}
                 isEditModalOpen={isEditSofaModalOpen}
+                onSuccess={msg => setSuccessMessage(msg)}
+                onError={msg => setErrorMessage(msg)}
               />
             ))}
 
@@ -190,16 +200,23 @@ const CounchPage = () => {
       <AddSofaModal
         isOpen={isAddSofaModalOpen}
         onClose={() => setAddSofaModalOpen(false)}
-        onSave={handleSaveSofa}
+        onSave={(sofa) => {
+          handleSaveSofa(sofa);
+          setSuccessMessage("Sofá adicionado com sucesso!");
+        }}
         onError={(msg) => setErrorMessage(msg)}
       />
 
       <EditSofaModal
         isOpen={isEditSofaModalOpen}
         onClose={() => setEditSofaModalOpen(false)}
-        onSave={handleSaveEditedSofa}
+        onSave={() => {
+          handleSaveEditedSofa();
+          setSuccessMessage("Sofá editado com sucesso!");
+        }}
         sofa={sofaToEdit}
         title={sofaToEdit?.modelo || ""}
+        onError={(msg) => setErrorMessage(msg)}
       />
 
       <ConfirmationModal

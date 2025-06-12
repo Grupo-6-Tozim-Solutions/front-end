@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { api } from '../Provider/apiProvider'; // Ajuste o caminho conforme necessário
 
-const MaterialSofaCard = ({sofaId, name, image, onEdit, onDelete, isEditModalOpen }) => {
+const MaterialSofaCard = ({sofaId, name, image, onEdit, onDelete, isEditModalOpen, onSuccess, onError }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [quantity, setQuantity] = useState(0);
   // const [isChecked, setIsChecked] = useState(false);
@@ -26,14 +26,18 @@ useEffect(() => {
 
 
   const handleProduzir = async () => {
-  try {
-    await api.post(`/sofa/produzir/${sofaId}?quantidade=${quantity}`);
-    alert("Produção realizada com sucesso!");
-    // Opcional: recarregue o estoque ou sofás
-  } catch (error) {
-    alert("Erro ao produzir sofá: " + (error.response?.data?.message || error.message));
-  }
-};
+    try {
+      await api.post(`/sofa/produzir/${sofaId}?quantidade=${quantity}`);
+      if (onSuccess) {
+        onSuccess("Produção realizada com sucesso!");
+      }
+      // Opcional: recarregue o estoque ou sofás
+    } catch (error) {
+      if (onError) {
+        onError("Erro ao produzir sofá: " + (error.response?.data?.message || error.message));
+      }
+    }
+  };
 
   // const handleCheckboxChange = (e) => {
   //   e.stopPropagation(); // Prevents the card's state from toggling

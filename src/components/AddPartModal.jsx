@@ -50,9 +50,9 @@ const AddPartModal = ({ isOpen, onClose, onSave, onError }) => {
       quantidadeMinima: parseFloat(lowStockThreshold),
       tipo: tipo,
     };
-     console.log("Enviando peça:", newPart);
+    console.log("Enviando peça:", newPart);
     onSave(newPart);
-
+    onClose(); // Fecha o modal após salvar
   };
 
   const handleClose = () => {
