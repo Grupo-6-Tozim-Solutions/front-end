@@ -18,6 +18,7 @@ const PieChartCard = ({ title, data }) => {
               nameKey="name"
               outerRadius={80}
               innerRadius={40}
+              
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

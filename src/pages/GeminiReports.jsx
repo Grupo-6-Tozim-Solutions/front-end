@@ -10,12 +10,16 @@ import { api } from "../Provider/apiProvider"; // instância Axios com baseURL, 
 import { useNavigate } from "react-router-dom"; // para redirecionar ao login se não houver token
 
 const GeminiReports = () => {
-  const [messages, setMessages] = useState([
-    {
-      sender: "ia",
-      text: "Olá! Sou sua assistente IA. Em que posso ajudar?",
-    },
-  ]);
+  // Carrega histórico do localStorage ao iniciar
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('geminiMessages');
+    return saved ? JSON.parse(saved) : [
+      {
+        sender: "ia",
+        text: "Olá! Sou sua assistente IA. Em que posso ajudar?",
+      },
+    ];
+  });
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -28,6 +32,11 @@ const GeminiReports = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  // Salva histórico no localStorage sempre que messages mudar
+  useEffect(() => {
+    localStorage.setItem('geminiMessages', JSON.stringify(messages));
+  }, [messages]);
 
   const sendMessage = async () => {
     const trimmed = input.trim();

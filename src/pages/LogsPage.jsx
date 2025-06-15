@@ -1,5 +1,5 @@
 // src/pages/LogsPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Box, Table, TableContainer, TableBody, Paper } from "@mui/material";
 import SideBarCounch from "../components/SideBarCounch";
 import HeaderSimple from "../components/HeaderSimple";
@@ -15,14 +15,13 @@ const LogsPage = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch("http://localhost:8080/movimentacaoEstoque", {
+        const response = await fetch("http://localhost:8080/movimentacoes", {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
-        // Se algum status 401/400, lança erro para cair no catch
         if (!response.ok) {
           throw new Error(`Erro HTTP: ${response.status}`);
         }
@@ -34,7 +33,7 @@ const LogsPage = () => {
 
         // Mapear cada registro para o formato do front
         const transformedLogs = data.map((entry) => {
-          const dateObj = new Date(entry.data);
+          const dateObj = new Date(entry.dataMovimentacao);
           const date = dateObj.toISOString().split("T")[0]; // “2025-05-30”
           const time = dateObj.toTimeString().split(":").slice(0, 2).join(":"); // “17:49”
 
@@ -54,8 +53,8 @@ const LogsPage = () => {
             time,
             action,
             quantity,
-            type: "Peça",
-            item: entry.peca?.nome || "Desconhecido",
+            type: (entry.tipoPeca || "Peça").toUpperCase(),
+            item: entry.nomePeca || "Desconhecido",
           };
         });
 
@@ -98,20 +97,18 @@ const LogsPage = () => {
     });
   });
 
-  
-  useEffect(() => {
-    checarToken();
-  }, []);
+  const navigate = useNavigate();
 
-
-  function checarToken() {
+  const checarToken = useCallback(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate('/login');
     }
-  }
+  }, [navigate]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    checarToken();
+  }, [checarToken]);
 
   return (
     <Box

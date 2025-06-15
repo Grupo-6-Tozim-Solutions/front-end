@@ -7,8 +7,7 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   
   const token = localStorage.getItem("token");
-  console.log("Token:", token);
-
+ 
   const isLoginRequest = config.url?.includes("/login") || config.url?.endsWith("/usuario");
  
   
