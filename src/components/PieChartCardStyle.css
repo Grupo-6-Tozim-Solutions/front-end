@@ -25,7 +25,7 @@
   .pie-chart-legend {
     background-color: #e0e0e0;
     border-radius: 8px;
-    padding: 10px;
+    padding: 4px;
     width: 40%;
     height: 90%;
     text-align: center;
@@ -34,12 +34,14 @@
     align-items: flex-start;
     overflow-y: auto;
     overflow-x: hidden;
+    justify-content: center;
+    align-items: center
   }
   
   .legend-item {
     display: flex;
     align-items: center;
-    margin: 6px 0;
+    margin: 4px ;
     width: 100%;
   }
   

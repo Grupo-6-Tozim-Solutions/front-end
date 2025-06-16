@@ -11,7 +11,7 @@ const HeaderStorage = ({
 }) => {
   return (
     <AppBar position="static" color="default" sx={{ padding: "10px" }}>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between",  marginRight: 4.8  }}>
         <Box>
           <Typography variant="h6" component="div">
             {title}
@@ -21,7 +21,7 @@ const HeaderStorage = ({
           </Typography>
         </Box>
           
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2  }}>
           <Divider orientation="vertical" flexItem />
           <Button variant="contained" color="primary" onClick={onFilter}>
             {filterText}

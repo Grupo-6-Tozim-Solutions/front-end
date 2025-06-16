@@ -5,11 +5,10 @@ import PasswordInput from './PasswordInput';
 const LoginForm = ({ onLogin, loginStatus }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [rememberMe, setRememberMe] = useState(true);
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ email, senha, rememberMe });
+    onLogin({ email, senha });
   };
 
   return (
@@ -66,17 +65,6 @@ const LoginForm = ({ onLogin, loginStatus }) => {
         />
       </Box>
 
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-            color="primary"
-          />
-        }
-        label="Lembrar-me"
-        sx={{ alignSelf: 'flex-start' }}
-      />
 
       <Button
         type="submit"

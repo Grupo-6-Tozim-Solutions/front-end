@@ -149,7 +149,7 @@ useEffect(() => {
         )}
       </Box>
       <CardContent>
-        <Typography variant="h6" component="div" textAlign="center">
+        <Typography component="div" textAlign="center" sx={{ fontSize: "1.15rem" }}>
           {name}
         </Typography>
       </CardContent>

@@ -57,7 +57,7 @@ const Dashboard = () => {
             <Box sx={{ width: "80%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
               <BarChartCard data={barChartData} />
             </Box>
-            <Box sx={{ width: "25%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "3%" }}>
+            <Box sx={{ width: "25%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "2%" }}>
               <PieChartCard title="Sofás que mais saíram no mês" data={sofasMaisSaida} />
               <PieChartCard title="Peças que mais saíram no mês" data={pecasMaisSaida} />
             </Box>

@@ -5,12 +5,15 @@ import SideBarCounch from "../components/SideBarCounch";
 import HeaderSimple from "../components/HeaderSimple";
 import TableStructureLogs from "../components/TableStructureLogs";
 import TableRowLogs from "../components/TableRowLogs";
+import TablePagination from "../components/TablePagination";
 import { useNavigate } from "react-router-dom";
 
 const LogsPage = () => {
   const [logs, setLogs] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filters, setFilters] = useState({});
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 9
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -97,6 +100,8 @@ const LogsPage = () => {
     });
   });
 
+  const paginatedLogs = filteredLogs.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+
   const navigate = useNavigate();
 
   const checarToken = useCallback(() => {
@@ -146,8 +151,9 @@ const LogsPage = () => {
             component={Paper}
             sx={{
               width: "94%",
-              maxHeight: "600px",
+              maxHeight: 534,
               borderRadius: "16px",
+              marginTop: -2,
             }}
           >
             <Table sx={{ borderRadius: "30%" }}>
@@ -170,7 +176,7 @@ const LogsPage = () => {
                 ]}
               />
               <TableBody>
-                {filteredLogs.map((log, index) => (
+                {paginatedLogs.map((log, index) => (
                   <TableRowLogs
                     key={index}
                     date={log.date}
@@ -185,6 +191,11 @@ const LogsPage = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            count={Math.ceil(filteredLogs.length / rowsPerPage)}
+            page={page}
+            onChange={setPage}
+          />
         </Box>
       </Box>
     </Box>

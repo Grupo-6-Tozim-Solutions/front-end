@@ -11,10 +11,12 @@ import FilterModal from "../components/FilterModal";
 import EditPartModal from "../components/EditPartModal";
 import ConfirmationModal from "../components/ConfirmationModals";
 import "../styles/PartsStorageStyle.css";
+import "../styles/TableBodyScroll.css";
 import initialPecas from "../data/DataMock";
 import SideBarCounch from "../components/SideBarCounch";
 import { Box, Table, TableContainer, TableBody, Paper } from '@mui/material';
 import { useEffect } from "react";
+import TablePagination from "../components/TablePagination";
 
 export function PartsStorage() {
   const [pecas, setPecas] = useState(initialPecas);
@@ -30,6 +32,8 @@ export function PartsStorage() {
     name: "",
     order: null,
   });
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 8;
 
   const navigate = useNavigate();
 
@@ -125,6 +129,7 @@ export function PartsStorage() {
   };
 
   const filteredParts = getFilteredAndSortedParts();
+  const paginatedParts = filteredParts.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   useEffect(() => {
     const fetchPecas = async () => {
@@ -177,14 +182,13 @@ export function PartsStorage() {
           onAdd={() => setAddModalOpen(true)}
           onLogout={() => setLogoutModalOpen(true)} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", marginTop: "40px" }}>
-          <TableContainer sx={{ width: "94%", maxHeight: "600px", borderRadius: "16px" }} component={Paper}>
+          <TableContainer sx={{ width: "94%", maxHeight: 530, borderRadius: "16px" }} component={Paper}>
             <Table sx={{ borderRadius: "30%" }}>
 
               <TableStructurePartsStorage />
 
               <TableBody>
-
-                {filteredParts.map((peca, index) => {
+                {paginatedParts.map((peca, index) => {
                   console.log("peca exibida:", peca);
                   const name = peca.nome;
                   const quantity = peca.quantidadeEstoque;
@@ -221,6 +225,11 @@ export function PartsStorage() {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            count={Math.ceil(filteredParts.length / rowsPerPage)}
+            page={page}
+            onChange={setPage}
+          />
         </Box>
       </Box>
 
