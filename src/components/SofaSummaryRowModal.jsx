@@ -32,6 +32,9 @@ const SofaSummaryRowModal = ({
   }, [quantidade]);
 
   const handleEditClick = () => {
+    if (isEditing && onQuantityChange) {
+      onQuantityChange(localQuantity); // Salva ao sair do modo edição
+    }
     setIsEditing(!isEditing);
   };
 
@@ -55,7 +58,12 @@ const SofaSummaryRowModal = ({
   };
 
   const handleInputChange = (e) => {
-    const value = Math.max(Number(e.target.value), 1); // Mínimo de 1 peça
+    let value = Number(e.target.value);
+    if (tipo === "PECA") {
+      value = Math.max(Math.floor(value), 1); // mínimo 1 inteiro
+    } else {
+      value = value > 0 ? value : 0.01; // mínimo 0.01 decimal
+    }
     setLocalQuantity(value);
   };
 
@@ -128,7 +136,7 @@ const SofaSummaryRowModal = ({
               value={localQuantity}
               onChange={handleInputChange}
               onBlur={handleBlur}
-              min="1"
+              min={tipo === "PECA" ? "1" : "0.01"}
               step={tipo === "PECA" ? "1" : "0.01"}
               style={{
                 width: "60px",

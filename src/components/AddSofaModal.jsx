@@ -53,11 +53,11 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
       if (!exists) {
         return [...prev, {
           peca: {
-            id: peca.id,        // Garantimos que o ID está presente
+            id: peca.id,
             nome: peca.nome,
-            tipo: peca.tipo    // Mantemos todos os campos necessários
+            tipo: peca.tipo
           },
-          quantidade: 1
+          quantidade: peca.tipo === "PECA" ? 1 : 0 // Corrige quantidade inicial
         }];
       }
       return prev;
