@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Alert } from '@mui/material';
 import PasswordInput from './PasswordInput';
 
-const CadastroForm = ({ onCadastro, loginStatus }) => {
+const CadastroForm = ({ onCadastro, loginStatus, senhaErrors }) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +54,7 @@ const CadastroForm = ({ onCadastro, loginStatus }) => {
           sx={{
             '& .MuiInputBase-root': {
               backgroundColor: '#EBEBEB',
-              height: '46px', // Reduced height
+              height: '46px',
             },
           }}
         />
@@ -70,8 +75,8 @@ const CadastroForm = ({ onCadastro, loginStatus }) => {
           sx={{
             '& .MuiInputBase-root': {
               backgroundColor: '#EBEBEB',
-              height: '46px', // Adjusted height
-              borderRadius: '8px', // Added border radius for consistency
+              height: '46px',
+              borderRadius: '8px',
             },
           }}
         />
@@ -85,8 +90,37 @@ const CadastroForm = ({ onCadastro, loginStatus }) => {
           id="input-senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
+          error={senhaErrors.length > 0}
         />
       </Box>
+
+      {/* Adicionar exibição dos erros de senha */}
+      {senhaErrors.length > 0 && (
+        <Box sx={{ 
+          textAlign: 'left',
+          backgroundColor: '#fff5f5',
+          padding: 2,
+          borderRadius: 1,
+          border: '1px solid',
+          borderColor: 'error.light'
+        }}>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1, color: 'error.main' }}>
+            A senha deve conter:
+          </Typography>
+          <Box component="ul" sx={{ margin: 0, paddingLeft: 2 }}>
+            {senhaErrors.map((error, index) => (
+              <Typography 
+                key={index} 
+                variant="body2" 
+                component="li"
+                sx={{ color: 'error.main' }}
+              >
+                {error}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
+      )}
 
       <Box sx={{ textAlign: 'left', width: '100%' }}>
         <Typography variant="body1" sx={{ marginBottom: '5px' }}>
@@ -106,7 +140,7 @@ const CadastroForm = ({ onCadastro, loginStatus }) => {
         sx={{
           marginTop: '16px',
           width: '50%',
-          alignSelf: 'center', // Center the button horizontally
+          alignSelf: 'center',
         }}
       >
         Criar Conta
