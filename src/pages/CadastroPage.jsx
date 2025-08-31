@@ -54,7 +54,7 @@ const CadastroPage = () => {
     }
 
     api
-      .post("/usuario", { nome, email, senha })
+      .post("/api/v2/usuarios", { nome, email, senha })
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
           setLoginStatus({

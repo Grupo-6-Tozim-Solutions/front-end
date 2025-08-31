@@ -47,7 +47,7 @@ export function PartsStorage() {
       const existingPart = pecas.find(p => p.id === updatedPart.id);
 
       if (updatedPart.nome !== existingPart.nome) {
-        await api.put(`/peca/${updatedPart.id}`, {
+        await api.put(`/api/v2/pecas/${updatedPart.id}`, {
           nome: updatedPart.nome,
           quantidadeMinima: existingPart.quantidadeMinima,
         });
@@ -56,12 +56,12 @@ export function PartsStorage() {
       const diff = updatedPart.quantidadeEstoque - existingPart.quantidadeEstoque;
 
       if (diff > 0) {
-        await api.put(`/peca/adicionarQuantidade/${updatedPart.id}/${diff}`);
+        await api.put(`/api/v2/pecas/adicionar-estoque/${updatedPart.id}/${diff}`);
       } else if (diff < 0) {
-        await api.put(`/peca/removerQuantidade/${updatedPart.id}/${Math.abs(diff)}`);
+        await api.put(`/api/v2/pecas/remover-estoque/${updatedPart.id}/${Math.abs(diff)}`);
       }
 
-      const response = await api.get("/peca/listarTodas");
+      const response = await api.get("/api/v2/pecas/listarTodas");
 
       setPecas(response.data);
       setEditModalOpen(false);
@@ -90,7 +90,7 @@ export function PartsStorage() {
 
   const handleConfirmDelete = async () => {
     try {
-      await api.delete(`/peca/${selectedPart.id}`);
+      await api.delete(`/api/v2/pecas/${selectedPart.id}`);
 
       setPecas((prevPecas) =>
         prevPecas.filter((peca) => peca.id !== selectedPart.id)
@@ -134,7 +134,7 @@ export function PartsStorage() {
   useEffect(() => {
     const fetchPecas = async () => {
       try {
-        const response = await api.get("/peca/listarTodas");
+        const response = await api.get("/api/v2/pecas/listarTodas");
         setPecas(response.data);
       } catch (error) {
         console.error("Erro ao buscar peças:", error);
@@ -189,7 +189,6 @@ export function PartsStorage() {
 
               <TableBody>
                 {paginatedParts.map((peca, index) => {
-                  console.log("peca exibida:", peca);
                   const name = peca.nome;
                   const quantity = peca.quantidadeEstoque;
                   const warningLevel = quantity < peca.quantidadeMinima ? "critical" : null;
@@ -239,7 +238,7 @@ export function PartsStorage() {
         onClose={() => setAddModalOpen(false)}
         onSave={async (newPart) => {
           try {
-            const response = await api.post("/peca", {
+            const response = await api.post("/api/v2/pecas", {
               nome: newPart.nome,
               quantidadeEstoque: newPart.quantidadeEstoque,
               quantidadeMinima: newPart.quantidadeMinima,

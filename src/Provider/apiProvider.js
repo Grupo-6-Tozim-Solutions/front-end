@@ -8,7 +8,7 @@ api.interceptors.request.use((config) => {
   
   const token = localStorage.getItem("token");
  
-  const isLoginRequest = config.url?.includes("/login") || config.url?.endsWith("/usuario");
+  const isLoginRequest = config.url?.includes("/api/v2/auth") || config.url?.endsWith("/api/v2/usuarios");
  
   
   if (token != undefined && token != 'undefined' && !isLoginRequest) {

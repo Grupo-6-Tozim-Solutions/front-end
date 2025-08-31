@@ -15,7 +15,7 @@ const LoginPage = () => {
   const handleLogin = (credentials) => {
     setIsLoading(true);
 
-    api.post('/usuario/login', {
+    api.post('/api/v2/auth/login', {
       email: credentials.email, // o campo que o back espera
       senha: credentials.senha,
     })
