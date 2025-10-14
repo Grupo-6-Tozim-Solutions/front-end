@@ -35,17 +35,17 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title, onError }) => {
 
       try {
         const [estoqueResponse, sofaPecasResponse] = await Promise.all([
-          api.get('/peca/listarTodas'),
-          api.get(`/sofa/listarPecas/${sofa.id}`)
+          api.get('/api/v2/pecas/listarTodas'),
+          api.get(`/api/v2/sofas/listarPecas/${sofa.id}`)
         ]);
         console.log("sofaPecasResponse.data", sofaPecasResponse.data);
 
         const pecasSofa = (sofaPecasResponse.data || [])
-          .filter(item => item && item.id)
+          .filter(item => item && item.pecaId)
           .map(item => ({
             peca: {
-              id: item.id,
-              nome: item.nome,
+              id: item.pecaId,
+              nome: item.nomePeca,
               tipo: item.tipo
             },
             quantidade: item.quantidade || 0
@@ -79,7 +79,7 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title, onError }) => {
 
   const normalizePeca = (peca) => ({
     peca: {
-      id: peca.peca?.id || peca.id || peca.idPeca,
+      id: peca.peca?.id || peca.id || peca.pecaId,
       nome: peca.peca?.nome || peca.nome,
       tipo: peca.peca?.tipo || peca.tipo
     },
@@ -112,66 +112,95 @@ const EditSofaModal = ({ isOpen, onClose, onSave, sofa, title, onError }) => {
     });
   };
 
-  const handleUpdateQuantity = async (pecaId, newQuantity) => {
+  const handleUpdateQuantity = (pecaId, newQuantity) => {
     if (!sofa?.id || !pecaId) return;
-    try {
-      const payload = [{
-        idPeca: pecaId,
-        quantidade: newQuantity
-      }];
-      await api.put(`/sofa/adicionarPeca/${sofa.id}`, payload);
-      setRightItems(prev =>
-        prev.map(item =>
-          String(item.peca.id) === String(pecaId) ? { ...item, quantidade: newQuantity } : item
-        )
-      );
-    } catch (error) {
-      onError?.("Erro ao atualizar quantidade.");
-    }
+
+    // Atualiza apenas o estado local primeiro
+    setRightItems(prev =>
+      prev.map(item =>
+        String(item.peca.id) === String(pecaId)
+          ? { ...item, quantidade: newQuantity }
+          : item
+      )
+    );
   };
 
   const handleDelete = async (pecaId) => {
-    if (!sofa?.id || !pecaId) return;
+    if (!sofa?.id || !pecaId) {
+      console.error("Dados inválidos:", { sofaId: sofa?.id, pecaId });
+      return;
+    }
+
     try {
-      const response = await api.delete(`/sofa/removerPeca/${sofa.id}/${pecaId}`);
+      console.log("Tentando remover peça:", { sofaId: sofa.id, pecaId });
+
+      const response = await api.delete(`/api/v2/sofas/removerPeca/${sofa.id}/${pecaId}`);
+
+      console.log("Resposta da API:", response);
+
       if (response.status === 200) {
+        // Remove do estado local
         setRightItems(prev => prev.filter(item => String(item.peca.id) !== String(pecaId)));
+        console.log("Peça removida com sucesso do estado local");
       } else {
+        console.error("Status inesperado:", response.status);
         onError?.("Erro ao remover peça. Status: " + response.status);
       }
     } catch (error) {
+      console.error("Erro completo ao remover peça:", error);
+
+      if (error.response) {
+        console.error("Resposta do servidor:", error.response.data);
+        console.error("Status:", error.response.status);
+        console.error("Headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Não houve resposta do servidor:", error.request);
+      } else {
+        console.error("Erro na configuração:", error.message);
+      }
+
       onError?.(`Erro ao remover peça: ${error.response?.data?.message || error.message}`);
     }
   };
+  const handleSave = async () => {
+    if (!sofa?.id) return;
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      const dadosSofa = { modelo: sofaName };
+      formData.append("dados", JSON.stringify(dadosSofa));
 
-const handleSave = async () => {
-  if (!sofa?.id) return;
-  setIsLoading(true);
-  try {
-    const formData = new FormData();
-    const dadosSofa = { modelo: sofaName };
-    formData.append("sofa", JSON.stringify(dadosSofa));
-    if (selectedImage) {
-      formData.append("imagem", selectedImage);
+      if (selectedImage) {
+        formData.append("imagem", selectedImage);
+      }
+
+      const responseSofa = await api.put(`/api/v2/sofas/atualizar/${sofa.id}`, formData);
+      console.log("✅ Sofá atualizado:", responseSofa.data);
+
+      const payload = {
+        pecas: rightItems.map(item => ({
+          pecaId: item.peca.id,
+          quantidade: item.quantidade
+        }))
+      };
+
+      await api.put(`/api/v2/sofas/adicionarPeca/${sofa.id}`, payload, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      onSave();
+      onClose();
+    } catch (error) {
+      console.error('❌ Erro ao salvar:', error); 
+      const errorMessage = error.response?.data?.message ||
+        error.message ||
+        'Erro ao salvar alterações';
+
+      onError?.(`Erro ao salvar: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
     }
-    await api.put(`/sofa/atualizar/${sofa.id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-
-    const payload = rightItems.map(item => ({
-      idPeca: item.peca.id,
-      quantidade: item.quantidade
-    }));
-    await api.put(`/sofa/adicionarPeca/${sofa.id}`, payload);
-
-    onSave();
-    onClose();
-  } catch (error) {
-    onError?.('Erro ao salvar alterações.');
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const uniqueLeftItems = Array.from(
     new Map(leftItems.filter(item => item && item.peca && item.peca.id).map(item => [String(item.peca.id), item])).values()

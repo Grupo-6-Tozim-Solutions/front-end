@@ -45,7 +45,7 @@ const CounchPage = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.get('/sofa');
+      const response = await api.get('/api/v2/sofas');
       const sofasData = Array.isArray(response.data) ? response.data : [];
 
       // Mapeia os sofás sem buscar peças associadas
@@ -89,7 +89,7 @@ const CounchPage = () => {
 
   const handleDeleteSofa = async (sofaId) => {
     try {
-      await api.delete(`/sofa/${sofaId}`);
+      await api.delete(`/api/v2/sofas/${sofaId}`);
       // Remove o sofá localmente
       setSofas(prevSofas => prevSofas.filter(sofa => sofa.id !== sofaId));
       setSuccessMessage("Sofá excluído com sucesso!");

@@ -16,7 +16,7 @@ const Dashboard = () => {
   const [pecasMaisSaida, setPecasMaisSaida] = useState([]);
 
   useEffect(() => {
-    api.get('/dashboard').then(res => {
+    api.get('/api/v2/dashboard').then(res => {
       // Converte {1: 10, 2: 15, ...} para [{month: "Jan", sofas: 10}, ...]
       const data = Object.entries(res.data).map(([month, sofas]) => ({
         month: monthNames[parseInt(month, 10) - 1],
@@ -24,8 +24,8 @@ const Dashboard = () => {
       }));
       setBarChartData(data);
     });
-    api.get('/dashboard/sofas-mais-saida-mes').then(res => setSofasMaisSaida(res.data));
-    api.get('/dashboard/pecas-mais-saida-mes').then(res => setPecasMaisSaida(res.data));
+    api.get('/api/v2/dashboard/sofas-mais-saida-mes').then(res => setSofasMaisSaida(res.data));
+    api.get('/api/v2/dashboard/pecas-mais-saida-mes').then(res => setPecasMaisSaida(res.data));
   }, []);
 
 

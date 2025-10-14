@@ -4,16 +4,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { api } from '../Provider/apiProvider'; // Ajuste o caminho conforme necessário
+import { api } from '../Provider/apiProvider';
 
 const MaterialSofaCard = ({sofaId, name, image, onEdit, onDelete, isEditModalOpen, onSuccess, onError }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [quantity, setQuantity] = useState(0);
-  // const [isChecked, setIsChecked] = useState(false);
 
 useEffect(() => {
     if (!isEditModalOpen) {
-      setIsSelected(false); // Reseta o card ao fechar o modal
+      setIsSelected(false);
     }
   }, [isEditModalOpen]);
 
@@ -25,24 +24,21 @@ useEffect(() => {
   };
 
 
-  const handleProduzir = async () => {
-    try {
-      await api.post(`/sofa/produzir/${sofaId}?quantidade=${quantity}`);
-      if (onSuccess) {
-        onSuccess("Produção realizada com sucesso!");
-      }
-      // Opcional: recarregue o estoque ou sofás
-    } catch (error) {
-      if (onError) {
-        onError("Erro ao produzir sofá: " + (error.response?.data?.message || error.message));
-      }
-    }
-  };
+const handleProduzir = async () => {
+  try {
+    // ✅ Use o endpoint V1 antigo que já funciona
+    await api.post(`/api/v2/sofas/produzir/${sofaId}?quantidade=${quantity}`);
 
-  // const handleCheckboxChange = (e) => {
-  //   e.stopPropagation(); // Prevents the card's state from toggling
-  //   setIsChecked(e.target.checked);
-  // };
+    if (onSuccess) {
+      onSuccess("Produção realizada com sucesso!");
+    }
+  } catch (error) {
+    if (onError) {
+      onError("Erro ao produzir sofá: " + (error.response?.data?.message || error.message));
+    }
+  }
+};
+
 
   return (
     <Card
@@ -56,7 +52,7 @@ useEffect(() => {
         overflow: "hidden",
         height: "240px",
         "&:hover .hover-image": {
-          filter: "brightness(54%)", // Darken the image on hover
+          filter: "brightness(54%)",
         },
       }}
     >
@@ -69,7 +65,7 @@ useEffect(() => {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: isSelected ? "#f8f8f8" : "transparent",
-          position: "relative", // Ensure proper positioning for the checkbox
+          position: "relative",
         }}
       >
 

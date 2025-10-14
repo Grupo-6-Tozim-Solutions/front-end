@@ -19,7 +19,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
   useEffect(() => {
     const fetchPecas = async () => {
       try {
-        const response = await api.get("/peca/listarTodas");
+        const response = await api.get("/api/v2/pecas/listarTodas");
         setLeftItems(response.data);
       } catch (error) {
         console.error("Erro ao buscar peças:", error);
@@ -90,37 +90,50 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      if (!sofaName) {
-        onError?.("O nome do sofá não pode estar em branco");
-        return;
-      }
-      if (sofaName.length > 30) {
-        onError?.("O nome do sofá não pode conter mais de 30 caracteres");
-        return;
-      }
-      const sofaData = {
-        modelo: sofaName,
-      };
+const handleSave = async () => {
+  try {
+    if (!sofaName) {
+      onError?.("O nome do sofá não pode estar em branco");
+      return;
+    }
+    if (sofaName.length > 30) {
+      onError?.("O nome do sofá não pode conter mais de 30 caracteres");
+      return;
+    }
+    
+    if (!selectedImage) {
+      onError?.("Selecione uma imagem para o sofá");
+      return;
+    }
 
-      const formData = new FormData();
-      formData.append("sofa", JSON.stringify(sofaData));
-      if (selectedImage) {
-        formData.append("imagem", selectedImage);
-      } else {
-        onError?.("Selecione uma imagem para o sofá");
-        return;
-      }
+    const sofaData = {
+      modelo: sofaName,
+    };
 
-      // POST para cadastrar sofá com imagem
-      const sofaResponse = await api.post('/sofa/upload', formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+    const formData = new FormData();
+    
+    // CORREÇÃO: Enviar como Blob com type application/json
+    formData.append("dados", new Blob([JSON.stringify(sofaData)], { 
+      type: "application/json" 
+    }));
+    
+    formData.append("imagem", selectedImage);
+
+    // Debug: verifique o que está sendo enviado
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    // POST para cadastrar sofá com imagem
+    const sofaResponse = await api.post('/api/v2/sofas', formData, {
+      headers: { 
+        "Content-Type": "multipart/form-data"
+      }
+    });
 
       // Aqui, não precisamos buscar as peças já associadas, pois queremos adicionar novas
       const pecasParaAdicionar = rightItems.map(item => ({
-        idPeca: item.peca.id,
+        pecaId: item.peca.id,
         quantidade: item.quantidade
       }));
 
@@ -129,9 +142,16 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
         return;
       }
 
+      if (sofaName === "Novo Sofá") {
+      onError?.("Escolha um nome único para o sofá, não use 'Novo Sofá'");
+      return;
+    }
+
       // Envia as peças associadas sem remover do estoque
       if (pecasParaAdicionar.length > 0) {
-        await api.put(`/sofa/adicionarPeca/${sofaResponse.data.id}`, pecasParaAdicionar);
+       await api.put(`/api/v2/sofas/adicionarPeca/${sofaResponse.data.id}`, {
+       pecas: pecasParaAdicionar
+      });
       }
 
       onSave(sofaResponse.data);
