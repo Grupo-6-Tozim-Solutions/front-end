@@ -23,7 +23,7 @@ const LoginLeft = () => {
         }}
       >
         <img
-          src="../../public/assets/box.png"
+          src="/assets/box.png"
           alt="Logo"
           style={{ height: "78%", width: "auto", opacity: 0.9 }}
         />

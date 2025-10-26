@@ -45,7 +45,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
                 setQuantity((prev) => Math.max(prev - 1, 0));
               }}
             >
-              <img src="../../public/assets/decrement.svg" alt="" />
+              <img src="/assets/decrement.svg" alt="" />
             </button>
             <span className="numero-produzir">{quantity}</span>
             <button
@@ -55,7 +55,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
                 setQuantity((prev) => prev + 1);
               }}
             >
-              <img src="../../public/assets/increment.svg" alt="" />
+              <img src="/assets/increment.svg" alt="" />
             </button>
           </div>
           <div className="action-buttons">
@@ -66,7 +66,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
                 onEdit(); // Chama a função de edição passada como prop
               }}
             >
-              <img src="../../public/assets/lapisIcone.png" alt="Editar" /> Editar
+              <img src="/assets/lapisIcone.png" alt="Editar" /> Editar
             </button>
             <button
               className="delete-button proportional-button"
@@ -75,7 +75,7 @@ const SofaCard = ({ name, image, onEdit, onDelete }) => { // Adicione "onDelete"
                 onDelete(); // Chama a função de exclusão passada como prop
               }}
             >
-              <img src="../../public/assets/trashCanPartsStorage.png" alt="Excluir" />
+              <img src="/assets/trashCanPartsStorage.png" alt="Excluir" />
               Excluir
             </button>
             
