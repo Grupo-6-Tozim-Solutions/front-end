@@ -19,7 +19,7 @@ import { useEffect } from "react";
 import TablePagination from "../components/TablePagination";
 
 export function PartsStorage() {
-  const [pecas, setPecas] = useState(initialPecas);
+  const [pecas, setPecas] = useState([]);
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isFilterModalOpen, setFilterModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -27,15 +27,47 @@ export function PartsStorage() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [selectedPart, setSelectedPart] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // Novo estado para mensagens de sucesso
+  const [successMessage, setSuccessMessage] = useState("");
   const [filterCriteria, setFilterCriteria] = useState({
     name: "",
     order: null,
   });
   const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const rowsPerPage = 8;
 
   const navigate = useNavigate();
+
+  // Buscar peças com paginação do servidor
+  const fetchPecas = async (currentPage = page, filter = filterCriteria.name) => {
+    try {
+      const response = await api.get("/api/v2/pecas/listarPaginado", {
+        params: {
+          page: currentPage,
+          size: rowsPerPage,
+          sortBy: 'nome',
+          sortDirection: 'asc',
+          filter: filter || ''
+        }
+      });
+      
+      setPecas(response.data.content);
+      setTotalItems(response.data.totalItems);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Erro ao buscar peças:", error);
+      setErrorMessage("Erro ao carregar peças.");
+    }
+  };
+
+  useEffect(() => {
+    fetchPecas();
+  }, []);
+
+  useEffect(() => {
+    fetchPecas(page);
+  }, [page]);
 
   const handleEdit = (peca) => {
     setSelectedPart(peca);
@@ -60,10 +92,7 @@ export function PartsStorage() {
       } else if (diff < 0) {
         await api.put(`/api/v2/pecas/remover-estoque/${updatedPart.id}/${Math.abs(diff)}`);
       }
-
-      const response = await api.get("/api/v2/pecas/listarTodas");
-
-      setPecas(response.data);
+      await fetchPecas(page);
       setEditModalOpen(false);
       setSuccessMessage("Peça editada com sucesso!");
     } catch (error) {
@@ -77,7 +106,6 @@ export function PartsStorage() {
     setConfirmationModalOpen(true);
   };
 
-
   const handleLogoutConfirm = () => {
     setLogoutModalOpen(false);
     navigate('/login');
@@ -86,16 +114,16 @@ export function PartsStorage() {
   const handleApplyFilter = (filteredCriteria) => {
     setFilterCriteria(filteredCriteria);
     setFilterModalOpen(false);
+    
+    // Resetar para página 1 e buscar com filtro
+    setPage(1);
+    fetchPecas(1, filteredCriteria.name);
   };
 
   const handleConfirmDelete = async () => {
     try {
       await api.delete(`/api/v2/pecas/${selectedPart.id}`);
-
-      setPecas((prevPecas) =>
-        prevPecas.filter((peca) => peca.id !== selectedPart.id)
-      );
-
+      await fetchPecas(page);
       setConfirmationModalOpen(false);
       setSuccessMessage("Peça excluída com sucesso!");
     } catch (error) {
@@ -104,7 +132,7 @@ export function PartsStorage() {
     }
   };
 
-  const getFilteredAndSortedParts = () => {
+  const getSortedParts = () => {
     let sortedParts = [...pecas];
 
     if (filterCriteria.order === "largest") {
@@ -113,43 +141,14 @@ export function PartsStorage() {
       sortedParts.sort((a, b) => a.quantidadeEstoque - b.quantidadeEstoque);
     }
 
-    if (filterCriteria.name) {
-      sortedParts = sortedParts.sort((a, b) => {
-        const aMatches = a.nome
-          .toLowerCase()
-          .includes(filterCriteria.name.toLowerCase());
-        const bMatches = b.nome
-          .toLowerCase()
-          .includes(filterCriteria.name.toLowerCase());
-        return bMatches - aMatches;
-      });
-    }
-
     return sortedParts;
   };
 
-  const filteredParts = getFilteredAndSortedParts();
-  const paginatedParts = filteredParts.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-
-  useEffect(() => {
-    const fetchPecas = async () => {
-      try {
-        const response = await api.get("/api/v2/pecas/listarTodas");
-        setPecas(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar peças:", error);
-      }
-    };
-
-    fetchPecas();
-  }, []);
-
-
+  const sortedParts = getSortedParts();
 
   useEffect(() => {
     checarToken();
   }, []);
-
 
   function checarToken() {
     const token = localStorage.getItem("token");
@@ -157,7 +156,6 @@ export function PartsStorage() {
       navigate('/login');
     }
   }
-
 
   return (
     <div className="parts-storage">
@@ -188,7 +186,7 @@ export function PartsStorage() {
               <TableStructurePartsStorage />
 
               <TableBody>
-                {paginatedParts.map((peca, index) => {
+                {sortedParts.map((peca, index) => {
                   const name = peca.nome;
                   const quantity = peca.quantidadeEstoque;
                   const warningLevel = quantity < peca.quantidadeMinima ? "critical" : null;
@@ -225,9 +223,11 @@ export function PartsStorage() {
             </Table>
           </TableContainer>
           <TablePagination
-            count={Math.ceil(filteredParts.length / rowsPerPage)}
+            count={totalPages}
             page={page}
             onChange={setPage}
+            rowsPerPage={rowsPerPage}
+            totalItems={totalItems}
           />
         </Box>
       </Box>
@@ -242,11 +242,12 @@ export function PartsStorage() {
               nome: newPart.nome,
               quantidadeEstoque: newPart.quantidadeEstoque,
               quantidadeMinima: newPart.quantidadeMinima,
-              tipo: newPart.tipo, // <-- Adicione esta linha!
+              tipo: newPart.tipo,
             });
 
-            const savedPart = response.data;
-            setPecas((prev) => [...prev, savedPart]);
+            // Recarregar os dados atualizados
+            await fetchPecas(page);
+            setAddModalOpen(false);
             setSuccessMessage("Peça adicionada com sucesso!");
           } catch (error) {
             console.error("Erro ao salvar a peça:", error.response?.data || error.message);
@@ -255,7 +256,6 @@ export function PartsStorage() {
         }}
         onError={(msg) => setErrorMessage(msg)}
       />
-
 
       <FilterModal
         isOpen={isFilterModalOpen}
