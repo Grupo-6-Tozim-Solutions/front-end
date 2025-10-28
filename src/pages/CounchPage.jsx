@@ -11,7 +11,8 @@ import AddSofaCard from "../components/AddSofaCard";
 import { Box, Typography, Button } from '@mui/material';
 import { api } from '../Provider/apiProvider';
 import { ErrorAlert } from "../components/ErrorAlert";
-import { SuccessAlert } from "../components/SuccessAlert"; // Import SuccessAlert
+import { SuccessAlert } from "../components/SuccessAlert";
+import TablePagination from "../components/TablePagination";
 
 const CounchPage = () => {
   const [isAddSofaModalOpen, setAddSofaModalOpen] = useState(false);
@@ -24,13 +25,16 @@ const CounchPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // Novo estado para mensagens de sucesso
+  const [successMessage, setSuccessMessage] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const rowsPerPage = 8;
 
-  // Verifica o token ao carregar a página
+  const navigate = useNavigate();
   useEffect(() => {
     checarToken();
   }, []);
-
 
   function checarToken() {
     const token = localStorage.getItem("token");
@@ -38,21 +42,28 @@ const CounchPage = () => {
       navigate('/login');
     }
   }
-
-  const navigate = useNavigate();
-  // Função simplificada para carregar apenas os sofás
-  const fetchSofas = async () => {
+  const fetchSofas = async (currentPage = page) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.get('/api/v2/sofas');
-      const sofasData = Array.isArray(response.data) ? response.data : [];
-
-      // Mapeia os sofás sem buscar peças associadas
+      const response = await api.get('/api/v2/sofas/listarPaginado', {
+        params: {
+          page: currentPage,
+          size: rowsPerPage,
+          sortBy: 'modelo',
+          sortDirection: 'asc'
+        }
+      });
+      
+      const data = response.data.content;
+      const sofasData = Array.isArray(data) ? data : [];
       setSofas(sofasData.map(sofa => ({
         ...sofa,
-        pecas: [] // Array vazio para manter a estrutura
+        pecas: [] 
       })));
+
+      setTotalItems(response.data.totalItems);
+      setTotalPages(response.data.totalPages);
 
     } catch (error) {
       console.error('Erro ao buscar sofás:', error);
@@ -63,18 +74,103 @@ const CounchPage = () => {
     }
   };
 
-  // Carrega os sofás quando o componente monta
   useEffect(() => {
     fetchSofas();
   }, []);
 
-  const handleSaveSofa = (newSofa) => {
-    // Adiciona o novo sofá localmente sem recarregar
-    setSofas(prevSofas => [...prevSofas, {
-      ...newSofa,
-      pecas: [] // Inicializa sem peças
-    }]);
-    setAddSofaModalOpen(false);
+  useEffect(() => {
+    fetchSofas(page);
+  }, [page]);
+
+const safeStringify = (obj) => {
+  try {
+    return JSON.stringify(obj, null, 2);
+  } catch {
+    return String(obj);
+  }
+};
+
+  const handleSaveSofa = async (newSofa) => {
+    try {
+      console.log('Iniciando criação do sofá...');
+      const newModel = (newSofa?.modelo || "").trim().toLowerCase();
+      if (!newModel) {
+        setErrorMessage("O nome do sofá não pode estar em branco");
+        return;
+      }
+      const exists = sofas.some(s => (s.modelo || "").trim().toLowerCase() === newModel);
+      if (exists) {
+        setErrorMessage("Já existe um sofá com esse modelo");
+        return;
+      }
+      
+      const formData = new FormData();
+      const dadosSofa = { modelo: newSofa.modelo };
+      
+      formData.append("dados", new Blob([JSON.stringify(dadosSofa)], { 
+        type: "application/json" 
+      }));
+      formData.append("imagem", newSofa.imagem);
+
+      for (const [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log('formData entry:', key, { name: value.name, type: value.type, size: value.size });
+        } else {
+          console.log('formData entry:', key, value);
+        }
+      }      const base = api.defaults?.baseURL || '';
+      const url = base ? `${base.replace(/\/$/, '')}/api/v2/sofas` : '/api/v2/sofas';
+      const token = localStorage.getItem('token') || '';
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: token ? `Bearer ${token}` : ''
+        },
+        body: formData
+      });
+
+      const resData = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const serverMsg = resData?.message || JSON.stringify(resData) || res.statusText;
+        console.error('Create sofa server error:', res.status, resData);
+        setErrorMessage(`Erro ao criar sofá (status ${res.status}). ${serverMsg}`);
+        return;
+      }
+
+      console.log('Sofá criado com sucesso!', resData);
+    
+      if (Array.isArray(newSofa.pecas) && newSofa.pecas.length > 0) {
+        try {
+          await api.put(`/api/v2/sofas/adicionarPeca/${resData.id}`, { pecas: newSofa.pecas });
+        } catch (putErr) {
+          console.error('Erro ao adicionar peças ao sofá criado:', putErr);
+          setErrorMessage('Sofá criado, mas falha ao associar peças.');
+        }
+      }
+      await fetchSofas(page);
+      setAddSofaModalOpen(false);
+      setSuccessMessage("Sofá adicionado com sucesso!");
+      
+    } catch (error) {
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      const config = error?.config;
+      const errMsg = {
+        message: error?.message,
+        status,
+        responseData: data,
+        requestUrl: config?.url,
+        requestMethod: config?.method,
+        requestHeaders: config?.headers
+      };
+      console.error('ERRO (detailed):', safeStringify(errMsg));
+      if (status) {
+        setErrorMessage(`Erro ao criar sofá (status ${status}). ${typeof data === 'object' ? safeStringify(data) : data || ''}`);
+      } else {
+        setErrorMessage(`Erro ao criar sofá. ${error?.message || ''}`);
+      }
+    }
   };
 
   const handleEditSofa = (sofa) => {
@@ -83,19 +179,18 @@ const CounchPage = () => {
   };
 
   const handleSaveEditedSofa = () => {
-    fetchSofas(); // Atualiza a lista com dados do backend
+    fetchSofas(page);
     setEditSofaModalOpen(false);
   };
 
   const handleDeleteSofa = async (sofaId) => {
     try {
       await api.delete(`/api/v2/sofas/${sofaId}`);
-      // Remove o sofá localmente
-      setSofas(prevSofas => prevSofas.filter(sofa => sofa.id !== sofaId));
+      await fetchSofas(page);
       setSuccessMessage("Sofá excluído com sucesso!");
     } catch (error) {
       console.error('Erro ao excluir sofá:', error);
-      setError('Erro ao excluir sofá. Tente novamente.');
+      setErrorMessage('Erro ao excluir sofá. Tente novamente.');
     } finally {
       setDeleteModalOpen(false);
     }
@@ -110,7 +205,7 @@ const CounchPage = () => {
     setLogoutModalOpen(false);
     navigate('/login');
   };
-
+  const visibleSofas = sofas.filter(sofa => sofa && sofa.id);
   if (isLoading) {
     return (
       <Box
@@ -135,7 +230,6 @@ const CounchPage = () => {
         flexDirection: 'column',
         gap: 2
       }}>
-        {/* Remover ErrorAlert daqui */}
         <Typography variant="h6" color="error">{error}</Typography>
         <Button
           variant="contained"
@@ -149,12 +243,10 @@ const CounchPage = () => {
 
   return (
     <div className="Counch-Page">
-      {/* Exibir ErrorAlert sempre que houver errorMessage */}
       <ErrorAlert
         errorMessage={errorMessage}
         onClose={() => setErrorMessage("")}
       />
-      {/* Exibir SuccessAlert sempre que houver successMessage */}
       <SuccessAlert
         successMessage={successMessage}
         onClose={() => setSuccessMessage("")}
@@ -174,25 +266,37 @@ const CounchPage = () => {
           padding: 1.4,
           overflowY: 'auto',
         }}>
-          {sofas
-            .filter(sofa => sofa && sofa.id)
-            .map(sofa => (
-              <MaterialSofaCard
-                key={sofa.id}
-                sofaId={sofa.id}
-                name={sofa.modelo}
-                image={`http://localhost:8080${sofa.caminhoImagem}`}
-                pecas={sofa.pecas}
-                onEdit={() => handleEditSofa(sofa)}
-                onDelete={() => openDeleteModal(sofa)}
-                isEditModalOpen={isEditSofaModalOpen}
-                onSuccess={msg => setSuccessMessage(msg)}
-                onError={msg => setErrorMessage(msg)}
-              />
-            ))}
+          {visibleSofas.map(sofa => (
+            <MaterialSofaCard
+              key={sofa.id}
+              sofaId={sofa.id}
+              name={sofa.modelo}
+              image={`http://localhost:8080${sofa.caminhoImagem}`}
+              pecas={sofa.pecas}
+              onEdit={() => handleEditSofa(sofa)}
+              onDelete={() => openDeleteModal(sofa)}
+              isEditModalOpen={isEditSofaModalOpen}
+              onSuccess={msg => setSuccessMessage(msg)}
+              onError={msg => setErrorMessage(msg)}
+            />
+          ))}
 
-          <AddSofaCard
-            onClick={() => setAddSofaModalOpen(true)}
+          {/* Show Add button only if current page has fewer than rowsPerPage items */}
+          {visibleSofas.length < rowsPerPage && (
+            <AddSofaCard
+              onClick={() => setAddSofaModalOpen(true)}
+            />
+          )}
+        </Box>
+        
+        {/* Paginação para sofás */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+          <TablePagination
+            count={totalPages}
+            page={page}
+            onChange={setPage}
+            rowsPerPage={rowsPerPage}
+            totalItems={totalItems}
           />
         </Box>
       </Box>
@@ -200,10 +304,7 @@ const CounchPage = () => {
       <AddSofaModal
         isOpen={isAddSofaModalOpen}
         onClose={() => setAddSofaModalOpen(false)}
-        onSave={(sofa) => {
-          handleSaveSofa(sofa);
-          setSuccessMessage("Sofá adicionado com sucesso!");
-        }}
+        onSave={handleSaveSofa}
         onError={(msg) => setErrorMessage(msg)}
       />
 
@@ -239,7 +340,6 @@ const CounchPage = () => {
         textButtonDelete="Sair"
         imagem="public/assets/logoutImage.png"
         onConfirm={handleLogoutConfirm}
-        onAfterSave={fetchSofas}
       />
     </div>
   );

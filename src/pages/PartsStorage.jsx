@@ -115,7 +115,6 @@ export function PartsStorage() {
     setFilterCriteria(filteredCriteria);
     setFilterModalOpen(false);
     
-    // Resetar para página 1 e buscar com filtro
     setPage(1);
     fetchPecas(1, filteredCriteria.name);
   };
@@ -192,8 +191,6 @@ export function PartsStorage() {
                   const warningLevel = quantity < peca.quantidadeMinima ? "critical" : null;
                   const status = warningLevel === "critical" ? "Estoque Baixo" : "Estoque OK";
                   const formattedId = String(peca.id).padStart(3, "0");
-
-                  // Formatação conforme o tipo
                   let formattedQty;
                   if (peca.tipo === "PEÇA") {
                     formattedQty = String(Math.round(quantity ?? 0)).padStart(2, "0");
@@ -245,7 +242,6 @@ export function PartsStorage() {
               tipo: newPart.tipo,
             });
 
-            // Recarregar os dados atualizados
             await fetchPecas(page);
             setAddModalOpen(false);
             setSuccessMessage("Peça adicionada com sucesso!");

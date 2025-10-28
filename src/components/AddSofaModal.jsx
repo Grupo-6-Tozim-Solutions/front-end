@@ -29,15 +29,13 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
 
     if (isOpen) {
       fetchPecas();
-      setRightItems([]); // Limpa peças selecionadas ao abrir
+      setRightItems([]);
       setSofaName("Novo Sofá");
       setIsImageSelected(false);
       setSelectedImage(null);
     }
   }, [isOpen]);
 
-  // Filtra peças duplicadas por id para evitar erro de chave duplicada no React
-  // Substitua o filtro por este Map para garantir unicidade real:
   const uniqueLeftItems = Array.from(
     new Map(leftItems.map(item => [item.id, item])).values()
   );
@@ -57,7 +55,7 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
             nome: peca.nome,
             tipo: peca.tipo
           },
-          quantidade: peca.tipo === "PECA" ? 1 : 0 // Corrige quantidade inicial
+          quantidade: peca.tipo === "PECA" ? 1 : 0
         }];
       }
       return prev;
@@ -90,48 +88,30 @@ const AddSofaModal = ({ isOpen, onClose, onSave, onError }) => {
     }
   };
 
-const handleSave = async () => {
-  try {
-    if (!sofaName) {
-      onError?.("O nome do sofá não pode estar em branco");
-      return;
+  const safeStringify = (obj) => {
+    try {
+      return JSON.stringify(obj, null, 2);
+    } catch {
+      return String(obj);
     }
-    if (sofaName.length > 30) {
-      onError?.("O nome do sofá não pode conter mais de 30 caracteres");
-      return;
-    }
-    
-    if (!selectedImage) {
-      onError?.("Selecione uma imagem para o sofá");
-      return;
-    }
+  };
 
-    const sofaData = {
-      modelo: sofaName,
-    };
-
-    const formData = new FormData();
-    
-    // CORREÇÃO: Enviar como Blob com type application/json
-    formData.append("dados", new Blob([JSON.stringify(sofaData)], { 
-      type: "application/json" 
-    }));
-    
-    formData.append("imagem", selectedImage);
-
-    // Debug: verifique o que está sendo enviado
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
-    // POST para cadastrar sofá com imagem
-    const sofaResponse = await api.post('/api/v2/sofas', formData, {
-      headers: { 
-        "Content-Type": "multipart/form-data"
+  const handleSave = async () => {
+    try {
+      if (!sofaName) {
+        onError?.("O nome do sofá não pode estar em branco");
+        return;
       }
-    });
+      if (sofaName.length > 30) {
+        onError?.("O nome do sofá não pode conter mais de 30 caracteres");
+        return;
+      }
+      
+      if (!selectedImage) {
+        onError?.("Selecione uma imagem para o sofá");
+        return;
+      }
 
-      // Aqui, não precisamos buscar as peças já associadas, pois queremos adicionar novas
       const pecasParaAdicionar = rightItems.map(item => ({
         pecaId: item.peca.id,
         quantidade: item.quantidade
@@ -143,22 +123,27 @@ const handleSave = async () => {
       }
 
       if (sofaName === "Novo Sofá") {
-      onError?.("Escolha um nome único para o sofá, não use 'Novo Sofá'");
-      return;
-    }
-
-      // Envia as peças associadas sem remover do estoque
-      if (pecasParaAdicionar.length > 0) {
-       await api.put(`/api/v2/sofas/adicionarPeca/${sofaResponse.data.id}`, {
-       pecas: pecasParaAdicionar
-      });
+        onError?.("Escolha um nome único para o sofá, não use 'Novo Sofá'");
+        return;
       }
 
-      onSave(sofaResponse.data);
-      onClose();
+      const newSofaPayload = {
+        modelo: sofaName,
+        imagem: selectedImage,
+        pecas: pecasParaAdicionar
+      };
+
+      onSave?.(newSofaPayload);
+
     } catch (error) {
-      console.error("Erro ao salvar sofá:", error.response?.data || error.message);
-      onError?.("Erro ao salvar sofá. Verifique os dados e tente novamente.");
+      const status = error?.response?.status;
+      const data = error?.response?.data;
+      console.error("Erro ao salvar sofá (detailed):", { message: error?.message, status, data });
+      if (status) {
+        onError?.(`Erro ao salvar sofá (status ${status}). ${typeof data === 'object' ? JSON.stringify(data) : data || ''}`);
+      } else {
+        onError?.("Erro ao salvar sofá. Verifique os dados e tente novamente.");
+      }
     }
   };
   return (
@@ -247,7 +232,7 @@ const handleSave = async () => {
                   key={`sofa-${item.peca.id}`}
                   text={item.peca.nome}
                   quantidade={item.quantidade}
-                  tipo={item.peca.tipo} // <-- Adicione esta linha!
+                  tipo={item.peca.tipo}
                   pecaId={item.peca.id}
                   isEditMode={true}
                   onDelete={() => handleDelete(item.peca.id)}
