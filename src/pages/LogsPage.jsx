@@ -1,35 +1,40 @@
-  // src/pages/LogsPage.jsx
-  import React, { useEffect, useState, useCallback } from "react";
-  import { Box, Table, TableContainer, TableBody, Paper } from "@mui/material";
-  import SideBarCounch from "../components/SideBarCounch";
-  import HeaderSimple from "../components/HeaderSimple";
-  import TableStructureLogs from "../components/TableStructureLogs";
-  import TableRowLogs from "../components/TableRowLogs";
-  import TablePagination from "../components/TablePagination";
-  import { useNavigate } from "react-router-dom";
-  import { api } from '../Provider/apiProvider';
+import React, { useEffect, useState, useCallback } from "react";
+import { Box, Table, TableContainer, TableBody, Paper } from "@mui/material";
+import SideBarCounch from "../components/SideBarCounch";
+import HeaderSimple from "../components/HeaderSimple";
+import TableStructureLogs from "../components/TableStructureLogs";
+import TableRowLogs from "../components/TableRowLogs";
+import TablePagination from "../components/TablePagination";
+import { useNavigate } from "react-router-dom";
+import { api } from '../Provider/apiProvider';
 
-  const LogsPage = () => {
-    const [logs, setLogs] = useState([]);
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-    const [filters, setFilters] = useState({});
-    const [page, setPage] = useState(1);
-    const rowsPerPage = 9
-
-// No LogsPage.jsx
-useEffect(() => {
-  const fetchLogs = async () => {
+const LogsPage = () => {
+  const [logs, setLogs] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [filters, setFilters] = useState({});
+  const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const rowsPerPage = 9;
+  const fetchLogs = async (currentPage = page, currentFilters = filters) => {
     try {
-      // ✅ Use o endpoint V1 de logs que já funciona
-      const response = await api.get("/api/v2/logs-movimentacao");
+      const response = await api.get("/api/v2/logs-movimentacao/listarPaginado", {
+        params: {
+          page: currentPage,
+          size: rowsPerPage,
+          sortBy: 'dataMovimentacao',
+          sortDirection: 'desc',
+          filter: currentFilters.item || '',
+          tipoPeca: currentFilters.type || '',
+          acao: currentFilters.action || ''
+        }
+      });
       
-      const data = response.data;
+      const data = response.data.content;
       
       if (!Array.isArray(data)) {
         throw new Error("Resposta da API não é um array de logs.");
       }
-
-      // Transformação dos dados (mantenha sua lógica atual)
       const transformedLogs = data.map((log, index) => {
         const dateObj = new Date(log.dataMovimentacao);
         const date = dateObj.toISOString().split("T")[0];
@@ -50,149 +55,142 @@ useEffect(() => {
           quantity,
           type: (log.tipoPeca || "Peça").toUpperCase(),
           item: log.nomePeca || "Desconhecido",
+          originalData: log
         };
       });
 
       setLogs(transformedLogs);
+      setTotalItems(response.data.totalItems);
+      setTotalPages(response.data.totalPages);
       
     } catch (error) {
       console.error("Erro ao buscar logs:", error);
     }
   };
 
-  fetchLogs();
-}, []);
+  useEffect(() => {
+    fetchLogs();
+  }, []);
 
-    const handleSort = (key) => {
-      let direction = "asc";
-      if (sortConfig.key === key && sortConfig.direction === "asc") {
-        direction = "desc";
-      }
-      setSortConfig({ key, direction });
+  useEffect(() => {
+    fetchLogs(page);
+  }, [page]);
 
-      // Ordena o array localmente
-      const sortedLogs = [...logs].sort((a, b) => {
-        if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-        if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-        return 0;
-      });
-      setLogs(sortedLogs);
-    };
-
-    const handleFilter = (column, value) => {
-      setFilters((prevFilters) => ({ ...prevFilters, [column]: value }));
-    };
-
-    const filteredLogs = logs.filter((log) => {
-      return Object.keys(filters).every((key) => {
-        if (!filters[key]) return true;
-        return log[key]
-          .toString()
-          .toLowerCase()
-          .includes(filters[key].toLowerCase());
-      });
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+    const sortedLogs = [...logs].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+      return 0;
     });
+    setLogs(sortedLogs);
+  };
 
-    const paginatedLogs = filteredLogs.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  const handleFilter = (column, value) => {
+    const newFilters = { ...filters, [column]: value };
+    setFilters(newFilters);
+    setPage(1);
+    fetchLogs(1, newFilters);
+  };
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const checarToken = useCallback(() => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate('/login');
-      }
-    }, [navigate]);
+  const checarToken = useCallback(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
-    useEffect(() => {
-      checarToken();
-    }, [checarToken]);
+  useEffect(() => {
+    checarToken();
+  }, [checarToken]);
 
-    return (
+  return (
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <SideBarCounch />
       <Box
         sx={{
-          height: "100%",
           width: "100%",
+          height: "100%",
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
         }}
       >
-        <SideBarCounch />
+        <HeaderSimple
+          subtitle="Tozine Solutions"
+          title="Histórico de ações na plataforma"
+        />
         <Box
           sx={{
             width: "100%",
-            height: "100%",
             display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             flexDirection: "column",
+            marginTop: "40px",
           }}
         >
-          <HeaderSimple
-            subtitle="Tozine Solutions"
-            title="Histórico de ações na plataforma dos últimos 60 dias"
-          />
-          <Box
+          <TableContainer
+            component={Paper}
             sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              marginTop: "40px",
+              width: "94%",
+              maxHeight: 534,
+              borderRadius: "16px",
+              marginTop: -2,
             }}
           >
-            <TableContainer
-              component={Paper}
-              sx={{
-                width: "94%",
-                maxHeight: 534,
-                borderRadius: "16px",
-                marginTop: -2,
-              }}
-            >
-              <Table sx={{ borderRadius: "30%" }}>
-                {/* 
-                  Supondo que TableStructureLogs receba:
-                  onSort → função de ordenação
-                  onFilter → função de filtro
-                  columns → lista de colunas, incluindo “quantity” 
-                */}
-                <TableStructureLogs
-                  onSort={handleSort}
-                  onFilter={handleFilter}
-                  columns={[
-                    { key: "date", label: "Data" },
-                    { key: "time", label: "Hora" },
-                    { key: "action", label: "Ação" },
-                    { key: "quantity", label: "Quantidade" },
-                    { key: "type", label: "Tipo" },
-                    { key: "item", label: "Item" },
-                  ]}
-                />
-                <TableBody>
-                  {paginatedLogs.map((log, index) => (
-                    <TableRowLogs
-                      key={index}
-                      date={log.date}
-                      time={log.time}
-                      action={log.action}
-                      quantity={log.quantity}
-                      type={log.type}
-                      item={log.item}
-                      index={index}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              count={Math.ceil(filteredLogs.length / rowsPerPage)}
-              page={page}
-              onChange={setPage}
-            />
-          </Box>
+            <Table sx={{ borderRadius: "30%" }}>
+              <TableStructureLogs
+                onSort={handleSort}
+                onFilter={handleFilter}
+                columns={[
+                  { key: "date", label: "Data" },
+                  { key: "time", label: "Hora" },
+                  { key: "action", label: "Ação" },
+                  { key: "quantity", label: "Quantidade" },
+                  { key: "type", label: "Tipo" },
+                  { key: "item", label: "Item" },
+                ]}
+              />
+              <TableBody>
+                {logs.map((log, index) => (
+                  <TableRowLogs
+                    key={log.id}
+                    date={log.date}
+                    time={log.time}
+                    action={log.action}
+                    quantity={log.quantity}
+                    type={log.type}
+                    item={log.item}
+                    index={index}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            count={totalPages}
+            page={page}
+            onChange={setPage}
+            rowsPerPage={rowsPerPage}
+            totalItems={totalItems}
+          />
         </Box>
       </Box>
-    );
-  };
+    </Box>
+  );
+};
 
-  export default LogsPage;
+export default LogsPage;
