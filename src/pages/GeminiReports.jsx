@@ -5,7 +5,7 @@ import { Send } from "lucide-react";
 import { askGemini as rawAskGemini } from "../services/geminiService"; // chamaremos de rawAskGemini
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import "../styles/GeminiReports.css";
+import "../styles/geminiReports.css";
 import { api } from "../Provider/apiProvider"; // instância Axios com baseURL, headers, token etc.
 import { useNavigate } from "react-router-dom"; // para redirecionar ao login se não houver token
 
