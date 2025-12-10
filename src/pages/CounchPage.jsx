@@ -69,6 +69,7 @@ const CounchPage = () => {
       console.error('Erro ao buscar sofás:', error);
       setError('Erro ao carregar sofás. Tente recarregar a página.');
       setSofas([]);
+      // Don't set totalPages to prevent navigation errors
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +119,9 @@ const safeStringify = (obj) => {
         } else {
           console.log('formData entry:', key, value);
         }
-      }      const base = api.defaults?.baseURL || '';
+      }
+      
+      const base = api.defaults?.baseURL || '';
       const url = base ? `${base.replace(/\/$/, '')}/api/v2/sofas` : '/api/v2/sofas';
       const token = localStorage.getItem('token') || '';
 
@@ -139,7 +142,7 @@ const safeStringify = (obj) => {
       }
 
       console.log('Sofá criado com sucesso!', resData);
-    
+      
       if (Array.isArray(newSofa.pecas) && newSofa.pecas.length > 0) {
         try {
           await api.put(`/api/v2/sofas/adicionarPeca/${resData.id}`, { pecas: newSofa.pecas });
@@ -148,7 +151,37 @@ const safeStringify = (obj) => {
           setErrorMessage('Sofá criado, mas falha ao associar peças.');
         }
       }
-      await fetchSofas(page);
+
+      // Fetch updated pagination info
+      const response = await api.get('/api/v2/sofas/listarPaginado', {
+        params: {
+          page: page,
+          size: rowsPerPage,
+          sortBy: 'modelo',
+          sortDirection: 'asc'
+        }
+      });
+      
+      const newTotalPages = response.data.totalPages;
+      const newTotalItems = response.data.totalItems;
+      
+      setTotalItems(newTotalItems);
+      setTotalPages(newTotalPages);
+      
+      // If new page was created, navigate to it and let useEffect fetch the data
+      if (newTotalPages > totalPages) {
+        console.log('New page created, navigating to page', newTotalPages);
+        setTotalPages(newTotalPages);
+        setTotalItems(newTotalItems);
+        setPage(newTotalPages);
+        // useEffect will trigger and fetch the new page
+      } else {
+        // Otherwise just refresh current page
+        setTotalPages(newTotalPages);
+        setTotalItems(newTotalItems);
+        await fetchSofas(page);
+      }
+      
       setAddSofaModalOpen(false);
       setSuccessMessage("Sofá adicionado com sucesso!");
       
@@ -206,40 +239,6 @@ const safeStringify = (obj) => {
     navigate('/login');
   };
   const visibleSofas = sofas.filter(sofa => sofa && sofa.id);
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
-        }}>
-        <Typography variant="h6">Carregando sofás...</Typography>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        flexDirection: 'column',
-        gap: 2
-      }}>
-        <Typography variant="h6" color="error">{error}</Typography>
-        <Button
-          variant="contained"
-          onClick={fetchSofas}
-        >
-          Tentar novamente
-        </Button>
-      </Box>
-    );
-  }
 
   return (
     <div className="Counch-Page">
@@ -280,19 +279,15 @@ const safeStringify = (obj) => {
               onError={msg => setErrorMessage(msg)}
             />
           ))}
-
-          {/* Show Add button only if current page has fewer than rowsPerPage items */}
-          {visibleSofas.length < rowsPerPage && (
+          {(visibleSofas.length < rowsPerPage) && (
             <AddSofaCard
               onClick={() => setAddSofaModalOpen(true)}
             />
           )}
         </Box>
-        
-        {/* Paginação para sofás */}
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
           <TablePagination
-            count={totalPages}
+            count={totalPages + 1}
             page={page}
             onChange={setPage}
             rowsPerPage={rowsPerPage}
